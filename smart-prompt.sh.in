@@ -12,20 +12,20 @@
 #
 
 # Load configuration file
-if [ -f "@SMART_PROMPT_CONFIG@" ]; then
-    source "@SMART_PROMPT_CONFIG@"
+if [ -f @SMART_PROMPT_CONFIG@ ]; then
+    source @SMART_PROMPT_CONFIG@
 fi
 
 # Load user level overrides
-if [ -f "~/.@PROJECT_NAME@rc" ]; then
-    source "~/.@PROJECT_NAME@rc"
+if [ -f ~/.@PROJECT_NAME@rc ]; then
+    source ~/.@PROJECT_NAME@rc
 fi
 
 # Declare a global associative array to be filled by found plugins
 declare -A SMART_PROMPT_PLUGINS
 
 # Loading user plugins
-if [ -d ~/.@.d ]; then
+if [ -d ~/.@PROJECT_NAME@.d ]; then
     for plugin in ~/.@PROJECT_NAME@.d/[0-9][0-9]*.sh; do
         source ${plugin}
     done
@@ -48,20 +48,21 @@ function _eval_color_string
     typeset -A _colors
     _colors['black']='\[\e[30m\]'
     _colors['red']='\[\e[31m\]'
-    _colors['green']='\[\e[34;10m\]'
+    _colors['green']='\[\e[32\]'
     _colors['brown']='\[\e[33m\]'
     _colors['blue']='\[\e[34m\]'
     _colors['magenta']='\[\e[35m\]'
     _colors['cyan']='\[\e[36m\]'
-    _colors['white']='\[\e[37m\]'
+    _colors['grey']='\[\e[37m\]'
 
+    _colors['dark-grey']='\[\e[30;1m\]'
     _colors['bright-red']='\[\e[31;1m\]'
     _colors['bright-green']='\[\e[32;1m\]'
     _colors['yellow']='\[\e[33;1m\]'
     _colors['bright-blue']='\[\e[34;1m\]'
     _colors['bright-magenta']='\[\e[35;1m\]'
     _colors['bright-cyan']='\[\e[36;1m\]'
-    _colors['grey']='\[\e[37;1m\]'
+    _colors['white']='\[\e[37;1m\]'
 
     _colors['reset']='\[\e[0m\]'
     _colors['bold']='\[\e[1m\]'
@@ -83,11 +84,14 @@ function _@PROJECT_NAME@()
     local sp_reset
 
     # Get configured colors (or defaults)
-    _eval_color_string "${SP_PATH:-bright-blue}" sp_path
+    # NOTE Before set desired color, make sure there is no
+    # other styles in effect...it is why `reset' is a leading
+    # (and hardcoded) "color" in a sequence...
+    _eval_color_string "reset ${SP_PATH:-bright-blue}" sp_path
     if [[ ${EUID} != 0 ]]; then
-        _eval_color_string "${SP_USER:-bright-green}" sp_user
+        _eval_color_string "reset ${SP_USER:-bright-green}" sp_user
     else
-        _eval_color_string "${SP_SUSER:-bright-red}" sp_user
+        _eval_color_string "reset ${SP_SUSER:-bright-red}" sp_user
     fi
     _eval_color_string 'reset' sp_reset
 
@@ -106,7 +110,7 @@ function _@PROJECT_NAME@()
     if [ -z "$middle" ]; then
         PS1="${start}${end}"
     else
-        PS1="${start}|${middle}|${end}"
+        PS1="${start}|${middle}${sp_path}|${end}"
     fi
 }
 
