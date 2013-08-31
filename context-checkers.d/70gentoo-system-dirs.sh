@@ -18,13 +18,10 @@ function _70_is_inside_of_portage_tree_dir()
 
 function _show_tree_timestamp()
 {
-    local _misc_color
-    _eval_color_string "${SP_MISC:-dark-grey}" _misc_color
-
     # Transform UTC date/time into local timezone
     local _stamp=`cat /usr/portage/metadata/timestamp.chk`
-    local _local_stamp=`date -d "${_stamp}" +"${SP_TIME_FMT:-%H:%M %d/%m}"`
-    printf "${_misc_color}timestamp: ${_local_stamp}${sp_path}"
+    local _local_stamp=`date -d "${_stamp}" +"${sp_time_fmt}"`
+    printf "${sp_debug}timestamp: ${_local_stamp}${sp_path}"
 }
 
 SMART_PROMPT_PLUGINS[_70_is_inside_of_portage_tree_dir]=_show_tree_timestamp

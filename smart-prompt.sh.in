@@ -35,7 +35,7 @@ fi
 # Loading plugins
 if [ -d @SP_CONTEXT_CHECKERS_DIR@ ]; then
     for plugin in `ls -v1 @SP_CONTEXT_CHECKERS_DIR@/[0-9][0-9]*.sh`; do
-        if [ -n "${SP_DEBUG_SPAM}" ]; then
+        if [ -n "${SP_SHOW_DEBUG}" ]; then
             echo "sp: loading ${plugin}..."
         fi
         source ${plugin}
@@ -76,8 +76,23 @@ function _@PROJECT_NAME@()
         _eval_color_string "reset ${SP_SUSER:-bright-red}" sp_user
     fi
     _eval_color_string 'reset' sp_reset
+    local sp_alert
+    _eval_color_string "reset ${SP_ALERT:-'bright-red'}" sp_alert
+    local sp_warn
+    _eval_color_string "reset ${SP_WARN:-'yellow'}" sp_warn
+    local sp_info
+    _eval_color_string "reset ${SP_INFO:-'bright-green'}" sp_info
+    local sp_notice
+    _eval_color_string "reset ${SP_NOTICE:-'bright-cyan'}" sp_notice
+    local sp_debug
+    _eval_color_string "reset ${SP_DEBUG:-'dark-grey'}" sp_debug
+    local sp_misc
+    _eval_color_string "reset ${SP_MISC:-'white'}" sp_misc
 
-    local sp_seg_delim=${SP_SEGMENT_DELIMITER:-"\342\214\252"}
+    # Get some other (non color) configurable parameters
+    local -r sp_time_fmt=${SP_TIME_FMT:-%H:%M %d/%m}
+    local -r sp_seg_delim=${SP_SEGMENT_DELIMITER:-"\342\214\252"}
+
     # TODO Make the prompt format configurable? Really?
     local start="${sp_user}\u@\h${sp_path}${sp_seg_delim}\w "
     local end="${sp_seg_delim}${sp_reset}"
@@ -85,16 +100,16 @@ function _@PROJECT_NAME@()
 
     # Iterate over registered plugins and collect strings to be appended to PS1
     for checker in $(_get_registered_context_checkers); do
-        if [ -n "${SP_DEBUG_SPAM}" ]; then
+        if [ -n "${SP_SHOW_DEBUG}" ]; then
             echo -n "checking ${checker}... "
         fi
         if `${checker}`; then
-            if [ -n "${SP_DEBUG_SPAM}" ]; then
+            if [ -n "${SP_SHOW_DEBUG}" ]; then
                 echo "ok"
             fi
             middle=`${SMART_PROMPT_PLUGINS[$checker]}`
             break
-        elif [ -n "${SP_DEBUG_SPAM}" ]; then
+        elif [ -n "${SP_SHOW_DEBUG}" ]; then
             echo "!!"
         fi
     done

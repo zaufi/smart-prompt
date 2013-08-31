@@ -49,12 +49,7 @@ function _show_kernel_and_uptime()
     local _uptime
     _seconds_to_duration ${_seconds} _uptime
 
-    local _kernel_color
-    _eval_color_string "${SP_KERNEL:-dark-grey}" _kernel_color
-    local _uptime_color
-    _eval_color_string "${SP_UPTIME:-white}" _uptime_color
-
-    printf "${_kernel_color}${_kernel}${sp_path}${sp_seg_delim}${_uptime_color}${_uptime}"
+    printf "${sp_debug}${_kernel}${sp_path}${sp_seg_delim}${sp_misc}${_uptime}"
 }
 
 function _show_processes_and_load()
@@ -65,38 +60,24 @@ function _show_processes_and_load()
     local _all_processes=$(( ${_psax_wc_l} - 2))
     local _user_processes=$(( ${_psu_wc_l} - 2))
 
-    local _misc_color
-    _eval_color_string "${SP_MISC:-dark-grey}" _misc_color
-
-    printf "${_misc_color}${_user_processes}/${_all_processes}${sp_path}${sp_seg_delim}${_misc_color}${_load}"
+    printf "${sp_debug}${_user_processes}/${_all_processes}${sp_path}${sp_seg_delim}${sp_debug}${_load}"
 }
 
 function _show_kernel_link()
 {
     local _link_to=`readlink \`pwd\``
-
-    local _kernel_color
-    _eval_color_string "${SP_KERNEL:-dark-grey}" _kernel_color
-
-    printf "${_kernel_color}link -> ../${_link_to}${sp_path}"
+    printf "${sp_debug}link -> ../${_link_to}${sp_path}"
 }
 
 function _show_dir_link()
 {
     local _link_to=`readlink \`pwd\``
-
-    local _misc_color
-    _eval_color_string "${SP_MISC:-dark-grey}" _misc_color
-
-    printf "${_misc_color}link-> ${_link_to}${sp_path}"
+    printf "${sp_debug}link-> ${_link_to}${sp_path}"
 }
 
 function _show_empty_mark()
 {
-    local _misc_color
-    _eval_color_string "${SP_MISC:-dark-grey}" _misc_color
-
-    printf "${_misc_color}empty dir${sp_path}"
+    printf "${sp_debug}empty dir${sp_path}"
 }
 
 SMART_PROMPT_PLUGINS[_60_is_empty_dir]=_show_empty_mark

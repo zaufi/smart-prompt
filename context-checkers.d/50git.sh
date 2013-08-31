@@ -27,9 +27,9 @@ function _get_git_dirty_status()
     local _ggds__output_var=$1
     local _ggds__status_color
     if [ -z "`git status -s`" ]; then
-        _eval_color_string "${SP_VCS_CLEAN:-bright-green}" _ggds__status_color
+        _ggds__status_color="${sp_info}"
     else
-        _eval_color_string "${SP_VCS_MODIFIED:-yellow}" _ggds__status_color
+        _ggds__status_color="${sp_warn}"
     fi
     eval "${_ggds__output_var}=\"${_ggds__status_color}\""
 }

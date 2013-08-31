@@ -37,9 +37,9 @@ function _get_svn_dirty_status()
       | sed 's,Working Copy Root Path:\s*\(.*\)$,\1,'`
     local _gsds__status_color
     if [ -z "`svn status \"${_gsds__wrk_root}\" 2>/dev/null | grep -v '^\?'`" ]; then
-        _eval_color_string "${SP_VCS_CLEAN:-bright-green}" _gsds__status_color
+        _gsds__status_color="${sp_info}"
     else
-        _eval_color_string "${SP_VCS_MODIFIED:-yellow}" _gsds__status_color
+        _gsds__status_color="${sp_warn}"
     fi
     eval "${_gsds__output_var}=\"${_gsds__status_color}\""
 }

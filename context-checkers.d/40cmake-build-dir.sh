@@ -27,11 +27,7 @@ function _show_cmake_options()
               | sed 's,CMAKE_BUILD_TYPE:STRING=\(.*\),\1,'`
             local _sco__prefix=`grep 'CMAKE_INSTALL_PREFIX' "${_sco__top_build_dir}"/CMakeCache.txt \
               | sed 's,CMAKE_INSTALL_PREFIX:PATH=\(.*\),\1,'`
-            local _sco__build_type_color
-            _eval_color_string "${SP_CMAKE_BUILD_TYPE:-bright-cyan}" _sco__build_type_color
-            local _sco__prefix_color
-            _eval_color_string "${SP_CMAKE_INSTALL_PATH:-dark-grey}" _sco__prefix_color
-            printf "${_sco__build_type_color}${_sco__build_type}${sp_path}->${_sco__prefix_color}${_sco__prefix}"
+            printf "${sp_notice}${_sco__build_type}${sp_path}->${sp_debug}${_sco__prefix}"
         fi
     fi
 }
