@@ -29,7 +29,7 @@ The system consists of two different parts:
 How To Install
 --------------
 
-As one may notice `[cmake](http://cmake.org)` needed to install (and make source tarball of) this package.
+As one may notice [`cmake`](http://cmake.org) needed to install (and make source tarball of) this package.
 It helps (lazy me) to do it like this:
 
     $ tar -zxf smart-prompt-X.Y.Z-Sources.tar.gz
