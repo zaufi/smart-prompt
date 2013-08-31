@@ -1,3 +1,6 @@
+#---------------------------------------------------------
+# Section: Initialize CMake
+#---------------------------------------------------------
 cmake_minimum_required(VERSION 2.8)
 
 # NOTE This project do not use C compiler actually,
@@ -27,19 +30,56 @@ else()
   set(SP_SYSCONFDIR "${CMAKE_INSTALL_FULL_SYSCONFDIR}")
 endif()
 
-message(STATUS "PROJECT_NAME=${PROJECT_NAME}")
 message(STATUS "SP_PREFIX=${CMAKE_INSTALL_PREFIX}")
 message(STATUS "SP_SYSCONFDIR=${SP_SYSCONFDIR}")
 message(STATUS "SP_DATAROOTDIR=${SP_DATAROOTDIR}")
 message(STATUS "SP_DOCDIR=${SP_DOCDIR}")
 message(STATUS "SP_LIBEXECDIR=${SP_LIBEXECDIR}")
 
+#---------------------------------------------------------
+# Section: "Build" related statements
+#---------------------------------------------------------
+
 set(SP_CONTEXT_CHECKERS_DIR "${SP_LIBEXECDIR}/context-checkers.d")
 set(SMART_PROMPT_CONFIG ${SP_SYSCONFDIR}/${PROJECT_NAME}.conf)
 
 configure_file(${PROJECT_NAME}.sh.in ${PROJECT_NAME}.sh @ONLY)
 
-install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh DESTINATION ${SP_SYSCONFDIR}/profile.d)
-install(FILES ${PROJECT_NAME}.conf DESTINATION ${SP_SYSCONFDIR})
+#---------------------------------------------------------
+# Section: Install project files
+#---------------------------------------------------------
 
+install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh DESTINATION ${SP_SYSCONFDIR}/profile.d)
+install(FILES ${PROJECT_NAME}-functions.sh DESTINATION ${SP_LIBEXECDIR})
 install(DIRECTORY context-checkers.d DESTINATION ${SP_LIBEXECDIR})
+install(FILES ${PROJECT_NAME}.conf DESTINATION ${SP_SYSCONFDIR})
+install(FILES LICENSE README.md DESTINATION ${SP_DOCDIR})
+
+#---------------------------------------------------------
+# Section: Configure package options
+#---------------------------------------------------------
+
+# CPack version numbers for release tarball name.
+set(CPACK_PACKAGE_VERSION_MAJOR ${SP_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${SP_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${SP_PATCH})
+set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE)
+set(
+    CPACK_PACKAGE_DESCRIPTION_SUMMARY
+    "Smart prompt: easy way to show various context info in a command prompt"
+  )
+set(CPACK_PACKAGE_VENDOR "Alex Turbov")
+set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/README.md)
+set(CPACK_SET_DESTDIR ON)
+
+set(CPACK_SOURCE_GENERATOR TGZ)
+# The following components are regex's to match anywhere (unless anchored)
+# in absolute path + filename to find files or directories to be excluded
+# from source tarball.
+set(CPACK_SOURCE_IGNORE_FILES
+    "\\\\.gitignore$";
+    "\\\\.kate-swp$";
+    "\\\\.tar\\\\.gz$";
+    "^.*/\\\\.git.*$"
+  )
+include(CPack)

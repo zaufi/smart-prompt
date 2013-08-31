@@ -27,6 +27,7 @@ declare -A SMART_PROMPT_PLUGINS
 # Loading user plugins
 if [ -d ~/.@PROJECT_NAME@.d ]; then
     for plugin in `ls -v1 ~/.@PROJECT_NAME@.d/[0-9][0-9]*.sh`; do
+        #echo "loading ${plugin}..."
         source ${plugin}
     done
 fi
@@ -34,47 +35,28 @@ fi
 # Loading plugins
 if [ -d @SP_CONTEXT_CHECKERS_DIR@ ]; then
     for plugin in `ls -v1 @SP_CONTEXT_CHECKERS_DIR@/[0-9][0-9]*.sh`; do
+        if [ -n "${SP_DEBUG_SPAM}" ]; then
+            echo "sp: loading ${plugin}..."
+        fi
         source ${plugin}
     done
 fi
 
+# Include reusable functions into the scope
+if [ -f @SP_LIBEXECDIR@/@PROJECT_NAME@-functions.sh ]; then
+    source @SP_LIBEXECDIR@/@PROJECT_NAME@-functions.sh
+else
+    logger -t @PROJECT_NAME@ "Reusable functions library " \
+        "'@SP_LIBEXECDIR@/@PROJECT_NAME@-functions.sh' "   \
+        "not found. Installation seems broken!"
+    return
+fi
 
-function _eval_color_string
+function _get_registered_context_checkers()
 {
-    local colors_str=$1
-    local output_var=$2
-
-    local _colors
-    typeset -A _colors
-    _colors['black']='\[\e[30m\]'
-    _colors['red']='\[\e[31m\]'
-    _colors['green']='\[\e[32\]'
-    _colors['brown']='\[\e[33m\]'
-    _colors['blue']='\[\e[34m\]'
-    _colors['magenta']='\[\e[35m\]'
-    _colors['cyan']='\[\e[36m\]'
-    _colors['grey']='\[\e[37m\]'
-
-    _colors['dark-grey']='\[\e[30;1m\]'
-    _colors['bright-red']='\[\e[31;1m\]'
-    _colors['bright-green']='\[\e[32;1m\]'
-    _colors['yellow']='\[\e[33;1m\]'
-    _colors['bright-blue']='\[\e[34;1m\]'
-    _colors['bright-magenta']='\[\e[35;1m\]'
-    _colors['bright-cyan']='\[\e[36;1m\]'
-    _colors['white']='\[\e[37;1m\]'
-
-    _colors['reset']='\[\e[0m\]'
-    _colors['bold']='\[\e[1m\]'
-    _colors['itallic']='\[\e[3m\]'
-    _colors['underscore']='\[\e[4m\]'
-    _colors['reverse']='\[\e[7m\]'
-
-    local _result_str
-    for c in ${colors_str}; do
-        _result_str="${_result_str}\${_colors[${c}]}"
-    done
-    eval "${output_var}=${_result_str}"
+    for checker in "${!SMART_PROMPT_PLUGINS[@]}"; do
+        echo "${checker}"
+    done | sort
 }
 
 function _@PROJECT_NAME@()
@@ -95,18 +77,27 @@ function _@PROJECT_NAME@()
     fi
     _eval_color_string 'reset' sp_reset
 
-    # Set configuration variables to defaults if needed
+    # TODO Make the prompt format configurable? Really?
     local start="${sp_user}\u@\h${sp_path} \w"
     local end=" \$ ${sp_reset}"
     local middle=''
 
     # Iterate over registered plugins and collect strings to be appended to PS1
-    for checker in "${!SMART_PROMPT_PLUGINS[@]}"; do
+    for checker in $(_get_registered_context_checkers); do
+        if [ -n "${SP_DEBUG_SPAM}" ]; then
+            echo -n "checking ${checker}... "
+        fi
         if `${checker}`; then
+            if [ -n "${SP_DEBUG_SPAM}" ]; then
+                echo "ok"
+            fi
             middle=`${SMART_PROMPT_PLUGINS[$checker]}`
             break
+        elif [ -n "${SP_DEBUG_SPAM}" ]; then
+            echo "!!"
         fi
     done
+    # Iterate over registered plugins and collect strings to be appended to PS1
     if [ -z "$middle" ]; then
         PS1="${start}${end}"
     else

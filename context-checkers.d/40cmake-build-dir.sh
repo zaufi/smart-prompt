@@ -11,7 +11,7 @@
 # (at your option) any later version.
 #
 
-function _is_cmake_build_dir()
+function _40_is_cmake_build_dir()
 {
     return `test -f CMakeFiles/CMakeDirectoryInformation.cmake`
 }
@@ -36,4 +36,4 @@ function _show_cmake_options()
     fi
 }
 
-SMART_PROMPT_PLUGINS[_is_cmake_build_dir]=_show_cmake_options
+SMART_PROMPT_PLUGINS[_40_is_cmake_build_dir]=_show_cmake_options

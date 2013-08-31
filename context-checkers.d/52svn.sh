@@ -10,6 +10,11 @@
 # (at your option) any later version.
 #
 
+function _52_is_svn_repo()
+{
+    return `svn info 1>/dev/null 2>/dev/null`
+}
+
 function _get_svn_branch()
 {
     local _gsb__output_var=$1
@@ -39,11 +44,6 @@ function _get_svn_dirty_status()
     eval "${_gsds__output_var}=\"${_gsds__status_color}\""
 }
 
-function _is_svn_repo()
-{
-    return `svn info 1>/dev/null 2>/dev/null`
-}
-
 function _show_svn_status()
 {
     local _sss__branch
@@ -54,4 +54,4 @@ function _show_svn_status()
     printf "${_sss__status}svn:${_sss__branch}"
 }
 
-SMART_PROMPT_PLUGINS[_is_svn_repo]=_show_svn_status
+SMART_PROMPT_PLUGINS[_52_is_svn_repo]=_show_svn_status

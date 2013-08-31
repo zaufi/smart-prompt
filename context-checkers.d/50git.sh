@@ -10,6 +10,11 @@
 # (at your option) any later version.
 #
 
+function _50_is_git_repo()
+{
+    return `git status -s 1>/dev/null 2>&1`
+}
+
 function _get_git_branch()
 {
     local _ggb__output_var=$1
@@ -29,11 +34,6 @@ function _get_git_dirty_status()
     eval "${_ggds__output_var}=\"${_ggds__status_color}\""
 }
 
-function _is_git_repo()
-{
-    return `git status -s 2>/dev/null`
-}
-
 function _show_git_status()
 {
     local _sgs__branch
@@ -44,4 +44,4 @@ function _show_git_status()
     printf "${_sgs__status}git:${_sgs__branch}"
 }
 
-SMART_PROMPT_PLUGINS[_is_git_repo]=_show_git_status
+SMART_PROMPT_PLUGINS[_50_is_git_repo]=_show_git_status
