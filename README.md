@@ -40,8 +40,8 @@ It helps (lazy me) to do it like this:
 But if you brave enough you can just copy (just) **needed** files to their locations.
 Later (maybe) I'll write a simple `Makefile` to get rid of `cmake` dependency ;-)
 
-But to work, it doesn't require **any** other dependencies, except `bash` ;-) -- 
-only pure `bash`, nothing else ;-)
+But to work, it doesn't require **any** other dependencies, except `bash` (and some tools detected at configure stage) --
+cuz it is written using pure `bash`, nothing else ;-)
 
 
 Context Checker Details
