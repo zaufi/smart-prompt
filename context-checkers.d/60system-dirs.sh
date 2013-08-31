@@ -10,47 +10,94 @@
 # (at your option) any later version.
 #
 
+#
+# Show "link to: <dirname>" if current dir is a symlink
+#
 function _60_is_linked_dir()
 {
     return `readlink -q \`pwd\` >/dev/null`
 }
-
-function _61_is_boot_or_run_dir()
+function _show_dir_link()
 {
-    local _cur=`pwd`
-    return `test "${_cur}" = '/boot' -o "${_cur}" = '/run'`
+    local _link_to=`readlink \`pwd\``
+    printf "${sp_debug}@-> ${_link_to}"
 }
+SMART_PROMPT_PLUGINS[_60_is_linked_dir]=_show_dir_link
 
-function _61_is_proc_dir()
-{
-    local _cur=`pwd`
-    return `test "${_cur}" = '/proc'`
-}
 
-# Check if current directory is /usr/src/linux*
-function _65_is_usr_src_linux_dir()
-{
-    local _cur=`pwd | grep '/usr/src/linux'`
-    return `test -n "${_cur}"`
-}
-
-function _69_is_empty_dir()
+#
+# Append "empty dir" segment for, surprise, empty dirs ;)
+#
+# NOTE W/ priority 99 it will be close to the prompt end
+#
+function _99_is_empty_dir()
 {
     local _content=`ls`
     return `test -z "${_content}"`
 }
-
-# TODO Make sure /proc is available
-function _show_kernel_and_uptime()
+function _show_empty_mark()
 {
-    local _kernel=`uname -r`
+    printf "${sp_debug}empty dir"
+}
+SMART_PROMPT_PLUGINS[_99_is_empty_dir]=_show_empty_mark
+
+
+#
+# Reusable helper functions to display various info
+#
+
+# Append 'NN modules loaded' segment
+function _show_loaded_modules()
+{
+    printf "${sp_debug}%d modules loaded" $(( `lsmod | wc -l` - 1 ))
+}
+
+# Append segment w/ current uptime
+# TODO Make sure /proc is available
+function _show_uptime()
+{
     local _seconds=`sed 's,\([0-9]\+\)\..*,\1,' /proc/uptime`
     local _uptime
     _seconds_to_duration ${_seconds} _uptime
 
-    printf "${sp_debug}${_kernel}${sp_seg}${sp_misc}${_uptime}"
+    printf "${sp_misc}${_uptime}"
 }
 
+# Add segment w/ current kernel name
+function _show_kernel()
+{
+    local _kernel=`uname -r`
+    printf "${sp_debug}${_kernel}"
+}
+
+
+#
+# Show current kernel name and uptime for /boot dir
+#
+function _61_is_boot_dir()
+{
+    return `_cur_dir_starts_with /boot`
+}
+SMART_PROMPT_PLUGINS[_61_is_boot_dir]='_show_kernel _show_uptime'
+
+
+#
+# Show uptime for /run
+#
+function _61_is_run_dir()
+{
+    return `_is_cur_dir_equals_to /run`
+}
+SMART_PROMPT_PLUGINS[_61_is_run_dir]=_show_uptime
+
+
+#
+# Show user/all processes and load average for /proc
+#
+function _61_is_proc_dir()
+{
+    return `_cur_dir_starts_with /proc`
+}
 function _show_processes_and_load()
 {
     local _load=`cat /proc/loadavg | cut -d ' ' -f 1,2,3`
@@ -61,31 +108,55 @@ function _show_processes_and_load()
 
     printf "${sp_debug}${_user_processes}/${_all_processes}${sp_seg}${sp_debug}${_load}"
 }
+SMART_PROMPT_PLUGINS[_61_is_proc_dir]=_show_processes_and_load
 
-function _show_kernel_link()
+
+#
+# Show some configuration stats for selected kernel sources dir
+#
+function _65_is_in_usr_src_linux_dir()
+{
+    return `_cur_dir_starts_with /usr/src/linux`
+}
+# TODO Show kernel's build time?
+function _show_kernel_config()
 {
     local _configured
     if [ -f .config ]; then
-        _configured="${sp_misc}`grep '^[^#]\+=m' .config | wc -l` modules"
+        _configured="${sp_misc}cfg: `grep '^[^#]\+=m' .config | wc -l` modules"
     else
         _configured="${sp_warn}no .config"
     fi
     printf "${_configured}"
 }
+SMART_PROMPT_PLUGINS[_65_is_in_usr_src_linux_dir]=_show_kernel_config
 
-function _show_dir_link()
+
+#
+# Show current kernel and loaded modules count for /modules
+#
+function _65_is_modules_dir()
 {
-    local _link_to=`readlink \`pwd\``
-    printf "${sp_debug}@-> ${_link_to}"
+    return `_is_cur_dir_equals_to /lib/modules`
 }
+SMART_PROMPT_PLUGINS[_65_is_modules_dir]='_show_kernel _show_loaded_modules'
 
-function _show_empty_mark()
+
+#
+#
+#
+function _61_is_dev_dir()
 {
-    printf "${sp_debug}empty dir"
+    return `_cur_dir_starts_with /dev || _cur_dir_starts_with /run/media/${USER}`
 }
+function _show_some_dev_and_mount_info()
+{
+    printf "${sp_debug}${_devs_mounted}%d blk.devs" `mount | grep '^/dev/' | wc -l`
 
-SMART_PROMPT_PLUGINS[_60_is_linked_dir]=_show_dir_link
-SMART_PROMPT_PLUGINS[_61_is_boot_or_run_dir]=_show_kernel_and_uptime
-SMART_PROMPT_PLUGINS[_61_is_proc_dir]=_show_processes_and_load
-SMART_PROMPT_PLUGINS[_65_is_usr_src_linux_dir]=_show_kernel_link
-SMART_PROMPT_PLUGINS[_69_is_empty_dir]=_show_empty_mark
+    local _lsusb_bin=`which lsusb 2>/dev/null`
+    if [ -n "${_lsusb_bin}" ]; then
+        local -i _usb_devs=`${_lsusb_bin} | grep -iv 'hub$' | wc -l`
+        printf "${sp_seg}${sp_debug}${_usb_devs} usb devs"
+    fi
+}
+SMART_PROMPT_PLUGINS[_61_is_dev_dir]=_show_some_dev_and_mount_info

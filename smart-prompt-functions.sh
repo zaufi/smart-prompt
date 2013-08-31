@@ -76,3 +76,23 @@ function _seconds_to_duration()
     fi
     eval "${_output_var}=\"${_result}\""
 }
+
+# Check if current dir name starts w/ a given prefix
+#
+# @param $1 -- dirname to match
+#
+function _cur_dir_starts_with()
+{
+    local _cdsw__cur=`pwd | grep "^${1}"`
+    return `test -n "${_cdsw__cur}"`
+}
+
+# Check if current dir name equals to a given one
+#
+# @param $1 -- dirname to check against
+#
+function _is_cur_dir_equals_to()
+{
+    local _cdsw__cur=`pwd`
+    return `test "${_cdsw__cur}" = "${1}"`
+}

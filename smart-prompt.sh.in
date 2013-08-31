@@ -106,7 +106,9 @@ function _@PROJECT_NAME@()
             if [ -n "${SP_SHOW_DEBUG}" ]; then
                 echo "ok"
             fi
-            middle+="`${SMART_PROMPT_PLUGINS[$checker]}`${sp_seg}"
+            for action in ${SMART_PROMPT_PLUGINS[$checker]}; do
+                middle+="`${action}`${sp_seg}"
+            done
         elif [ -n "${SP_SHOW_DEBUG}" ]; then
             echo "!!"
         fi
