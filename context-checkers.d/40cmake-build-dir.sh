@@ -27,7 +27,7 @@ function _show_cmake_options()
               | sed 's,CMAKE_BUILD_TYPE:STRING=\(.*\),\1,'`
             local _sco__prefix=`grep 'CMAKE_INSTALL_PREFIX' "${_sco__top_build_dir}"/CMakeCache.txt \
               | sed 's,CMAKE_INSTALL_PREFIX:PATH=\(.*\),\1,'`
-            printf "${sp_notice}${_sco__build_type}${sp_path}->${sp_debug}${_sco__prefix}"
+            printf "${sp_notice}${_sco__build_type}${sp_seg}${sp_debug}pfx: ${_sco__prefix}"
         fi
     fi
 }

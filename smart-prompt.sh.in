@@ -91,14 +91,13 @@ function _@PROJECT_NAME@()
 
     # Get some other (non color) configurable parameters
     local -r sp_time_fmt=${SP_TIME_FMT:-%H:%M %d/%m}
-    local -r sp_seg_delim=${SP_SEGMENT_DELIMITER:-"\342\214\252"}
+    local -r sp_seg=${sp_path}${SP_SEGMENT_DELIMITER:-"\342\214\252"}
 
     # TODO Make the prompt format configurable? Really?
-    local start="${sp_user}\u@\h${sp_path}${sp_seg_delim}\w "
-    local end="${sp_seg_delim}${sp_reset}"
-    local middle=''
+    local start="${sp_user}\u@\h${sp_seg}\w${sp_seg}"
 
     # Iterate over registered plugins and collect strings to be appended to PS1
+    local middle=''
     for checker in $(_get_registered_context_checkers); do
         if [ -n "${SP_SHOW_DEBUG}" ]; then
             echo -n "checking ${checker}... "
@@ -107,18 +106,13 @@ function _@PROJECT_NAME@()
             if [ -n "${SP_SHOW_DEBUG}" ]; then
                 echo "ok"
             fi
-            middle=`${SMART_PROMPT_PLUGINS[$checker]}`
-            break
+            middle+="`${SMART_PROMPT_PLUGINS[$checker]}`${sp_seg}"
         elif [ -n "${SP_SHOW_DEBUG}" ]; then
             echo "!!"
         fi
     done
-    # Iterate over registered plugins and collect strings to be appended to PS1
-    if [ -z "$middle" ]; then
-        PS1="${start}${end}"
-    else
-        PS1="${start}${sp_seg_delim}${middle}${sp_path}${end}"
-    fi
+    # Form the final PS1
+    PS1="${start}${middle}${sp_reset}"
 }
 
 export PROMPT_COMMAND=_@PROJECT_NAME@

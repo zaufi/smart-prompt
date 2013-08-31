@@ -21,7 +21,7 @@ function _show_tree_timestamp()
     # Transform UTC date/time into local timezone
     local _stamp=`cat /usr/portage/metadata/timestamp.chk`
     local _local_stamp=`date -d "${_stamp}" +"${sp_time_fmt}"`
-    printf "${sp_debug}timestamp: ${_local_stamp}${sp_path}"
+    printf "${sp_debug}timestamp: ${_local_stamp}"
 }
 
 SMART_PROMPT_PLUGINS[_70_is_inside_of_portage_tree_dir]=_show_tree_timestamp

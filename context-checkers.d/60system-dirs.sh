@@ -10,20 +10,7 @@
 # (at your option) any later version.
 #
 
-function _60_is_empty_dir()
-{
-    local _content=`ls`
-    return `test -z "${_content}"`
-}
-
-# Check if current directory is /usr/src/linux and latter is a symbolic link
-function _60_is_usr_src_linux_dir()
-{
-    local _cur=`pwd`
-    return `test "${_cur}" = '/usr/src/linux' -a -L "${_cur}"`
-}
-
-function _61_is_linked_dir()
+function _60_is_linked_dir()
 {
     return `readlink -q \`pwd\` >/dev/null`
 }
@@ -40,6 +27,18 @@ function _61_is_proc_dir()
     return `test "${_cur}" = '/proc'`
 }
 
+# Check if current directory is /usr/src/linux*
+function _65_is_usr_src_linux_dir()
+{
+    local _cur=`pwd | grep '/usr/src/linux'`
+    return `test -n "${_cur}"`
+}
+
+function _69_is_empty_dir()
+{
+    local _content=`ls`
+    return `test -z "${_content}"`
+}
 
 # TODO Make sure /proc is available
 function _show_kernel_and_uptime()
@@ -49,7 +48,7 @@ function _show_kernel_and_uptime()
     local _uptime
     _seconds_to_duration ${_seconds} _uptime
 
-    printf "${sp_debug}${_kernel}${sp_path}${sp_seg_delim}${sp_misc}${_uptime}"
+    printf "${sp_debug}${_kernel}${sp_seg}${sp_misc}${_uptime}"
 }
 
 function _show_processes_and_load()
@@ -60,28 +59,33 @@ function _show_processes_and_load()
     local _all_processes=$(( ${_psax_wc_l} - 2))
     local _user_processes=$(( ${_psu_wc_l} - 2))
 
-    printf "${sp_debug}${_user_processes}/${_all_processes}${sp_path}${sp_seg_delim}${sp_debug}${_load}"
+    printf "${sp_debug}${_user_processes}/${_all_processes}${sp_seg}${sp_debug}${_load}"
 }
 
 function _show_kernel_link()
 {
-    local _link_to=`readlink \`pwd\``
-    printf "${sp_debug}link -> ../${_link_to}${sp_path}"
+    local _configured
+    if [ -f .config ]; then
+        _configured="${sp_misc}`grep '^[^#]\+=m' .config | wc -l` modules"
+    else
+        _configured="${sp_warn}no .config"
+    fi
+    printf "${_configured}"
 }
 
 function _show_dir_link()
 {
     local _link_to=`readlink \`pwd\``
-    printf "${sp_debug}link-> ${_link_to}${sp_path}"
+    printf "${sp_debug}@-> ${_link_to}"
 }
 
 function _show_empty_mark()
 {
-    printf "${sp_debug}empty dir${sp_path}"
+    printf "${sp_debug}empty dir"
 }
 
-SMART_PROMPT_PLUGINS[_60_is_empty_dir]=_show_empty_mark
-SMART_PROMPT_PLUGINS[_60_is_usr_src_linux_dir]=_show_kernel_link
-SMART_PROMPT_PLUGINS[_61_is_linked_dir]=_show_dir_link
+SMART_PROMPT_PLUGINS[_60_is_linked_dir]=_show_dir_link
 SMART_PROMPT_PLUGINS[_61_is_boot_or_run_dir]=_show_kernel_and_uptime
 SMART_PROMPT_PLUGINS[_61_is_proc_dir]=_show_processes_and_load
+SMART_PROMPT_PLUGINS[_65_is_usr_src_linux_dir]=_show_kernel_link
+SMART_PROMPT_PLUGINS[_69_is_empty_dir]=_show_empty_mark
