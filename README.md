@@ -2,6 +2,10 @@ What Is This?
 =============
 
 **Smart bash prompt** is a pluggable system to show various context information in a command prompt.
+The initial idea was to create an extensible engine to have a dynamically changing command prompt instead
+of <strike>boring</strike> static one, capable to display some aux info depending on a particular location 
+and/or condition.
+
 For example if you are in git working copy, your command prompt will look like this:
 
     zaufi@gentop /work/GitHub/smart-prompt|git:master| $
@@ -20,6 +24,21 @@ and so on... See [example wiki page](https://github.com/zaufi/smart-prompt/wiki)
 The system consists of two different parts:
 - a pluggable engine, which loads _context checkers_ and form the resulting `PS1`;
 - a _context checker_ is a small script to display particular info in a command prompt depending on conditions.
+
+
+How To Install
+--------------
+
+As one may notice `[cmake](http://cmake.org)` needed to install (and make source tarball of) this package.
+It helps (lazy me) to do it like this:
+
+    $ tar -zxf smart-prompt-X.Y.Z-Sources.tar.gz
+    $ cd smart-prompt-X.Y.Z-Sources
+    $ cmake -DCMAKE_INSTALL_PREFIX=/usr .
+    $ sudo make install
+
+But if you brave enough you can just copy (just) **needed** files to their locations.
+Later (maybe) I'll write a simple `Makefile` to get rid of `cmake` dependency ;-)
 
 
 Context Checker Details

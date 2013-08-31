@@ -10,15 +10,22 @@
 # (at your option) any later version.
 #
 
-function _60_is_linked_dir()
-{
-    return `readlink -q \`pwd\` >/dev/null`
-}
-
 function _60_is_empty_dir()
 {
     local _content=`ls`
     return `test -z "${_content}"`
+}
+
+# Check if current directory is /usr/src/linux and latter is a symbolic link
+function _60_is_usr_src_linux_dir()
+{
+    local _cur=`pwd`
+    return `test "${_cur}" = '/usr/src/linux' -a -L "${_cur}"`
+}
+
+function _61_is_linked_dir()
+{
+    return `readlink -q \`pwd\` >/dev/null`
 }
 
 function _61_is_boot_or_run_dir()
@@ -33,12 +40,6 @@ function _61_is_proc_dir()
     return `test "${_cur}" = '/proc'`
 }
 
-# Check if current directory is /usr/src/linux and latter is a symbolic link
-function _61_is_usr_src_linux_dir()
-{
-    local _cur=`pwd`
-    return `test "${_cur}" = '/usr/src/linux' -a -L "${_cur}"`
-}
 
 # TODO Make sure /proc is available
 function _show_kernel_and_uptime()
@@ -53,7 +54,7 @@ function _show_kernel_and_uptime()
     local _uptime_color
     _eval_color_string "${SP_UPTIME:-white}" _uptime_color
 
-    printf "${_kernel_color}${_kernel}${sp_path}:${_uptime_color}${_uptime}"
+    printf "${_kernel_color}${_kernel}${sp_path}${sp_seg_delim}${_uptime_color}${_uptime}"
 }
 
 function _show_processes_and_load()
@@ -67,7 +68,7 @@ function _show_processes_and_load()
     local _misc_color
     _eval_color_string "${SP_MISC:-dark-grey}" _misc_color
 
-    printf "${_misc_color}${_user_processes}/${_all_processes}${sp_path}|${_misc_color}${_load}"
+    printf "${_misc_color}${_user_processes}/${_all_processes}${sp_path}${sp_seg_delim}${_misc_color}${_load}"
 }
 
 function _show_kernel_link()
@@ -77,7 +78,7 @@ function _show_kernel_link()
     local _kernel_color
     _eval_color_string "${SP_KERNEL:-dark-grey}" _kernel_color
 
-    printf "${_kernel_color}link to: ../${_link_to}${sp_path}"
+    printf "${_kernel_color}link -> ../${_link_to}${sp_path}"
 }
 
 function _show_dir_link()
@@ -87,7 +88,7 @@ function _show_dir_link()
     local _misc_color
     _eval_color_string "${SP_MISC:-dark-grey}" _misc_color
 
-    printf "${_misc_color}link to: ${_link_to}${sp_path}"
+    printf "${_misc_color}link-> ${_link_to}${sp_path}"
 }
 
 function _show_empty_mark()
@@ -99,7 +100,7 @@ function _show_empty_mark()
 }
 
 SMART_PROMPT_PLUGINS[_60_is_empty_dir]=_show_empty_mark
-SMART_PROMPT_PLUGINS[_60_is_linked_dir]=_show_dir_link
+SMART_PROMPT_PLUGINS[_60_is_usr_src_linux_dir]=_show_kernel_link
+SMART_PROMPT_PLUGINS[_61_is_linked_dir]=_show_dir_link
 SMART_PROMPT_PLUGINS[_61_is_boot_or_run_dir]=_show_kernel_and_uptime
 SMART_PROMPT_PLUGINS[_61_is_proc_dir]=_show_processes_and_load
-SMART_PROMPT_PLUGINS[_61_is_usr_src_linux_dir]=_show_kernel_link

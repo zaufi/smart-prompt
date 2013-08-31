@@ -77,9 +77,10 @@ function _@PROJECT_NAME@()
     fi
     _eval_color_string 'reset' sp_reset
 
+    local sp_seg_delim=${SP_SEGMENT_DELIMITER:-"\342\214\252"}
     # TODO Make the prompt format configurable? Really?
-    local start="${sp_user}\u@\h${sp_path} \w"
-    local end=" \$ ${sp_reset}"
+    local start="${sp_user}\u@\h${sp_path}${sp_seg_delim}\w "
+    local end="${sp_seg_delim}${sp_reset}"
     local middle=''
 
     # Iterate over registered plugins and collect strings to be appended to PS1
@@ -101,7 +102,7 @@ function _@PROJECT_NAME@()
     if [ -z "$middle" ]; then
         PS1="${start}${end}"
     else
-        PS1="${start}|${middle}${sp_path}|${end}"
+        PS1="${start}${sp_seg_delim}${middle}${sp_path}${end}"
     fi
 }
 
