@@ -143,7 +143,7 @@ SMART_PROMPT_PLUGINS[_65_is_modules_dir]='_show_kernel _show_loaded_modules'
 
 
 #
-#
+# Show count of block devices mounted and USB devices connected for /dev dir
 #
 function _61_is_dev_dir()
 {
@@ -160,3 +160,25 @@ function _show_some_dev_and_mount_info()
     fi
 }
 SMART_PROMPT_PLUGINS[_61_is_dev_dir]=_show_some_dev_and_mount_info
+
+
+#
+# Show total fonts known in the system
+#
+function _61_is_one_of_fonts_dir()
+{
+    return `_cur_dir_starts_with /usr/share/fonts || _cur_dir_starts_with /etc/fonts`
+}
+function _show_fonts_info()
+{
+    local _fc_list_bin=`which fc-list 2>/dev/null`
+    local _fc_cat_bin=`which fc-cat 2>/dev/null`
+    if [ -n "${_fc_list_bin}" -a -n "${_fc_cat_bin}" ]; then
+        if `_cur_dir_starts_with /etc/fonts`; then
+            printf "${sp_misc}fonts: %d" `${_fc_list_bin} | wc -l`
+        else
+            printf "${sp_misc}fonts: %d/%d" `${_fc_cat_bin} . | grep -v '"\.dir"' | wc -l` `${_fc_list_bin} | wc -l`
+        fi
+    fi
+}
+SMART_PROMPT_PLUGINS[_61_is_one_of_fonts_dir]=_show_fonts_info

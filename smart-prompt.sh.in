@@ -59,7 +59,7 @@ function _get_registered_context_checkers()
     done | sort
 }
 
-function _@PROJECT_NAME@()
+function _smart_prompt()
 {
     local sp_path
     local sp_user
@@ -117,6 +117,6 @@ function _@PROJECT_NAME@()
     PS1="${start}${middle}${sp_reset}"
 }
 
-export PROMPT_COMMAND=_@PROJECT_NAME@
+export PROMPT_COMMAND=_smart_prompt
 
 # kate: hl bash;
