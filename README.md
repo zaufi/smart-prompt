@@ -90,3 +90,8 @@ Limitations
 -----------
 
 * Nowadays I don't care about colorless terminals...
+
+TODO
+----
+
+* Make prompt segments configurable per directory

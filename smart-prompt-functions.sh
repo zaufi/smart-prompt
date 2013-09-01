@@ -18,39 +18,40 @@
 #
 function _eval_color_string
 {
-    local -A _colors
-    _colors['black']='\[\e[30m\]'
-    _colors['red']='\[\e[31m\]'
-    _colors['green']='\[\e[32\]'
-    _colors['brown']='\[\e[33m\]'
-    _colors['blue']='\[\e[34m\]'
-    _colors['magenta']='\[\e[35m\]'
-    _colors['cyan']='\[\e[36m\]'
-    _colors['grey']='\[\e[37m\]'
+    local -A _ecs__colors
+    _ecs__colors['black']='\[\e[30m\]'
+    _ecs__colors['red']='\[\e[31m\]'
+    _ecs__colors['green']='\[\e[32\]'
+    _ecs__colors['brown']='\[\e[33m\]'
+    _ecs__colors['blue']='\[\e[34m\]'
+    _ecs__colors['magenta']='\[\e[35m\]'
+    _ecs__colors['cyan']='\[\e[36m\]'
+    _ecs__colors['grey']='\[\e[37m\]'
 
-    _colors['dark-grey']='\[\e[30;1m\]'
-    _colors['bright-red']='\[\e[31;1m\]'
-    _colors['bright-green']='\[\e[32;1m\]'
-    _colors['yellow']='\[\e[33;1m\]'
-    _colors['bright-blue']='\[\e[34;1m\]'
-    _colors['bright-magenta']='\[\e[35;1m\]'
-    _colors['bright-cyan']='\[\e[36;1m\]'
-    _colors['white']='\[\e[37;1m\]'
+    _ecs__colors['dark-grey']='\[\e[30;1m\]'
+    _ecs__colors['bright-red']='\[\e[31;1m\]'
+    _ecs__colors['bright-green']='\[\e[32;1m\]'
+    _ecs__colors['yellow']='\[\e[33;1m\]'
+    _ecs__colors['bright-blue']='\[\e[34;1m\]'
+    _ecs__colors['bright-magenta']='\[\e[35;1m\]'
+    _ecs__colors['bright-cyan']='\[\e[36;1m\]'
+    _ecs__colors['white']='\[\e[37;1m\]'
 
-    _colors['reset']='\[\e[0m\]'
-    _colors['bold']='\[\e[1m\]'
-    _colors['itallic']='\[\e[3m\]'
-    _colors['underscore']='\[\e[4m\]'
-    _colors['reverse']='\[\e[7m\]'
+    _ecs__colors['reset']='\[\e[0m\]'
+    _ecs__colors['bold']='\[\e[1m\]'
+    _ecs__colors['itallic']='\[\e[3m\]'
+    _ecs__colors['underscore']='\[\e[4m\]'
+    _ecs__colors['reverse']='\[\e[7m\]'
 
-    local colors_str=$1
-    local output_var=$2
+    local -r _ecs__colors_str=$1
+    local -r _ecs__output_var=$2
 
-    local _result_str
-    for c in ${colors_str}; do
-        _result_str="${_result_str}\${_colors[${c}]}"
+    local _ecs__result_str
+    local _ecs__c
+    for _ecs__c in ${_ecs__colors_str}; do
+        _ecs__result_str="${_ecs__result_str}\${_ecs__colors[${_ecs__c}]}"
     done
-    eval "${output_var}=${_result_str}"
+    eval "${_ecs__output_var}=${_ecs__result_str}"
 }
 
 #
@@ -61,20 +62,20 @@ function _eval_color_string
 #
 function _seconds_to_duration()
 {
-    local -i _seconds=$1
-    local _output_var=$2
+    local -ir _s2d__seconds=$1
+    local -r _s2d__output_var=$2
 
-    local -i _d=$(( ${_seconds} / (3600 * 24) ))
-    local -i _h=$(( (${_seconds} % (3600 * 24)) / 3600 ))
-    local -i _m=$(( ((${_seconds} % (3600 * 24)) % 3600) / 60 ))
+    local -ir _s2d__d=$(( ${_s2d__seconds} / (3600 * 24) ))
+    local -ir _s2d__h=$(( (${_s2d__seconds} % (3600 * 24)) / 3600 ))
+    local -ir _s2d__m=$(( ((${_s2d__seconds} % (3600 * 24)) % 3600) / 60 ))
 
-    local _result
-    if [[ ${_d} != 0 ]]; then
-        _result=`printf "%d days, %02d:%02d" ${_d} ${_h} ${_m}`
+    local _s2d__result
+    if [[ ${_s2d__d} != 0 ]]; then
+        _s2d__result=`printf "%d days, %02d:%02d" ${_s2d__d} ${_s2d__h} ${_s2d__m}`
     else
-        _result=`printf "%02d:%02d" ${_h} ${_m}`
+        _s2d__result=`printf "%02d:%02d" ${_s2d__h} ${_s2d__m}`
     fi
-    eval "${_output_var}=\"${_result}\""
+    eval "${_s2d__output_var}=\"${_s2d__result}\""
 }
 
 # Check if current dir name starts w/ a given prefix
@@ -83,7 +84,7 @@ function _seconds_to_duration()
 #
 function _cur_dir_starts_with()
 {
-    local _cdsw__cur=`pwd | grep "^${1}"`
+    local -r _cdsw__cur=`pwd | grep "^${1}"`
     return `test -n "${_cdsw__cur}"`
 }
 
@@ -93,6 +94,24 @@ function _cur_dir_starts_with()
 #
 function _is_cur_dir_equals_to()
 {
-    local _cdsw__cur=`pwd`
-    return `test "${_cdsw__cur}" = "${1}"`
+    local -r _icdet__cur=`pwd`
+    return `test "${_icdet__cur}" = "${1}"`
+}
+
+#
+# Find a given program in PATHs, set specified variable and return a result code
+#
+# @param $1 -- a program to find
+# @param $2 -- a variable to set to a full path to executable
+#
+function _find_program()
+{
+    local -r _fp__name=${1}
+    local -r _fp__output_var=${2}
+    local -r _fp__bin=`which "${_fp__name}" 2>/dev/null`
+    if [ -n "${_fp__bin}" ]; then
+        eval "${_fp__output_var}=\"${_fp__bin}\""
+        return 0
+    fi
+    return 1
 }

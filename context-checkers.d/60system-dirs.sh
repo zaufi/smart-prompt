@@ -10,37 +10,6 @@
 # (at your option) any later version.
 #
 
-#
-# Show "link to: <dirname>" if current dir is a symlink
-#
-function _60_is_linked_dir()
-{
-    return `readlink -q \`pwd\` >/dev/null`
-}
-function _show_dir_link()
-{
-    local _link_to=`readlink \`pwd\``
-    printf "${sp_debug}@-> ${_link_to}"
-}
-SMART_PROMPT_PLUGINS[_60_is_linked_dir]=_show_dir_link
-
-
-#
-# Append "empty dir" segment for, surprise, empty dirs ;)
-#
-# NOTE W/ priority 99 it will be close to the prompt end
-#
-function _99_is_empty_dir()
-{
-    local _content=`ls`
-    return `test -z "${_content}"`
-}
-function _show_empty_mark()
-{
-    printf "${sp_debug}empty dir"
-}
-SMART_PROMPT_PLUGINS[_99_is_empty_dir]=_show_empty_mark
-
 
 #
 # Reusable helper functions to display various info
@@ -69,6 +38,67 @@ function _show_kernel()
     local _kernel=`uname -r`
     printf "${sp_debug}${_kernel}"
 }
+
+# Add segment w/ network interfaces
+function _show_net_ifaces()
+{
+    local _sni__iface
+    local _sni__result
+    local _sni__ip_bin
+    if _find_program ip _sni__ip_bin; then
+        local _sni_delim
+        for _sni__item in /sys/class/net/*; do
+            local _sni__iface=`basename ${_sni__item}`
+            if [ "${_sni__iface}" != "lo" ]; then
+                local _sni_stat=`cat ${_sni__item}/carrier`
+                case "${_sni_stat}" in
+                    1*)
+                        local _sni__addr=`${_sni__ip_bin} addr show ${_sni__iface} \
+                          | grep 'inet' \
+                          | sed 's,\s\+inet \([^ ]\+\).*,\1,'`
+                          _sni__result+="${_sni_delim}${sp_info}${_sni__iface}: ${_sni__addr}"
+                        ;;
+                    0*)
+                        _sni__result+="${_sni_delim}${sp_alert}${_sni__iface}"
+                        ;;
+                esac
+                _sni_delim="${sp_seg}"
+            fi
+        done
+        printf "${_sni__result}"
+    fi
+}
+
+#
+# Show "link to: <dirname>" if current dir is a symlink
+#
+function _60_is_linked_dir()
+{
+    return `readlink -q \`pwd\` >/dev/null`
+}
+function _show_dir_link()
+{
+    local _link_to=`readlink \`pwd\``
+    printf "${sp_debug}-> ${_link_to}"
+}
+SMART_PROMPT_PLUGINS[_60_is_linked_dir]=_show_dir_link
+
+
+#
+# Append "empty dir" segment for, surprise, empty dirs ;)
+#
+# NOTE W/ priority 99 it will be close to the prompt end
+#
+function _99_is_empty_dir()
+{
+    local _content=`ls`
+    return `test -z "${_content}"`
+}
+function _show_empty_mark()
+{
+    printf "${sp_debug}empty dir"
+}
+SMART_PROMPT_PLUGINS[_99_is_empty_dir]=_show_empty_mark
 
 
 #
@@ -135,31 +165,39 @@ SMART_PROMPT_PLUGINS[_65_is_in_usr_src_linux_dir]=_show_kernel_config
 #
 # Show current kernel and loaded modules count for /modules
 #
-function _65_is_modules_dir()
+function _64_is_lib_modules_dir()
 {
     return `_is_cur_dir_equals_to /lib/modules`
 }
-SMART_PROMPT_PLUGINS[_65_is_modules_dir]='_show_kernel _show_loaded_modules'
+SMART_PROMPT_PLUGINS[_64_is_lib_modules_dir]=_show_kernel
+
+function _65_may_show_modules_loaded()
+{
+    return `_64_is_lib_modules_dir || _is_cur_dir_equals_to /etc/modprobe.d || _cur_dir_starts_with /etc/udev`
+}
+SMART_PROMPT_PLUGINS[_65_may_show_modules_loaded]=_show_loaded_modules
 
 
 #
 # Show count of block devices mounted and USB devices connected for /dev dir
 #
-function _61_is_dev_dir()
+function _61_may_show_mount_info()
 {
-    return `_cur_dir_starts_with /dev || _cur_dir_starts_with /run/media/${USER}`
+    return `_cur_dir_starts_with /dev \
+      || _cur_dir_starts_with /run/media/${USER} \
+      || _is_cur_dir_equals_to /mnt`
 }
 function _show_some_dev_and_mount_info()
 {
     printf "${sp_debug}${_devs_mounted}%d blk.devs" `mount | grep '^/dev/' | wc -l`
 
-    local _lsusb_bin=`which lsusb 2>/dev/null`
-    if [ -n "${_lsusb_bin}" ]; then
+    local _lsusb_bin
+    if _find_program lsusb _lsusb_bin; then
         local -i _usb_devs=`${_lsusb_bin} | grep -iv 'hub$' | wc -l`
         printf "${sp_seg}${sp_debug}${_usb_devs} usb devs"
     fi
 }
-SMART_PROMPT_PLUGINS[_61_is_dev_dir]=_show_some_dev_and_mount_info
+SMART_PROMPT_PLUGINS[_61_may_show_mount_info]=_show_some_dev_and_mount_info
 
 
 #
@@ -167,13 +205,16 @@ SMART_PROMPT_PLUGINS[_61_is_dev_dir]=_show_some_dev_and_mount_info
 #
 function _61_is_one_of_fonts_dir()
 {
-    return `_cur_dir_starts_with /usr/share/fonts || _cur_dir_starts_with /etc/fonts`
+    return `_cur_dir_starts_with /usr/share/fonts \
+      || _cur_dir_starts_with /etc/fonts \
+      || _cur_dir_starts_with "${HOME}/.fonts"
+      `
 }
 function _show_fonts_info()
 {
-    local _fc_list_bin=`which fc-list 2>/dev/null`
-    local _fc_cat_bin=`which fc-cat 2>/dev/null`
-    if [ -n "${_fc_list_bin}" -a -n "${_fc_cat_bin}" ]; then
+    local _fc_list_bin
+    local _fc_cat_bin
+    if _find_program fc-list _fc_list_bin && _find_program fc-cat _fc_cat_bin; then
         if `_cur_dir_starts_with /etc/fonts`; then
             printf "${sp_misc}fonts: %d" `${_fc_list_bin} | wc -l`
         else
@@ -182,3 +223,36 @@ function _show_fonts_info()
     fi
 }
 SMART_PROMPT_PLUGINS[_61_is_one_of_fonts_dir]=_show_fonts_info
+
+#
+# Show network interfaces status for networking related dirs in /etc
+#
+function _65_may_show_net_ifaces_status()
+{
+    return `_cur_dir_starts_with /etc/wpa_supplicant \
+      || _cur_dir_starts_with /etc/NetworkManager \
+      || _is_cur_dir_equals_to /var/lib/dhcpcd`
+}
+SMART_PROMPT_PLUGINS[_65_may_show_net_ifaces_status]=_show_net_ifaces
+
+#
+# Show users logged in
+#
+function _61_is_home_dir()
+{
+    return `_is_cur_dir_equals_to /home`
+}
+function _show_logged_users()
+{
+    local -a _users
+    readarray -t _users < <(who | cut -d ' ' -f 1 | sort -nr | uniq -c | sed 's,^\s*,,')
+    local _delim=${sp_misc}
+    local _user
+    local _logged_users
+    for _user in "${_users[@]}"; do
+        _logged_users+="${_delim}${_user}"
+        _delim=','
+    done
+    printf "${_logged_users}"
+}
+SMART_PROMPT_PLUGINS[_61_is_home_dir]=_show_logged_users
