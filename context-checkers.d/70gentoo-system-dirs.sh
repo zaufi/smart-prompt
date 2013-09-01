@@ -27,7 +27,7 @@ function _show_tree_timestamp()
 SMART_PROMPT_PLUGINS[_70_is_inside_of_portage_tree_dir]=_show_tree_timestamp
 
 #
-# Show count of configured repositories for /etc/paludis
+# Show current profile for /etc
 #
 function _70_is_etc_dir()
 {
@@ -52,8 +52,9 @@ function _75_is_inside_of_paludis_sysconf_dir()
 function _show_paludis_info()
 {
     _show_current_profile
-    if [ -d /etc/paludis/repositories ]; then
-        printf "${sp_seg}${sp_misc}%d reps" `ls /etc/paludis/repositories/*.conf | wc -l`
+    local _cave_bin
+    if _find_program cave _cave_bin; then
+        printf "${sp_seg}${sp_misc}%d reps" `${_cave_bin} print-repositories | wc -l`
     fi
 }
 SMART_PROMPT_PLUGINS[_75_is_inside_of_paludis_sysconf_dir]=_show_paludis_info
