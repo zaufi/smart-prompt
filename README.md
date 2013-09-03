@@ -3,20 +3,20 @@ What Is This?
 
 **Smart bash prompt** is a pluggable system to show various context information in a command prompt.
 The initial idea was to create an extensible engine to have a dynamically changing command prompt instead
-of <strike>boring</strike> static one, capable to display some aux info depending on a particular location 
+of <strike>boring</strike> static one, capable to display some aux info depending on a particular location
 and/or condition.
 
 For example if you are in git working copy, your command prompt will look like this:
 
-    zaufi@gentop /work/GitHub/smart-prompt|git:master| $
+    zaufi@gentop〉 /work/GitHub/smart-prompt〉 git:master〉 $
 
 for `/boot` it will be like
 
-    zaufi@gentop /boot|3.10.9-gentoo-z1:3 days, 13:15| $
+    zaufi@gentop〉 /boot〉 3.10.9-gentoo-z1〉 3 days, 13:15〉
 
 for my `/usr/src/linux`
 
-    zaufi@gentop /usr/src/linux|link to: linux-3.10.10-gentoo| $
+    zaufi@gentop〉 /usr/src/linux〉 link to: linux-3.10.10-gentoo〉
 
 and so on... See [example wiki page](https://github.com/zaufi/smart-prompt/wiki)
 
@@ -84,6 +84,8 @@ the following:
 
 `SMART_PROMPT_PLUGINS` is a global associative array, where _key_ is a predicate to check, and _value_ is a function
 to execute.
+
+Context checker can (re)use helper functions (API) defined in `smart-pointer-functions.sh`.
 
 
 Limitations

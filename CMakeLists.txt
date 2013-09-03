@@ -9,8 +9,8 @@ cmake_minimum_required(VERSION 2.8)
 # least one...
 project(smart-prompt C)
 
-set(SP_MAJOR 0)
-set(SP_MINOR 1)
+set(SP_MAJOR 1)
+set(SP_MINOR 0)
 set(SP_PATCH 0)
 set(SP_VERSION ${SP_MAJOR}.${SP_MINOR}.${SP_PATCH})
 
