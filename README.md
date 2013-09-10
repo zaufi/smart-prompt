@@ -97,3 +97,4 @@ TODO
 ----
 
 * Make prompt segments configurable per directory
+* Add cache to some segments and dirs
