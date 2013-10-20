@@ -96,5 +96,6 @@ Limitations
 TODO
 ----
 
-* Make prompt segments configurable per directory
+* Make prompt segments configurable per directory. For example it could be an XML file rendered into a final
+  bash script to display prompt.
 * Add cache to some segments and dirs
