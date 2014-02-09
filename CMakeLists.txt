@@ -75,10 +75,10 @@ if(EXISTS /etc/gentoo-release)
     list(APPEND SP_CHECKERS_SRC context-checkers.d/70gentoo-system-dirs.sh)
 endif()
 
-install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh DESTINATION ${SP_SYSCONFDIR}/profile.d)
+install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh quick-cd.sh DESTINATION ${SP_SYSCONFDIR}/profile.d)
 install(FILES ${PROJECT_NAME}-functions.sh DESTINATION ${SP_LIBEXECDIR})
 install(FILES ${SP_CHECKERS_SRC} DESTINATION ${SP_CONTEXT_CHECKERS_DIR})
-install(FILES ${PROJECT_NAME}.conf DESTINATION ${SP_SYSCONFDIR})
+install(FILES ${PROJECT_NAME}.conf ${PROJECT_NAME}.inputrc DESTINATION ${SP_SYSCONFDIR})
 install(FILES LICENSE README.md DESTINATION ${SP_DOCDIR})
 
 #---------------------------------------------------------

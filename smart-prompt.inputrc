@@ -1,0 +1,97 @@
+set show-all-if-ambiguous on
+set mark-directories on
+set mark-symlinked-directories on
+set visible-stats on
+set skip-completed-text on
+
+set input-meta on
+set output-meta on
+set convert-meta off
+set enable-meta-key on
+
+# Allow Ctrl+LeftArrow/RightArrow to move by words
+"\e[D": backward-word
+"\e[C": forward-word
+
+# Reread config, so changes to ~/.inputrc will act immediately w/ reexec shell
+"\C-x\C-r": re-read-init-file
+
+# Set gentoo style PgUp/PgDown behaviour
+"\e[5~": history-search-backward
+"\e[6~": history-search-forward
+
+# Alt-Space -- one more way to complete the words
+"\e ": menu-complete
+
+# Bind Ctrl-X,x to yank current command line
+"\C-xx": kill-whole-line
+
+$if Bash
+
+# Win+Left/Right arrow to move between words
+# (a word is a sequence of characters between non-space characters)
+# NOTE This bindings will be used in F1/Shift+F1
+"\e[1;1D": shell-backward-word
+"\e[1;1C": shell-forward-word
+
+# Bind grep substring in all files to F3 (execute immediately)
+"\eOR": "\C-a\C-kgrep -nir \"\C-y\" *\n\C-y"
+# Shit-F3: same as above but allow to edit command line
+"\eO2R": "\C-agrep -nir \"\C-e\" *"
+
+# Bind grep substring in C/C++ files to F4 (execute immediately)
+# NOTE One may change particular file extensions to get some other kind of grep,
+# or comment this out if not needed...
+"\eOS": "\C-a\C-kgrep -nr --include=*.{c,h,cc,hh,icc,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-y\" *\n\C-y"
+# Shitf-F4: same as above but allow to edit command line
+"\eO2S": "\C-agrep -nr --include=*.{c,h,cc,hh,icc,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-e\" *"
+
+# Ctrl-Shift-F3: Iterate over matched files, initiate search'n'replace using `sed`
+"\eO6R": "\C-e \C-ufor i in `grep -nlr \"\C-y\b\" *`; do sed -i 's,\C-y\b,,g' $i; done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
+# Ctrl-Shift-F4: Iterate over matched files, initiate search'n'replace using `sed`
+"\eO6S": "\C-e \C-ufor i in `grep -nlr --include=*.{c,h,cc,hh,icc,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-y\b\" *`; do sed -i 's,\C-y\b,,g' $i; done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
+
+# Bind grep substring in a list of running processes to F7
+"\e[18~": "\C-aps ax | grep -v grep | grep "\C-e\"\n"
+
+# Bind search substring via dict to F8
+"\e[19~": "\C-e \C-a\C-kdict \"\C-y\b\"\n\C-y\b"
+
+# Bind `cd ..` to Crtl-Up
+"\e[1;5A": "\C-e \C-a\C-k cd ..\n\C-y\b"
+
+# Bind `cd -` to Crtl-Down
+"\e[1;5B": "\C-e \C-a\C-k cd -\n\C-y\b"
+
+# Show hot dirs list (Alt-RightArrow) (from MidnightCommander) and `pushd` into choosed one
+"\e[1;3C": "\C-e \C-a\C-k quick_cd\n\C-y\b"
+
+# popd on Alt-LeftArrow
+"\e[1;3D": "\C-e \C-u popd\n\C-y\b"
+
+# Edit the path
+"\C-xp": "\C-a\C-kexport PATH=${PATH}\e\C-e\C-a\ef\ef\C-f"
+
+# Edit the ld search path
+"\C-xl": "\C-a\C-kexport LD_LIBRARY_PATH=${LD_LIBRARY_PATH}\e\C-e"
+
+# Edit variable on current line.
+"\C-xv": "\C-a\C-k$\C-y\e\C-e\C-aexport \C-y="
+
+# prepare to type a quoted word -- insert open and close double quotes
+# and move to just after the open quote
+"\C-x\"": "\"\"\C-b"
+# insert a backslash (testing backslash escapes in sequences and macros)
+"\C-x\\": "\\"
+# Quote the current or previous word
+"\C-xq": "\eb\"\ef\""
+
+# Bind execution of current command w/ --help option and restore a previous text
+# TODO Rewrite to avoid '--help' to be in a history
+"\eOP": "\C-e \C-a\e[1;1C\C-k --help\n\C-p\C-a\e[1;1C\C-y\b\C-k"
+
+# Bind `man` on current command and restore a previous text after quit from `man`
+# TODO Rewrite to avoid 'man blah' to be in a history
+"\eO2P": "\C-e \C-a\e[1;1C\C-k\C-aman \C-e\n\C-p\C-y\b\C-a\e[1;1C\e[C\C-u\C-e"
+
+$endif

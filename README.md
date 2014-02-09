@@ -43,6 +43,17 @@ Later (maybe) I'll write a simple `Makefile` to get rid of `cmake` dependency ;-
 But to work, it doesn't require **any** other dependencies, except `bash` (and some tools detected at configure stage) --
 cuz it is written using pure `bash`, nothing else ;-)
 
+**Note**: To make `bash` bindings work do not forget to append `$include /etc/smart-prompt.inputrc` to `/etc/inputrc`
+
+
+`bash` Bindings
+---------------
+
+Except changing a command prompt, this package also provide some _keyboard macros_ for `bash`.
+Most of them are targeted to KDE's `konsole`, but one may easily to change a key codes for any other terminal.
+To get a keycode for particular combination, press `Ctrl+V` in a bash prompt, then a desired key sequence.
+The other way is to run `read` and press whatever you want.
+
 
 Context Checker Details
 -----------------------
