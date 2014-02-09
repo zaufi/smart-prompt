@@ -7,27 +7,24 @@ cmake_minimum_required(VERSION 2.8)
 # but unfortunately it can't be configured w/ NONE
 # as a languages set, cuz GNUInstallDirs wants at
 # least one...
-project(smart-prompt C)
+project(smart-prompt NONE)
 
 set(SP_MAJOR 1)
 set(SP_MINOR 1)
 set(SP_PATCH 0)
 set(SP_VERSION ${SP_MAJOR}.${SP_MINOR}.${SP_PATCH})
 
-# Define install destination dirs
-include(GNUInstallDirs)
-
 # Setup package pathes
 # TODO Add caching and docs
 set(SP_PREFIX      "${CMAKE_INSTALL_PREFIX}")
-set(SP_DATAROOTDIR "${CMAKE_INSTALL_FULL_DATAROOTDIR}")
-set(SP_LIBEXECDIR  "${CMAKE_INSTALL_FULL_LIBEXECDIR}/${PROJECT_NAME}")
-set(SP_DOCDIR      "${CMAKE_INSTALL_FULL_DOCDIR}")
+set(SP_DATAROOTDIR "${CMAKE_INSTALL_PREFIX}/share")
+set(SP_LIBEXECDIR  "${CMAKE_INSTALL_PREFIX}/libexec/${PROJECT_NAME}")
+set(SP_DOCDIR      "${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}")
 
-if(${SP_PREFIX} MATCHES "/usr")
+if(${SP_PREFIX} STREQUAL "/usr")
   set(SP_SYSCONFDIR "/etc")
 else()
-  set(SP_SYSCONFDIR "${CMAKE_INSTALL_FULL_SYSCONFDIR}")
+  set(SP_SYSCONFDIR "${CMAKE_INSTALL_PREFIX}/etc")
 endif()
 
 message(STATUS "SP_PREFIX=${CMAKE_INSTALL_PREFIX}")
