@@ -9,10 +9,6 @@ set output-meta on
 set convert-meta off
 set enable-meta-key on
 
-# Allow Ctrl+LeftArrow/RightArrow to move by words
-"\e[D": backward-word
-"\e[C": forward-word
-
 # Reread config, so changes to ~/.inputrc will act immediately w/ reexec shell
 "\C-x\C-r": re-read-init-file
 
