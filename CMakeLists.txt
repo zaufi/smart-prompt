@@ -10,7 +10,7 @@ cmake_minimum_required(VERSION 2.8)
 project(smart-prompt C)
 
 set(SP_MAJOR 1)
-set(SP_MINOR 0)
+set(SP_MINOR 1)
 set(SP_PATCH 0)
 set(SP_VERSION ${SP_MAJOR}.${SP_MINOR}.${SP_PATCH})
 
@@ -52,6 +52,10 @@ set(SP_CONTEXT_CHECKERS_DIR "${SP_LIBEXECDIR}/context-checkers.d")
 set(SMART_PROMPT_CONFIG ${SP_SYSCONFDIR}/${PROJECT_NAME}.conf)
 
 configure_file(${PROJECT_NAME}.sh.in ${PROJECT_NAME}.sh @ONLY)
+
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
 
 #---------------------------------------------------------
 # Section: Install project files
@@ -96,6 +100,7 @@ set(
   )
 set(CPACK_PACKAGE_VENDOR "Alex Turbov")
 set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/README.md)
+set(CPACK_SOURCE_PACKAGE_FILE_NAME ${PROJECT_NAME}-${SP_VERSION})
 set(CPACK_SET_DESTDIR ON)
 
 set(CPACK_SOURCE_GENERATOR TGZ)
@@ -103,9 +108,9 @@ set(CPACK_SOURCE_GENERATOR TGZ)
 # in absolute path + filename to find files or directories to be excluded
 # from source tarball.
 set(CPACK_SOURCE_IGNORE_FILES
-    "\\\\.gitignore$";
-    "\\\\.kate-swp$";
-    "\\\\.tar\\\\.gz$";
+    "\\\\.gitignore$"
+    "\\\\.kate-swp$"
+    "\\\\.tar\\\\.gz$"
     "^.*/\\\\.git.*$"
   )
 include(CPack)

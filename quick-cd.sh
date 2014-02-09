@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# This is a `quick_cd` module of the SmartPrompt engine.
+# This is a `quick_cd` module of the SmartPrompt.
 #
 # Smart Prompt @SP_VERSION@
 # Copyright (c) 2014 Alex Turbov <i.zaufi@gmail.com>
