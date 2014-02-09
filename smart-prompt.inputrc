@@ -32,19 +32,19 @@ $if Bash
 
 # Bind grep substring in all files to F3 (execute immediately)
 "\eOR": "\C-a\C-kgrep -nir \"\C-y\" *\n\C-y"
-# Shit-F3: same as above but allow to edit command line
+# Shit+F3: same as above but allow to edit command line
 "\eO2R": "\C-agrep -nir \"\C-e\" *"
 
 # Bind grep substring in C/C++ files to F4 (execute immediately)
 # NOTE One may change particular file extensions to get some other kind of grep,
 # or comment this out if not needed...
 "\eOS": "\C-a\C-kgrep -nr --include=*.{c,h,cc,hh,icc,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-y\" *\n\C-y"
-# Shitf-F4: same as above but allow to edit command line
+# Shitf+F4: same as above but allow to edit command line
 "\eO2S": "\C-agrep -nr --include=*.{c,h,cc,hh,icc,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-e\" *"
 
-# Ctrl-Shift-F3: Iterate over matched files, initiate search'n'replace using `sed`
+# Ctrl+Shift+F3: Iterate over matched files, initiate search'n'replace using `sed`
 "\eO6R": "\C-e \C-ufor i in `grep -nlr \"\C-y\b\" *`; do sed -i 's,\C-y\b,,g' $i; done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
-# Ctrl-Shift-F4: Iterate over matched files, initiate search'n'replace using `sed`
+# Ctrl+Shift+F4: Iterate over matched files, initiate search'n'replace using `sed`
 "\eO6S": "\C-e \C-ufor i in `grep -nlr --include=*.{c,h,cc,hh,icc,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-y\b\" *`; do sed -i 's,\C-y\b,,g' $i; done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
 
 # Bind grep substring in a list of running processes to F7
@@ -53,16 +53,16 @@ $if Bash
 # Bind search substring via dict to F8
 "\e[19~": "\C-e \C-a\C-kdict \"\C-y\b\"\n\C-y\b"
 
-# Bind `cd ..` to Crtl-Up
+# Bind `cd ..` to Ctrl+Up
 "\e[1;5A": "\C-e \C-a\C-k cd ..\n\C-y\b"
 
-# Bind `cd -` to Crtl-Down
+# Bind `cd -` to Ctrl+Down
 "\e[1;5B": "\C-e \C-a\C-k cd -\n\C-y\b"
 
-# Show hot dirs list (Alt-RightArrow) (from MidnightCommander) and `pushd` into choosed one
+# Show hot dirs list (Alt+RightArrow) (from MidnightCommander) and `pushd` into choosed one
 "\e[1;3C": "\C-e \C-a\C-k quick_cd\n\C-y\b"
 
-# popd on Alt-LeftArrow
+# popd on Alt+LeftArrow
 "\e[1;3D": "\C-e \C-u popd\n\C-y\b"
 
 # Edit the path
