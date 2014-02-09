@@ -19,7 +19,7 @@ set enable-meta-key on
 # Alt-Space -- one more way to complete the words
 "\e ": menu-complete
 
-# Bind Ctrl-X,x to yank current command line
+# Bind Ctrl+X,x to yank current command line
 "\C-xx": kill-whole-line
 
 $if Bash
