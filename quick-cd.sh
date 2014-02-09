@@ -38,6 +38,6 @@ function quick_cd()
       `
 
     if [ -n "${dirnum}" ]; then
-        pushd `head -n ${dirnum} "${hl}" | tail -n 1 | sed 's,.*URL "\(.*\)".*,\1,'`
+        pushd `head -n ${dirnum} "${hl}" | tail -n 1 | sed 's,.*URL "\(.*\)".*,\1,'` >/dev/null 2>&1
     fi
 }
