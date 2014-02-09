@@ -256,3 +256,32 @@ function _show_logged_users()
     printf "${_logged_users}"
 }
 SMART_PROMPT_PLUGINS[_61_is_home_dir]=_show_logged_users
+
+#
+# Show configured schroot environments
+#
+function _62_is_etc_schroot_dir()
+{
+    return `_cur_dir_starts_with /etc/schroot`
+}
+function _show_schroot_config()
+{
+    local _ssc_total=`schroot -l | wc -l`
+    local _ssc_active=`schroot --all-sessions -l 2>/dev/null | wc -l`
+    printf "${sp_notice}%d/%d active/total" ${_ssc_active} ${_ssc_total}
+}
+SMART_PROMPT_PLUGINS[_62_is_etc_schroot_dir]=_show_schroot_config
+
+#
+# Show installed bash completions details
+#
+function _62_is_etc_bash_completion_dir()
+{
+    return `_is_cur_dir_equals_to /etc/bash_completion.d`
+}
+function _show_bash_completions_config()
+{
+    local _sbcc_active=`ls -1 | wc -l`
+    printf "${sp_notice}%d installed" ${_sbcc_active}
+}
+SMART_PROMPT_PLUGINS[_62_is_etc_bash_completion_dir]=_show_bash_completions_config

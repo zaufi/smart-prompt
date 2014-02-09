@@ -10,7 +10,7 @@ cmake_minimum_required(VERSION 2.8)
 project(smart-prompt NONE)
 
 set(SP_MAJOR 1)
-set(SP_MINOR 1)
+set(SP_MINOR 2)
 set(SP_PATCH 0)
 set(SP_VERSION ${SP_MAJOR}.${SP_MINOR}.${SP_PATCH})
 

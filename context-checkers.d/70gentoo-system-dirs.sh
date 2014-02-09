@@ -10,6 +10,31 @@
 # (at your option) any later version.
 #
 
+#BEGIN Service functions
+function _get_started_services_cnt()
+{
+    local _gssc__level=${1:--a}
+    local _gssc__output_var=$2
+    local -i _gssc__count=`rc-status ${_gssc__level} | grep started | wc -l`
+    eval "${_gssc__output_var}=\"${_gssc__count}\""
+}
+
+function _get_total_services_cnt()
+{
+    local _gssc__level=${1:--a}
+    local _gssc__output_var=$2
+    local -i _gssc__count=`rc-status ${_gssc__level} | wc -l`
+    eval "${_gssc__output_var}=\"${_gssc__count}\""
+}
+
+function _get_total_packages_installed()
+{
+    local _gtpi__output_var=$1
+    local -i _gtpi__count=`ls -1 /var/db/pkg/* | egrep -v '(^|:)$' | wc -l`
+    eval "${_gtpi__output_var}=\"${_gtpi__count}\""
+}
+#END Service functions
+
 #
 # Show portage tree timestamp for /usr/portage
 #
@@ -59,23 +84,6 @@ function _show_paludis_info()
 }
 SMART_PROMPT_PLUGINS[_75_is_inside_of_paludis_sysconf_dir]=_show_paludis_info
 
-
-function _get_started_services_cnt()
-{
-    local _gssc__level=${1:--a}
-    local _gssc__output_var=$2
-    local -i _gssc__count=`rc-status ${_gssc__level} | grep started | wc -l`
-    eval "${_gssc__output_var}=\"${_gssc__count}\""
-}
-
-function _get_total_services_cnt()
-{
-    local _gssc__level=${1:--a}
-    local _gssc__output_var=$2
-    local -i _gssc__count=`rc-status ${_gssc__level} | wc -l`
-    eval "${_gssc__output_var}=\"${_gssc__count}\""
-}
-
 #
 # Show count of started services
 #
@@ -117,3 +125,50 @@ function _71_is_etc_conf_d_dir()
     return `_is_cur_dir_equals_to /etc/conf.d`
 }
 SMART_PROMPT_PLUGINS[_71_is_etc_conf_d_dir]='_show_net_ifaces _show_loaded_modules'
+
+
+#
+# Show installed packages count and some details for particular category/package
+#
+function _72_is_var_db_pkg_dir()
+{
+    return `_cur_dir_starts_with /var/db/pkg`
+}
+function _show_installed_packages()
+{
+    local _sip_installed_cnt
+    _get_total_packages_installed _sip_installed_cnt
+    case `pwd` in
+    /var/db/pkg/*/*)
+        local _sip_installed_date=`cat COUNTER`
+        _sip_installed_date=`date --date=@${_sip_installed_date} +"${sp_time_fmt}"`
+        local _sip_installed_from_repo=`cat REPOSITORY`
+        printf "${sp_info}${_sip_installed_date} from ${_sip_installed_from_repo}"
+        ;;
+    /var/db/pkg/*)
+        printf "${sp_notice}%d/%d cat/total pkgs" `ls -1 | wc -l` ${_sip_installed_cnt}
+        ;;
+    /var/db/pkg)
+        printf "${sp_notice}%d pkgs total" ${_sip_installed_cnt}
+        ;;
+    esac
+}
+SMART_PROMPT_PLUGINS[_72_is_var_db_pkg_dir]=_show_installed_packages
+
+#
+# Show details about packages/sets in a world file
+#
+function _72_is_var_lib_portage_dir()
+{
+    return `_is_cur_dir_equals_to /var/lib/portage`
+}
+function _show_world_details()
+{
+    local _swd_installed_cnt
+    _get_total_packages_installed _swd_installed_cnt
+    local _swd_world_contents=`cat /var/lib/portage/world`
+    local _swd_pkgs=`egrep -v '(\*|@)' <<<"${_swd_world_contents}" | wc -l`
+    local _swd_sets=`egrep '(\*|@)' <<<"${_swd_world_contents}" | wc -l`
+    printf "${sp_notice}%d/%d/%d pkgs/sets/total" ${_swd_pkgs} ${_swd_sets} ${_swd_installed_cnt}
+}
+SMART_PROMPT_PLUGINS[_72_is_var_lib_portage_dir]=_show_world_details

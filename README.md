@@ -109,4 +109,6 @@ TODO
 
 * Make prompt segments configurable per directory. For example it could be an XML file rendered into a final
   bash script to display prompt.
-* Add cache to some segments and dirs
+* Add cache to some segments and dirs.
+* Make sure some executable exists before run it. It is not about a core utils, but smth rarely used, 
+  like `schroot`.

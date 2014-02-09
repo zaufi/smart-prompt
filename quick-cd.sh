@@ -2,7 +2,6 @@
 #
 # This is a `quick_cd` module of the SmartPrompt.
 #
-# Smart Prompt @SP_VERSION@
 # Copyright (c) 2014 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
