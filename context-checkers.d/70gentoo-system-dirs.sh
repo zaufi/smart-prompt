@@ -2,7 +2,7 @@
 #
 # Show various gentoo related info depending on a current dir
 #
-# Copyright (c) 2013 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2013,2014 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -60,8 +60,14 @@ function _70_is_etc_dir()
 }
 function _show_current_profile()
 {
+    local _profile
     if [ -L /etc/make.profile ]; then
-        local _profile=`readlink /etc/make.profile`
+        _profile="/etc/make.profile"
+    elif [ -L /etc/portage/make.profile ]; then
+        _profile="/etc/make.profile"
+    fi
+    if [ -n "${_profile}" ]; then
+        _profile=`readlink ${_profile}`
         printf "${sp_debug}profile: %s" `sed 's,.*default/\(.*\),\1,' <<<${_profile}`
     fi
 }
