@@ -53,8 +53,9 @@ function _show_net_ifaces()
                 local _sni_stat=`cat ${_sni__item}/carrier`
                 case "${_sni_stat}" in
                     1*)
+                        # TODO What about IPv6 address? Or IPv6 only hosts?
                         local _sni__addr=`${_sni__ip_bin} addr show ${_sni__iface} \
-                          | grep 'inet' \
+                          | grep 'inet ' \
                           | sed 's,\s\+inet \([^ ]\+\).*,\1,'`
                           _sni__result+="${_sni_delim}${sp_info}${_sni__iface}: ${_sni__addr}"
                         ;;
