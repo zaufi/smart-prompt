@@ -73,12 +73,12 @@ Context checkers should be named in the following format:
 
 where `NN` is a numeric value of a loading priority.
 
-Typical context checker consists of two functions: 
+Typical context checker consists of two functions:
 * predicate to decide whether some aux info should be displayed. It must return numeric code, where `0` stands for _true_
  and _false_ is everything else. It **must** be named in according the following format: `_NN_some_name`, where `NN` same
  (or close to) as the number in the file name. This needed to conserve order in which checkers will be applied/tried.
 * the second function should `printf` (it can do `echo` as well but I don't recommend this due some limitations) any aux
-  info it wants to put in the middle (between `username@host` and `path` parts) of a `PS1`. It can use colors (ANSI escape 
+  info it wants to put in the middle (between `username@host` and `path` parts) of a `PS1`. It can use colors (ANSI escape
   sequences). See particular context checker for details (most of them are simple and trivial).
 
 Finally checker module should **register** provided functions. Do do so near the end of any checker module you may find
@@ -103,6 +103,7 @@ Limitations
 -----------
 
 * Nowadays I don't care about colorless terminals...
+* Support for RGB and TrueColor terminals
 
 TODO
 ----
@@ -110,6 +111,6 @@ TODO
 * Make prompt segments configurable per directory. For example it could be an XML file rendered into a final
   bash script to display prompt.
 * Add cache to some segments and dirs.
-* Make sure some executable exists before run it. It is not about a core utils, but smth rarely used, 
+* Make sure some executable exists before run it. It is not about a core utils, but smth rarely used,
   like `schroot`.
 * Support for 256 and TrueColor terminals
