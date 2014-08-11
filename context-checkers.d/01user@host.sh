@@ -17,7 +17,11 @@ function _01_show_user_and_host()
 
 function _show_user_and_host()
 {
-    printf "${sp_user}"'\\u@\\h'
+    local _suah_optional_ssh_warn
+    if [ -n "${SSH_CONNECTION}" ]; then
+        _suah_optional_ssh_warn="${sp_alert}ssh:"
+    fi
+    printf "${sp_user}"'\\u@'"${_suah_optional_ssh_warn}"'\\h'
 }
 
 SMART_PROMPT_PLUGINS[_01_show_user_and_host]=_show_user_and_host
