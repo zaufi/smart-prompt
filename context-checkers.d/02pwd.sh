@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Append schroot name if `schroot` detected
+# Append current path segment
 #
 # Copyright (c) 2014 Alex Turbov <i.zaufi@gmail.com>
 #
@@ -10,14 +10,14 @@
 # (at your option) any later version.
 #
 
-function _00_is_under_schroot()
+function _02_show_pwd()
 {
-    return `test -n "${SCHROOT_CHROOT_NAME}"`
+    return 1
 }
 
-function _show_schroot()
+function _show_pwd()
 {
-    printf "${sp_debug}[${sp_warn}${SCHROOT_CHROOT_NAME}${sp_debug}]"
+    printf "${sp_path}\w"
 }
 
-SMART_PROMPT_PLUGINS[_00_is_under_schroot]=_show_schroot
+SMART_PROMPT_PLUGINS[_01_show_user_and_host]=_show_user_and_host

@@ -96,11 +96,8 @@ function _smart_prompt()
     local -r sp_time_fmt=${SP_TIME_FMT:-%H:%M %d/%m}
     local -r sp_seg=${sp_path}${SP_SEGMENT_DELIMITER:-"\342\214\252"}
 
-    # TODO Make the prompt format configurable? Really?
-    local start="${sp_user}\u@\h${sp_seg}\w${sp_seg}"
-
     # Iterate over registered plugins and collect strings to be appended to PS1
-    local middle=''
+    local sp_ps=''
     for checker in $(_get_registered_context_checkers); do
         if [ -n "${SP_SHOW_DEBUG}" ]; then
             echo -n "checking ${checker}... "
@@ -110,14 +107,14 @@ function _smart_prompt()
                 echo "ok"
             fi
             for action in ${SMART_PROMPT_PLUGINS[$checker]}; do
-                middle+="`${action}`${sp_seg}"
+                sp_ps+="`${action}`${sp_seg}"
             done
         elif [ -n "${SP_SHOW_DEBUG}" ]; then
             echo "!!"
         fi
     done
     # Form the final PS1
-    PS1="${start}${middle}${sp_reset}"
+    PS1="${sp_ps}${sp_reset}"
 }
 
 export PROMPT_COMMAND=_smart_prompt
