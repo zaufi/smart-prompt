@@ -29,7 +29,7 @@ declare -A SMART_PROMPT_PLUGINS
 
 # Loading user plugins
 if [ -d ~/.@PROJECT_NAME@.d ]; then
-    for plugin in `ls -v1 ~/.@PROJECT_NAME@.d/[0-9][0-9]*.sh`; do
+    for plugin in ~/.@PROJECT_NAME@.d/[0-9][0-9]*.sh; do
         #echo "loading ${plugin}..."
         source ${plugin}
     done
@@ -37,7 +37,7 @@ fi
 
 # Loading plugins
 if [ -d @SP_CONTEXT_CHECKERS_DIR@ ]; then
-    for plugin in `ls -v1 @SP_CONTEXT_CHECKERS_DIR@/[0-9][0-9]*.sh`; do
+    for plugin in @SP_CONTEXT_CHECKERS_DIR@/[0-9][0-9]*.sh; do
         if [ -n "${SP_SHOW_DEBUG}" ]; then
             echo "sp: loading ${plugin}..."
         fi
