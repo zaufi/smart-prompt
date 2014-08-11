@@ -60,6 +60,7 @@ endif()
 
 set(
     SP_CHECKERS_SRC
+    context-checkers.d/00schroot.sh
     context-checkers.d/40cmake-build-dir.sh
     context-checkers.d/60system-dirs.sh
   )
