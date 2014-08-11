@@ -12,7 +12,7 @@
 
 function _02_show_pwd()
 {
-    return 1
+    return 0
 }
 
 function _show_pwd()

@@ -12,7 +12,7 @@
 
 function _01_show_user_and_host()
 {
-    return 1
+    return 0
 }
 
 function _show_user_and_host()
