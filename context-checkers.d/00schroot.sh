@@ -17,7 +17,7 @@ function _00_is_under_schroot()
 
 function _show_schroot()
 {
-    printf "${sp_debug}[${sp_warn}${SCHROOT_CHROOT_NAME}${sp_debug}]"
+    printf "${sp_warn}${SCHROOT_CHROOT_NAME}"
 }
 
 SMART_PROMPT_PLUGINS[_00_is_under_schroot]=_show_schroot

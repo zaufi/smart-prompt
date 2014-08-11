@@ -20,4 +20,4 @@ function _show_pwd()
     printf "${sp_path}\\w"
 }
 
-SMART_PROMPT_PLUGINS[_01_show_user_and_host]=_show_user_and_host
+SMART_PROMPT_PLUGINS[_02_show_pwd]=_show_pwd
