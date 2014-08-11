@@ -17,7 +17,7 @@ function _01_show_user_and_host()
 
 function _show_user_and_host()
 {
-    printf "${sp_user}\u@\h"
+    printf "${sp_user}\\u@\\h"
 }
 
 SMART_PROMPT_PLUGINS[_01_show_user_and_host]=_show_user_and_host
