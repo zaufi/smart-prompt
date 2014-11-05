@@ -36,7 +36,7 @@ function _get_svn_dirty_status()
       | grep 'Working Copy Root Path' \
       | sed 's,Working Copy Root Path:\s*\(.*\)$,\1,'`
     local _gsds__status_color
-    if [ -z "`svn status \"${_gsds__wrk_root}\" 2>/dev/null | grep -v '^\?'`" ]; then
+    if [ -z "`svn status -q \"${_gsds__wrk_root}\" 2>/dev/null" ]; then
         _gsds__status_color="${sp_info}"
     else
         _gsds__status_color="${sp_warn}"
