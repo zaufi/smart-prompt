@@ -40,12 +40,12 @@ $if Bash
 # or comment this out if not needed...
 "\eOS": "\C-a\C-kgrep -nr --include=*.{c,h,cc,hh,icc,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-y\" *\n\C-y"
 # Shitf+F4: same as above but allow to edit command line
-"\eO2S": "\C-agrep -nr --include=*.{c,h,cc,hh,icc,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-e\" *"
+"\eO2S": "\C-agrep -nr --exclude-dir=.{svn,hg,git} --include=*.{c,h,cc,hh,icc,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-e\" *"
 
 # Ctrl+Shift+F3: Iterate over matched files, initiate search'n'replace using `sed`
 "\eO6R": "\C-e \C-ufor i in `grep -nlr \"\C-y\b\" *`; do sed -i 's,\C-y\b,,g' $i; done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
 # Ctrl+Shift+F4: Iterate over matched files, initiate search'n'replace using `sed`
-"\eO6S": "\C-e \C-ufor i in `grep -nlr --include=*.{c,h,cc,hh,icc,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-y\b\" *`; do sed -i 's,\C-y\b,,g' $i; done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
+"\eO6S": "\C-e \C-ufor i in `grep -nlr --exclude-dir=.{svn,hg,git} --include=*.{c,h,cc,hh,icc,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-y\b\" *`; do sed -i 's,\C-y\b,,g' $i; done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
 
 # Bind grep substring in a list of running processes to F7
 "\e[18~": "\C-aps wwup `pgrep "\C-e\"`\n"
