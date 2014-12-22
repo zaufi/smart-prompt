@@ -22,9 +22,11 @@ function _get_svn_branch()
     local _gsb__branch=`sed -e 's,.*/branches/\([^/]\+\).*,\1,' -e 't end' -e 'd' -e ':end' <<<${_gsb__url}`
     if [ -z "${_gsb__branch}" ]; then
         _gsb__branch=`sed -e 's,.*/\(trunk\).*,\1,' -e 't end' -e 'd' -e ':end' <<<${_gsb__url}`
-        if [ -n "$_gsb__branch" ]; then
+        if [ -n "${_gsb__branch}" ]; then
             eval "${_gsb__output_var}=\"${_gsb__branch}\""
         fi
+    else
+        eval "${_gsb__output_var}=\"${_gsb__branch}\""
     fi
 }
 
