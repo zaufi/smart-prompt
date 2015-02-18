@@ -64,7 +64,7 @@ function _show_current_profile()
     if [ -L /etc/make.profile ]; then
         _profile="/etc/make.profile"
     elif [ -L /etc/portage/make.profile ]; then
-        _profile="/etc/make.profile"
+        _profile="/etc/portage/make.profile"
     fi
     if [ -n "${_profile}" ]; then
         _profile=`readlink ${_profile}`
