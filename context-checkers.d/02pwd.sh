@@ -2,7 +2,7 @@
 #
 # Append current path segment
 #
-# Copyright (c) 2014 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2014,2015 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,11 @@ function _02_show_pwd()
 
 function _show_pwd()
 {
-    printf "${sp_path}\\w"
+    local _dir_stack_size=''
+    if [[ ${#DIRSTACK[@]} > 1 ]]; then
+        _dir_stack_size="${#DIRSTACK[@]}:"
+    fi
+    printf "${sp_path}${_dir_stack_size}\\w"
 }
 
 SMART_PROMPT_PLUGINS[_02_show_pwd]=_show_pwd
