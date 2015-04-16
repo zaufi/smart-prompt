@@ -61,6 +61,7 @@ endif()
 set(
     SP_CHECKERS_SRC
     context-checkers.d/00schroot.sh
+    context-checkers.d/00terminal-multiplexers.sh
     context-checkers.d/01user@host.sh
     context-checkers.d/02pwd.sh
     context-checkers.d/40cmake-build-dir.sh
