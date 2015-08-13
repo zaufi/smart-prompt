@@ -18,7 +18,7 @@ function _50_is_git_repo()
 function _get_git_branch()
 {
     local _ggb__output_var=$1
-    local _ggb__branch=`git branch 2> /dev/null | grep '^\*\s\+' | sed 's,^\*\s\+\(.*\)$,\1,'`
+    local _ggb__branch=`git symbolic-ref --short HEAD 2> /dev/null`
     eval "${_ggb__output_var}=\"${_ggb__branch}\""
 }
 
