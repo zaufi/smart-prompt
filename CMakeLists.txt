@@ -1,18 +1,9 @@
 #---------------------------------------------------------
 # Section: Initialize CMake
 #---------------------------------------------------------
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 
-# NOTE This project do not use C compiler actually,
-# but unfortunately it can't be configured w/ NONE
-# as a languages set, cuz GNUInstallDirs wants at
-# least one...
-project(smart-prompt NONE)
-
-set(SP_MAJOR 1)
-set(SP_MINOR 3)
-set(SP_PATCH 2)
-set(SP_VERSION ${SP_MAJOR}.${SP_MINOR}.${SP_PATCH})
+project(smart-prompt VERSION 1.3.3 LANGUAGES NONE)
 
 # Setup package pathes
 # TODO Add caching and docs
@@ -91,9 +82,9 @@ install(FILES LICENSE README.md DESTINATION ${SP_DOCDIR})
 #---------------------------------------------------------
 
 # CPack version numbers for release tarball name.
-set(CPACK_PACKAGE_VERSION_MAJOR ${SP_MAJOR})
-set(CPACK_PACKAGE_VERSION_MINOR ${SP_MINOR})
-set(CPACK_PACKAGE_VERSION_PATCH ${SP_PATCH})
+set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
 set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE)
 set(
     CPACK_PACKAGE_DESCRIPTION_SUMMARY
@@ -101,7 +92,7 @@ set(
   )
 set(CPACK_PACKAGE_VENDOR "Alex Turbov")
 set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/README.md)
-set(CPACK_SOURCE_PACKAGE_FILE_NAME ${PROJECT_NAME}-${SP_VERSION})
+set(CPACK_SOURCE_PACKAGE_FILE_NAME ${PROJECT_NAME}-${PROJECT_VERSION})
 set(CPACK_SET_DESTDIR ON)
 
 set(CPACK_SOURCE_GENERATOR TGZ)

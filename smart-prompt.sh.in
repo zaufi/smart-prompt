@@ -2,7 +2,7 @@
 #
 # This is a `main` module of the SmartPrompt engine.
 #
-# Smart Prompt @SP_VERSION@
+# Smart Prompt @PROJECT_VERSION@
 # Copyright (c) 2013 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
