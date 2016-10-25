@@ -57,6 +57,7 @@ set(
     context-checkers.d/02pwd.sh
     context-checkers.d/40cmake-build-dir.sh
     context-checkers.d/60system-dirs.sh
+    context-checkers.d/80virtualenv.sh
   )
 
 if(GIT_FOUND)
