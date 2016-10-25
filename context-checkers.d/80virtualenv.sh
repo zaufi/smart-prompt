@@ -12,7 +12,7 @@
 
 function _80_check_virtualenv()
 {
-    return `test -n ${VIRTUAL_ENV}`
+    return `test -n "${VIRTUAL_ENV}"`
 }
 
 function _show_virtualenv()
