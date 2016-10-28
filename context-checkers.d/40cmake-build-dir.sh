@@ -24,10 +24,12 @@ function _show_cmake_options()
           | sed 's,SET(CMAKE_RELATIVE_PATH_TOP_BINARY\s\+"\(.*\)")$,\1,i'`
         if [ -n "${_sco__top_build_dir}" -a -f "${_sco__top_build_dir}"/CMakeCache.txt ]; then
             local _sco__build_type=`grep 'CMAKE_BUILD_TYPE' "${_sco__top_build_dir}"/CMakeCache.txt \
-              | sed 's,CMAKE_BUILD_TYPE:STRING=\(.*\),\1,'`
+              | sed 's,CMAKE_BUILD_TYPE:[^=]\+=\(.*\),\1,'`
             local _sco__prefix=`grep 'CMAKE_INSTALL_PREFIX:PATH' "${_sco__top_build_dir}"/CMakeCache.txt \
               | sed 's,CMAKE_INSTALL_PREFIX:PATH=\(.*\),\1,'`
             printf "${sp_notice}${_sco__build_type:-"default"}${sp_seg}${sp_debug}pfx: ${_sco__prefix}"
+        else
+            printf "${sp_warn}×${_sco__top_build_dir}"
         fi
     fi
 }
