@@ -33,9 +33,9 @@ $if Bash
 "\e[1;1C": shell-forward-word
 
 # Bind grep substring in all files to F3 (execute immediately)
-"\eOR": "\C-a\C-kgrep -nir \"\C-y\" *\n\C-y"
+"\eOR": "\C-a\C-kgrep -nir --exclude-dir=.{svn,hg,git} \"\C-y\" *\n\C-y"
 # Shit+F3: same as above but allow to edit command line
-"\eO2R": "\C-agrep -nir \"\C-e\" *"
+"\eO2R": "\C-agrep -nir --exclude-dir=.{svn,hg,git} \"\C-e\" *"
 
 # Bind grep substring in C/C++ files to F4 (execute immediately)
 # NOTE One may change particular file extensions to get some other kind of grep,
