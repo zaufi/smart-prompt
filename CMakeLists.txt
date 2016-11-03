@@ -3,7 +3,7 @@
 #---------------------------------------------------------
 cmake_minimum_required(VERSION 3.0)
 
-project(smart-prompt VERSION 1.3.3 LANGUAGES NONE)
+project(smart-prompt VERSION 1.4.0 LANGUAGES NONE)
 
 # Setup package pathes
 # TODO Add caching and docs
