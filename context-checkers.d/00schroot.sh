@@ -2,7 +2,7 @@
 #
 # Append schroot name if `schroot` detected
 #
-# Copyright (c) 2014 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2014-2016 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
