@@ -48,9 +48,9 @@ function _show_net_ifaces()
     if _find_program ip _sni__ip_bin; then
         local _sni_delim
         for _sni__item in /sys/class/net/*; do
-            local _sni__iface=`basename ${_sni__item}`
+            local _sni__iface=${_sni__item##*/}
             if [ "${_sni__iface}" != "lo" ]; then
-                local _sni_stat=`cat ${_sni__item}/carrier`
+                local _sni_stat=$(< ${_sni__item}/carrier)
                 case "${_sni_stat}" in
                     1*)
                         # TODO What about IPv6 address? Or IPv6 only hosts?
@@ -92,7 +92,7 @@ SMART_PROMPT_PLUGINS[_60_is_linked_dir]=_show_dir_link
 #
 function _99_is_empty_dir()
 {
-    local _content=`ls`
+    local -a _content=( $(shopt -s nullglob; echo *) )
     return `test -z "${_content}"`
 }
 function _show_empty_mark()
@@ -282,7 +282,7 @@ function _62_is_etc_bash_completion_dir()
 }
 function _show_bash_completions_config()
 {
-    local _sbcc_active=`ls -1 | wc -l`
-    printf "${sp_notice}%d installed" ${_sbcc_active}
+    local -a _sbcc_active=( $(shopt -s nullglob; echo *) )
+    printf "${sp_notice}%d installed" ${#_sbcc_active[@]}
 }
 SMART_PROMPT_PLUGINS[_62_is_etc_bash_completion_dir]=_show_bash_completions_config

@@ -114,7 +114,7 @@ function _75_is_inside_of_runlevels_dir()
 }
 function _show_started_services_at_level()
 {
-    local _level=`basename \`pwd\``
+    local _level=$(basename $(pwd))
     if [ "${_level}" = "runlevels" ]; then
         _show_started_services
     else
@@ -146,13 +146,13 @@ function _show_installed_packages()
     _get_total_packages_installed _sip_installed_cnt
     case `pwd` in
     /var/db/pkg/*/*)
-        local _sip_installed_date=`cat COUNTER`
+        local _sip_installed_date=$(< COUNTER)
         _sip_installed_date=`date --date=@${_sip_installed_date} +"${sp_time_fmt}"`
-        local _sip_installed_from_repo=`cat REPOSITORY`
+        local _sip_installed_from_repo=$(< REPOSITORY)
         printf "${sp_info}${_sip_installed_date} from ${_sip_installed_from_repo}"
         ;;
     /var/db/pkg/*)
-        printf "${sp_notice}%d/%d cat/total pkgs" `ls -1 | wc -l` ${_sip_installed_cnt}
+        printf "${sp_notice}%d/%d cat/total pkgs"  $(shopt -s nullglob; echo *) ${_sip_installed_cnt}
         ;;
     /var/db/pkg)
         printf "${sp_notice}%d pkgs total" ${_sip_installed_cnt}
@@ -172,7 +172,7 @@ function _show_world_details()
 {
     local _swd_installed_cnt
     _get_total_packages_installed _swd_installed_cnt
-    local _swd_world_contents=`cat /var/lib/portage/world`
+    local _swd_world_contents=$(< /var/lib/portage/world)
     local _swd_pkgs=`egrep -v '(\*|@)' <<<"${_swd_world_contents}" | wc -l`
     local _swd_sets=`egrep '(\*|@)' <<<"${_swd_world_contents}" | wc -l`
     printf "${sp_notice}%d/%d/%d pkgs/sets/total" ${_swd_pkgs} ${_swd_sets} ${_swd_installed_cnt}
