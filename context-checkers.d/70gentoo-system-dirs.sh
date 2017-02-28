@@ -45,7 +45,7 @@ function _70_is_inside_of_portage_tree_dir()
 function _show_tree_timestamp()
 {
     # Transform UTC date/time into local timezone
-    local _stamp=`cat /usr/portage/metadata/timestamp.chk`
+    local _stamp=$(< /usr/portage/metadata/timestamp.chk)
     local _local_stamp=`date -d "${_stamp}" +"${sp_time_fmt}"`
     printf "${sp_debug}timestamp: ${_local_stamp}"
 }
@@ -114,7 +114,7 @@ function _75_is_inside_of_runlevels_dir()
 }
 function _show_started_services_at_level()
 {
-    local _level=$(basename $(pwd))
+    local _level=${PWD##*/}
     if [ "${_level}" = "runlevels" ]; then
         _show_started_services
     else
