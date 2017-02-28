@@ -152,7 +152,8 @@ function _show_installed_packages()
         printf "${sp_info}${_sip_installed_date} from ${_sip_installed_from_repo}"
         ;;
     /var/db/pkg/*)
-        printf "${sp_notice}%d/%d cat/total pkgs"  $(shopt -s nullglob; echo *) ${_sip_installed_cnt}
+        local -r _sip_pkgs_in_cat=( $(shopt -s nullglob; echo *) )
+        printf "${sp_notice}%d/%d cat/total pkgs" ${#_sip_pkgs_in_cat[@]}  ${_sip_installed_cnt}
         ;;
     /var/db/pkg)
         printf "${sp_notice}%d pkgs total" ${_sip_installed_cnt}
