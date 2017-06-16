@@ -3,7 +3,13 @@
 #---------------------------------------------------------
 cmake_minimum_required(VERSION 3.0)
 
-project(smart-prompt VERSION 1.4.0 LANGUAGES NONE)
+project(smart-prompt VERSION 1.4.1 LANGUAGES NONE)
+
+# Setup package options
+include(CMakeDependentOption)
+cmake_dependent_option(USE_GIT "Use git checker" AUTO "DEFINED USE_GIT" AUTO)
+cmake_dependent_option(USE_SVN "Use subversion checker" AUTO "DEFINED USE_SVN" AUTO)
+cmake_dependent_option(USE_GENTOO "Use Gentoo specific checkers" ON "USE_GENTOO OR EXISTS /etc/gentoo-release" OFF)
 
 # Setup package pathes
 # TODO Add caching and docs
@@ -12,6 +18,8 @@ set(SP_DATAROOTDIR "${CMAKE_INSTALL_PREFIX}/share")
 set(SP_LIBEXECDIR  "${CMAKE_INSTALL_PREFIX}/libexec/${PROJECT_NAME}")
 set(SP_DOCDIR      "${SP_DATAROOTDIR}/doc/${PROJECT_NAME}")
 
+# NOTE Since CMake 3.?? `GNUInstallDirs` module respects `/usr` properly.
+# TODO Raise CMake minumum version?
 if(${SP_PREFIX} STREQUAL "/usr")
   set(SP_SYSCONFDIR "/etc")
 else()
@@ -23,12 +31,15 @@ message(STATUS "SP_SYSCONFDIR=${SP_SYSCONFDIR}")
 message(STATUS "SP_DATAROOTDIR=${SP_DATAROOTDIR}")
 message(STATUS "SP_DOCDIR=${SP_DOCDIR}")
 message(STATUS "SP_LIBEXECDIR=${SP_LIBEXECDIR}")
+message(STATUS "USE_GIT=${USE_GIT}")
+message(STATUS "USE_SVN=${USE_SVN}")
+message(STATUS "USE_GENTOO=${USE_GENTOO}")
 
-if(NOT DISABLE_GIT)
+if(USE_GIT)
     find_package(Git)
 endif()
 
-if(NOT DISABLE_SVN)
+if(USE_SVN)
     find_package(Subversion)
 endif()
 
@@ -60,15 +71,15 @@ set(
     context-checkers.d/80virtualenv.sh
   )
 
-if(GIT_FOUND)
+if(GIT_FOUND OR USE_GIT STREQUAL "AUTO")
     list(APPEND SP_CHECKERS_SRC context-checkers.d/50git.sh)
 endif()
 
-if(Subversion_FOUND)
+if(Subversion_FOUND OR USE_SVN STREQUAL "AUTO")
     list(APPEND SP_CHECKERS_SRC context-checkers.d/52svn.sh)
 endif()
 
-if(EXISTS /etc/gentoo-release)
+if(USE_GENTOO)
     list(APPEND SP_CHECKERS_SRC context-checkers.d/70gentoo-system-dirs.sh)
 endif()
 
@@ -76,7 +87,7 @@ install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh quick-cd.sh DESTINATION ${S
 install(FILES ${PROJECT_NAME}-functions.sh DESTINATION ${SP_LIBEXECDIR})
 install(FILES ${SP_CHECKERS_SRC} DESTINATION ${SP_CONTEXT_CHECKERS_DIR})
 install(FILES ${PROJECT_NAME}.conf ${PROJECT_NAME}.inputrc DESTINATION ${SP_SYSCONFDIR})
-install(FILES LICENSE README.md DESTINATION ${SP_DOCDIR})
+install(FILES ChangeLog.md LICENSE README.md DESTINATION ${SP_DOCDIR})
 
 #---------------------------------------------------------
 # Section: Configure package options

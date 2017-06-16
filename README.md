@@ -30,10 +30,11 @@ How To Install
 --------------
 
 As one may notice [`cmake`](http://cmake.org) needed to install (and make source tarball of) this package.
-It helps (lazy me) to do it like this:
+It helps (lazy me) to do it like this (replace the very first command with
+`git clone https://github.com/zaufi/smart-prompt.git` to get sources from GitHub repository:
 
-    $ tar -zxf smart-prompt-X.Y.Z-Sources.tar.gz
-    $ cd smart-prompt-X.Y.Z-Sources
+    $ tar -zxf smart-prompt-X.Y.Z.tar.gz
+    $ cd smart-prompt-X.Y.Z
     $ cmake -DCMAKE_INSTALL_PREFIX=/usr .
     $ sudo make install
 
