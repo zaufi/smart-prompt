@@ -24,7 +24,7 @@ function quick_cd()
     local dirs=$(grep -n 'ENTRY' "${hl}" \
       | grep -v 'sh://' \
       | grep -v 'ftp://' \
-      | sed 's,\(.*\)ENTRY "\(.*\)" URL "\(.*\)",\1\3,g' \
+      | sed 's,\(.*\):\s*ENTRY "\(.*\)" URL "\(.*\)",\1 \3,g' \
       )
 
     local dirnum=$(dialog --keep-tite \
