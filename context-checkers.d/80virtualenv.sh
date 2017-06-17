@@ -12,7 +12,7 @@
 
 function _80_check_virtualenv()
 {
-    return $([[-n ${VIRTUAL_ENV} ]])
+    return $([[ -n ${VIRTUAL_ENV} ]])
 }
 
 function _show_virtualenv()
