@@ -12,15 +12,15 @@
 #
 
 # Check for interactive bash and that we haven't already been sourced.
-[ -z "$BASH_VERSION" -o -z "$PS1" -o -n "$SMART_PROMPT_PLUGINS" ] && return
+[[ -z "$BASH_VERSION" || -z "$PS1" || -n "$SMART_PROMPT_PLUGINS" ]] && return
 
 # Load configuration file
-if [ -f @SMART_PROMPT_CONFIG@ ]; then
+if [[ -f @SMART_PROMPT_CONFIG@ ]]; then
     source @SMART_PROMPT_CONFIG@
 fi
 
 # Load user level overrides
-if [ -f ~/.@PROJECT_NAME@rc ]; then
+if [[ -f ~/.@PROJECT_NAME@rc ]]; then
     source ~/.@PROJECT_NAME@rc
 fi
 
@@ -28,7 +28,8 @@ fi
 declare -A SMART_PROMPT_PLUGINS
 
 # Loading user plugins
-if [ -d ~/.@PROJECT_NAME@.d ]; then
+if [[ -d ~/.@PROJECT_NAME@.d ]]; then
+
     for plugin in ~/.@PROJECT_NAME@.d/[0-9][0-9]*.sh; do
         #echo "loading ${plugin}..."
         source ${plugin}
@@ -36,9 +37,9 @@ if [ -d ~/.@PROJECT_NAME@.d ]; then
 fi
 
 # Loading plugins
-if [ -d @SP_CONTEXT_CHECKERS_DIR@ ]; then
+if [[ -d @SP_CONTEXT_CHECKERS_DIR@ ]]; then
     for plugin in @SP_CONTEXT_CHECKERS_DIR@/[0-9][0-9]*.sh; do
-        if [ -n "${SP_SHOW_DEBUG}" ]; then
+        if [[ -n ${SP_SHOW_DEBUG} ]]; then
             echo "sp: loading ${plugin}..."
         fi
         source ${plugin}
@@ -46,7 +47,7 @@ if [ -d @SP_CONTEXT_CHECKERS_DIR@ ]; then
 fi
 
 # Include reusable functions into the scope
-if [ -f @SP_LIBEXECDIR@/@PROJECT_NAME@-functions.sh ]; then
+if [[ -f @SP_LIBEXECDIR@/@PROJECT_NAME@-functions.sh ]]; then
     source @SP_LIBEXECDIR@/@PROJECT_NAME@-functions.sh
 else
     logger -t @PROJECT_NAME@ "Reusable functions library " \
@@ -102,7 +103,7 @@ function _smart_prompt()
         if [ -n "${SP_SHOW_DEBUG}" ]; then
             echo -n "checking ${checker}... "
         fi
-        if `${checker}`; then
+        if ${checker}; then
             if [ -n "${SP_SHOW_DEBUG}" ]; then
                 echo "ok"
             fi

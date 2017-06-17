@@ -2,7 +2,7 @@
 #
 # Check if we are inside a `virtualenv`
 #
-# Copyright (c) 2016 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2016-2017 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,13 +12,13 @@
 
 function _80_check_virtualenv()
 {
-    return `test -n "${VIRTUAL_ENV}"`
+    return $([[-n ${VIRTUAL_ENV} ]])
 }
 
 function _show_virtualenv()
 {
     local _svenv_segment
-    if [ -n "${VIRTUAL_ENV}" ]; then
+    if [[ -n ${VIRTUAL_ENV} ]]; then
         _svenv_segment="${sp_notice}venv:${VIRTUAL_ENV}"
     fi
     printf "${_svenv_segment}"

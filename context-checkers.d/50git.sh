@@ -2,7 +2,7 @@
 #
 # Show status of a git repository
 #
-# Copyright (c) 2013 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2013-2017 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,13 +12,13 @@
 
 function _50_is_git_repo()
 {
-    return `git status -s 1>/dev/null 2>&1`
+    return $(git status -s 1>/dev/null 2>&1)
 }
 
 function _get_git_branch()
 {
     local _ggb__output_var=$1
-    local _ggb__branch=`git symbolic-ref --short HEAD 2> /dev/null`
+    local _ggb__branch=$(git symbolic-ref --short HEAD 2> /dev/null)
     eval "${_ggb__output_var}=\"${_ggb__branch}\""
 }
 
@@ -26,7 +26,7 @@ function _get_git_dirty_status()
 {
     local _ggds__output_var=$1
     local _ggds__status_color
-    if [ -z "`git status -s`" ]; then
+    if [[ -z $(git status -s) ]]; then
         _ggds__status_color="${sp_info}"
     else
         _ggds__status_color="${sp_warn}"

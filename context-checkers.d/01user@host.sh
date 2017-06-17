@@ -2,7 +2,7 @@
 #
 # Append user@host segment
 #
-# Copyright (c) 2014 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2014-2017 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,11 +17,11 @@ function _01_show_user_and_host()
 
 function _show_user_and_host()
 {
-    local _suah_optional_ssh_warn
-    if [ -n "${SSH_CONNECTION}" ]; then
-        _suah_optional_ssh_warn="${sp_alert}ssh://"
+    local _optional_ssh_warn
+    if [[ -n ${SSH_CONNECTION} ]]; then
+        _optional_ssh_warn="${sp_alert}ssh://"
     fi
-    printf "${_suah_optional_ssh_warn}${sp_user}"'\\u@\\h'
+    printf "${_optional_ssh_warn}${sp_user}"'\\u@\\h'
 }
 
 SMART_PROMPT_PLUGINS[_01_show_user_and_host]=_show_user_and_host

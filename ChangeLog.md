@@ -14,4 +14,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Add option `USE_GENTOO` with default value `AUTO` to install Gentoo
   specific checkers.
 
+### Changed
+
+- Review code and use `[[` more extensively. Also replace backticks with `$()`.
+  Speed up a little: avoid some calls to external programs.
+
 [Unreleased]: https://github.com/zaufi/smart-prompt/compare/version-1.4.0...HEAD

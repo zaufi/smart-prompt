@@ -2,7 +2,7 @@
 #
 # Show status of a subversion repository
 #
-# Copyright (c) 2013 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2013-2017 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,17 +12,17 @@
 
 function _52_is_svn_repo()
 {
-    return `svn info 1>/dev/null 2>/dev/null`
+    return $(svn info >/dev/null 2>&1)
 }
 
 function _get_svn_branch()
 {
     local _gsb__output_var=$1
-    local _gsb__url=`svn info | grep '^URL' | sed 's,URL:\s*,,'`
-    local _gsb__branch=`sed -e 's,.*/branches/\([^/]\+\).*,\1,' -e 't end' -e 'd' -e ':end' <<<${_gsb__url}`
-    if [ -z "${_gsb__branch}" ]; then
-        _gsb__branch=`sed -e 's,.*/\(trunk\).*,\1,' -e 't end' -e 'd' -e ':end' <<<${_gsb__url}`
-        if [ -n "${_gsb__branch}" ]; then
+    local _gsb__url=$(svn info | grep '^URL' | sed 's,URL:\s*,,')
+    local _gsb__branch=$(sed -e 's,.*/branches/\([^/]\+\).*,\1,' -e 't end' -e 'd' -e ':end' <<<${_gsb__url})
+    if [[ -z ${_gsb__branch} ]]; then
+        _gsb__branch=$(sed -e 's,.*/\(trunk\).*,\1,' -e 't end' -e 'd' -e ':end' <<<${_gsb__url})
+        if [[ -n ${_gsb__branch} ]]; then
             eval "${_gsb__output_var}=\"${_gsb__branch}\""
         fi
     else
@@ -34,11 +34,11 @@ function _get_svn_branch()
 function _get_svn_dirty_status()
 {
     local _gsds__output_var=$1
-    local _gsds__wrk_root=`svn info \
+    local _gsds__wrk_root=$(svn info \
       | grep 'Working Copy Root Path' \
-      | sed 's,Working Copy Root Path:\s*\(.*\)$,\1,'`
+      | sed 's,Working Copy Root Path:\s*\(.*\)$,\1,')
     local _gsds__status_color
-    if [ -z "`svn status -q \"${_gsds__wrk_root}\" 2>/dev/null`" ]; then
+    if [[ -z $(svn status -q "${_gsds__wrk_root}" 2>/dev/null) ]]; then
         _gsds__status_color="${sp_info}"
     else
         _gsds__status_color="${sp_warn}"

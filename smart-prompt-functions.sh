@@ -2,7 +2,7 @@
 #
 # Functions that can be used by context checkers
 #
-# Copyright (c) 2013 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2013-2017 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -71,9 +71,9 @@ function _seconds_to_duration()
 
     local _s2d__result
     if [[ ${_s2d__d} != 0 ]]; then
-        _s2d__result=`printf "%d days, %02d:%02d" ${_s2d__d} ${_s2d__h} ${_s2d__m}`
+        _s2d__result=$(printf "%d days, %02d:%02d" ${_s2d__d} ${_s2d__h} ${_s2d__m})
     else
-        _s2d__result=`printf "%02d:%02d" ${_s2d__h} ${_s2d__m}`
+        _s2d__result=$(printf "%02d:%02d" ${_s2d__h} ${_s2d__m})
     fi
     eval "${_s2d__output_var}=\"${_s2d__result}\""
 }
@@ -84,8 +84,7 @@ function _seconds_to_duration()
 #
 function _cur_dir_starts_with()
 {
-    local -r _cdsw__cur=`pwd | grep "^${1}"`
-    return `test -n "${_cdsw__cur}"`
+    return $([[ ${PWD} =~ ^${1} ]])
 }
 
 # Check if current dir name equals to a given one
@@ -94,8 +93,7 @@ function _cur_dir_starts_with()
 #
 function _is_cur_dir_equals_to()
 {
-    local -r _icdet__cur=`pwd`
-    return `test "${_icdet__cur}" = "${1}"`
+    return $([[ ${PWD} = ${1} ]])
 }
 
 #
@@ -109,7 +107,7 @@ function _find_program()
     local -r _fp__name=${1}
     local -r _fp__output_var=${2}
     local -r _fp__bin=`which "${_fp__name}" 2>/dev/null`
-    if [ -n "${_fp__bin}" ]; then
+    if [[ -n ${_fp__bin} ]]; then
         eval "${_fp__output_var}=\"${_fp__bin}\""
         return 0
     fi
