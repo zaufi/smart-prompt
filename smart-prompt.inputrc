@@ -45,15 +45,12 @@ $if Bash
 "\eO2S": "\C-agrep -nr --exclude-dir=.{svn,hg,git} --include=*.{c,h,cc,hh,icc,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-e\" *"
 
 # Ctrl+Shift+F3: Iterate over matched files, initiate search'n'replace using `sed`
-"\eO6R": "\C-e \C-ufor i in `grep -nlr \"\C-y\b\" *`; do sed -i 's,\C-y\b,,g' $i; done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
+"\eO6R": "\C-e \C-ugrep -nlr \"\C-y\b\" * | while read i; do sed -i 's,\C-y\b,,g' \"$i\"; done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
 # Ctrl+Shift+F4: Iterate over matched files, initiate search'n'replace using `sed`
-"\eO6S": "\C-e \C-ufor i in `grep -nlr --exclude-dir=.{svn,hg,git} --include=*.{c,h,cc,hh,icc,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-y\b\" *`; do sed -i 's,\C-y\b,,g' $i; done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
+"\eO6S": "\C-e \C-ugrep -nlr --exclude-dir=.{svn,hg,git} --include=*.{c,h,cc,hh,icc,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-y\b\" * | while read i; do sed -i 's,\C-y\b,,g' \"$i\"; done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
 
 # Bind grep substring in a list of running processes to F7
 "\e[18~": "\C-aps wwup `pgrep "\C-e\"`\n"
-
-# Bind search substring via dict to F8
-"\e[19~": "\C-e \C-a\C-kdict \"\C-y\b\"\n\C-y\b"
 
 # Bind `cd ..` to Ctrl+Up
 "\e[1;5A": "\C-e \C-a\C-k cd ..\n\C-y\b"
