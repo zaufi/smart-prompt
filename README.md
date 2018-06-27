@@ -104,7 +104,6 @@ Limitations
 -----------
 
 * Nowadays I don't care about colorless terminals...
-* Support for RGB and TrueColor terminals
 
 TODO
 ----
@@ -114,5 +113,4 @@ TODO
 * Add cache to some segments and dirs.
 * Make sure some executable exists before run it. It is not about a core utils, but smth rarely used,
   like `schroot`.
-* Support for 256 and TrueColor terminals
-* Check if shell is running under `sudo` (`SUDO_USER` is set)
+* Themes
