@@ -40,7 +40,7 @@ $if Bash
 # Bind grep substring in C/C++ files to F4 (execute immediately)
 "\eOS": "\C-a\C-kgrep -nr --exclude-dir={.{svn,hg,git},__pycache__} --include=*.{c,h,cc,hh,icc,inl,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-y\" *\n\C-y"
 # Bind grep substring in Python files to Shift+F4 (execute immediately)
-"\eO2S": "\C-agrep -nr --exclude-dir={.{svn,hg,git},__pycache__} --include=*.py \"\C-e\" *"
+"\eO2S": "\C-a\C-kgrep -nr --exclude-dir={.{svn,hg,git},__pycache__} --include=*.py \"\C-y\" *\n\C-y"
 
 # Ctrl+Shift+F3: Iterate over matched files, initiate search'n'replace using `sed`
 "\eO6R": "\C-e \C-ugrep -nlr --exclude-dir={.{svn,hg,git},__pycache__} \"\C-y\b\" * | while read i; do sed -i 's,\C-y\b,,g' \"$i\"; done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
