@@ -62,14 +62,17 @@ $if Bash
 # popd on Alt+LeftArrow
 "\e[1;3D": "\C-e \C-u popd\n\C-y\b"
 
-# Edit the path
+# Ctrl+x,p: Edit the path
 "\C-xp": "\C-a\C-kexport PATH=${PATH}\e\C-e\C-a\ef\ef\C-f"
 
-# Edit the ld search path
+# Ctrl+x,l: Edit the ld search path
 "\C-xl": "\C-a\C-kexport LD_LIBRARY_PATH=${LD_LIBRARY_PATH}\e\C-e"
 
 # Edit variable on current line.
 "\C-xv": "\C-a\C-k$\C-y\e\C-e\C-aexport \C-y="
+
+# Ctrl+x,w: Add a loop to process lines in a pipe
+"\C-xw": " | while read f; do echo $f; done\C-b\C-b\C-b\C-b"
 
 # prepare to type a quoted word -- insert open and close double quotes
 # and move to just after the open quote
