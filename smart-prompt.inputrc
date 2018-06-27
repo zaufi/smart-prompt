@@ -33,21 +33,19 @@ $if Bash
 "\e[1;1C": shell-forward-word
 
 # Bind grep substring in all files to F3 (execute immediately)
-"\eOR": "\C-a\C-kgrep -nir --exclude-dir=.{svn,hg,git} \"\C-y\" *\n\C-y"
+"\eOR": "\C-a\C-kgrep -nir --exclude-dir={.{svn,hg,git},__pycache__} \"\C-y\" *\n\C-y"
 # Shit+F3: same as above but allow to edit command line
-"\eO2R": "\C-agrep -nir --exclude-dir=.{svn,hg,git} \"\C-e\" *"
+#"\eO2R": "\C-agrep -nir --exclude-dir={.{svn,hg,git},__pycache__} \"\C-e\" *"
 
 # Bind grep substring in C/C++ files to F4 (execute immediately)
-# NOTE One may change particular file extensions to get some other kind of grep,
-# or comment this out if not needed...
-"\eOS": "\C-a\C-kgrep -nr --include=*.{c,h,cc,hh,icc,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-y\" *\n\C-y"
-# Shitf+F4: same as above but allow to edit command line
-"\eO2S": "\C-agrep -nr --exclude-dir=.{svn,hg,git} --include=*.{c,h,cc,hh,icc,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-e\" *"
+"\eOS": "\C-a\C-kgrep -nr --exclude-dir={.{svn,hg,git},__pycache__} --include=*.{c,h,cc,hh,icc,inl,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-y\" *\n\C-y"
+# Bind grep substring in Python files to Shift+F4 (execute immediately)
+"\eO2S": "\C-agrep -nr --exclude-dir={.{svn,hg,git},__pycache__} --include=*.py \"\C-e\" *"
 
 # Ctrl+Shift+F3: Iterate over matched files, initiate search'n'replace using `sed`
-"\eO6R": "\C-e \C-ugrep -nlr --exclude-dir=.{svn,hg,git} \"\C-y\b\" * | while read i; do sed -i 's,\C-y\b,,g' \"$i\"; done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
+"\eO6R": "\C-e \C-ugrep -nlr --exclude-dir={.{svn,hg,git},__pycache__} \"\C-y\b\" * | while read i; do sed -i 's,\C-y\b,,g' \"$i\"; done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
 # Ctrl+Shift+F4: Iterate over matched files, initiate search'n'replace using `sed`
-"\eO6S": "\C-e \C-ugrep -nlr --exclude-dir=.{svn,hg,git} --include=*.{c,h,cc,hh,icc,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-y\b\" * | while read i; do sed -i 's,\C-y\b,,g' \"$i\"; done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
+"\eO6S": "\C-e \C-ugrep -nlr --exclude-dir={.{svn,hg,git},__pycache__} --include=*.{c,h,cc,hh,icc,inl,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-y\b\" * | while read i; do sed -i 's,\C-y\b,,g' \"$i\"; done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
 
 # Bind grep substring in a list of running processes to F7
 "\e[18~": "\C-aps wwup `pgrep "\C-e\"`\n"
