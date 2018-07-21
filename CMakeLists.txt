@@ -10,6 +10,7 @@ include(CMakeDependentOption)
 cmake_dependent_option(USE_GIT "Use git checker" AUTO "DEFINED USE_GIT" AUTO)
 cmake_dependent_option(USE_SVN "Use subversion checker" AUTO "DEFINED USE_SVN" AUTO)
 cmake_dependent_option(USE_GENTOO "Use Gentoo specific checkers" ON "USE_GENTOO OR EXISTS /etc/gentoo-release" OFF)
+cmake_dependent_option(USE_EXHERBO "Use Exherbo specific checkers" ON "USE_EXHERBO OR EXISTS /etc/exherbo-release" OFF)
 
 # Setup package pathes
 # TODO Add caching and docs
@@ -81,6 +82,10 @@ endif()
 
 if(USE_GENTOO)
     list(APPEND SP_CHECKERS_SRC context-checkers.d/70gentoo-system-dirs.sh)
+endif()
+
+if(USE_GENTOO)
+    list(APPEND SP_CHECKERS_SRC context-checkers.d/70exherbo-system-dirs.sh)
 endif()
 
 install(FILES ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh quick-cd.sh DESTINATION ${SP_SYSCONFDIR}/profile.d)
