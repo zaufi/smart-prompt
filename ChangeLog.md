@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 - Review code and use `[[` more extensively. Also replace backticks with `$()`.
-  Speed up a little: avoid some calls to external programs.
+  Speed up a little: avoid some calls to external programs;
+- CMake options changed from `USE_xxx` to `WITH_xxx`.
 
 [Unreleased]: https://github.com/zaufi/smart-prompt/compare/version-1.4.0...HEAD

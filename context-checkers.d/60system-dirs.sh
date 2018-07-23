@@ -257,24 +257,6 @@ function _show_logged_users()
 SMART_PROMPT_PLUGINS[_61_is_home_dir]=_show_logged_users
 
 #
-# Show configured schroot environments
-#
-function _62_is_etc_schroot_dir()
-{
-    return $(_cur_dir_starts_with /etc/schroot)
-}
-function _show_schroot_config()
-{
-    local _ssc_schroot_bin
-    if _find_program schroot _ssc_schroot_bin; then
-        local _ssc_total=$(${_ssc_schroot_bin} -l | wc -l)
-        local _ssc_active=$(${_ssc_schroot_bin} --all-sessions -l 2>/dev/null | wc -l)
-        printf "${sp_notice}%d/%d active/total" ${_ssc_active} ${_ssc_total}
-    fi
-}
-SMART_PROMPT_PLUGINS[_62_is_etc_schroot_dir]=_show_schroot_config
-
-#
 # Show installed bash completions details
 #
 function _62_is_etc_bash_completion_dir()

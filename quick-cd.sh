@@ -16,7 +16,7 @@
 #
 # TODO Add functions to edit (add/remove) hot list entries
 #
-function quick_cd()
+function quick-cd()
 {
     local hl=${SMART_PROMPT_HOTLIST:-~/.config/mc/hotlist}
     test -r ${hl} || { echo "* No hotlist file exists yet or read permission is not granted *" > /dev/stderr && exit 1; }
