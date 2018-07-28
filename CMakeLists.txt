@@ -31,6 +31,7 @@ auto_option(WITH_PALUDIS "Add support for Paludis (Gentoo and Exherbo)")
 auto_option(WITH_PORTAGE "Add support for Portage (Gentoo)")
 auto_option(WITH_SVN "Add support for subversion")
 auto_option(WITH_SCHROOT "Add support for schroot")
+auto_option(WITH_SYSTEMD "Add support for systemd")
 
 if(WITH_GIT)
     if(NOT WITH_GIT STREQUAL AUTO)
@@ -122,6 +123,22 @@ if(WITH_SCHROOT)
     endif()
 endif()
 
+if(WITH_SYSTEMD)
+    find_program(SYSTEMCTL_EXECUTABLE cave DOC "systemctl executable")
+    if(NOT SYSTEMCTL_EXECUTABLE)
+        if(NOT WITH_SYSTEMD STREQUAL AUTO)
+            message(
+                WARNING
+                "Systemd support has been requested, but `systemclt` executable and configuration not found."
+                "Make sure you have it installed after this package."
+              )
+        else()
+            set(WITH_SYSTEMD OFF)
+        endif()
+    endif()
+endif()
+
+
 # Report options
 message(STATUS "WITH_DOCKER=${WITH_DOCKER}")
 message(STATUS "WITH_GIT=${WITH_GIT}")
@@ -129,6 +146,8 @@ message(STATUS "WITH_OPENRC=${WITH_OPENRC}")
 message(STATUS "WITH_PALUDIS=${WITH_PALUDIS}")
 message(STATUS "WITH_PORTAGE=${WITH_PORTAGE}")
 message(STATUS "WITH_SVN=${WITH_SVN}")
+message(STATUS "WITH_SCHROOT=${WITH_SCHROOT}")
+message(STATUS "WITH_SYSTEMD=${WITH_SYSTEMD}")
 
 # NOTE Cheat the `GNUInstallDirs` module a little, so it can
 # set `libdir` some way (this package do not use it anyway)
@@ -170,8 +189,9 @@ install(
         $<$<BOOL:${WITH_SVN}>:${PROJECT_SOURCE_DIR}/context-checkers.d/52svn.sh>
         context-checkers.d/60system-dirs.sh
         $<$<BOOL:${WITH_PALUDIS}>:${PROJECT_SOURCE_DIR}/context-checkers.d/70paludis.sh>
-        $<$<BOOL:${WITH_PALUDIS}>:${PROJECT_SOURCE_DIR}/context-checkers.d/70portage.sh>
+        $<$<BOOL:${WITH_PORTAGE}>:${PROJECT_SOURCE_DIR}/context-checkers.d/70portage.sh>
         $<$<BOOL:${WITH_OPENRC}>:${PROJECT_SOURCE_DIR}/context-checkers.d/75openrc.sh>
+        $<$<BOOL:${WITH_SYSTEMD}>:${PROJECT_SOURCE_DIR}/context-checkers.d/75systemd.sh>
         context-checkers.d/80virtualenv.sh
     DESTINATION "${CMAKE_INSTALL_LIBEXECDIR}/${PROJECT_NAME}/context-checkers.d"
   )

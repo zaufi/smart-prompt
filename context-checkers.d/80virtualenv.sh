@@ -2,7 +2,7 @@
 #
 # Check if we are inside a `virtualenv`
 #
-# Copyright (c) 2016-2017 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2016-2018 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

@@ -3,7 +3,7 @@
 # Detect working under terminal multiplexers.
 # Supports `tmux` and `screen`
 #
-# Copyright (c) 2015-2017 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2015-2018 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

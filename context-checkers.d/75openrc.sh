@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Show various gentoo related info depending on a current dir
+# Show various OpenRC related info depending on a current dir
 #
 # Copyright (c) 2013-2018 Alex Turbov <i.zaufi@gmail.com>
 #
