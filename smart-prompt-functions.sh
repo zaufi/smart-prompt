@@ -148,7 +148,7 @@ function _seconds_to_duration()
 #
 function _cur_dir_starts_with()
 {
-    return [[ ${PWD} =~ ^${1} ]]
+    return $([[ ${PWD} =~ ^${1} ]])
 }
 
 #
@@ -158,7 +158,7 @@ function _cur_dir_starts_with()
 #
 function _is_cur_dir_equals_to()
 {
-    return [[ ${PWD} = ${1} ]]
+    return $([[ ${PWD} = ${1} ]])
 }
 
 #
@@ -168,7 +168,7 @@ function _is_cur_dir_equals_to()
 #
 function _cur_dir_matches()
 {
-    return [[ ${PWD} =~ ${1} ]]
+    return $([[ ${PWD} =~ ${1} ]])
 }
 
 #
