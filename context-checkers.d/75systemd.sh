@@ -24,7 +24,7 @@ function _systemd_get_default_target()
 #
 function _75_is_systemd_dir()
 {
-    return $(_cur_dir_starts_with /etc/systemd || _is_cur_dir_equals_to /usr/*/lib/systemd )
+    return $(_cur_dir_starts_with /etc/systemd || _cur_dir_matches '/usr/(.*/)?lib/systemd')
 }
 function _systemd_show_default_target()
 {
