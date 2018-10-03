@@ -28,8 +28,8 @@ fi
 declare -A SMART_PROMPT_PLUGINS
 
 # Loading plugins
-if [[ -d @CMAKE_INSTALL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d ]]; then
-    for plugin in @CMAKE_INSTALL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d/[0-9][0-9]*.sh; do
+if [[ -d @CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d ]]; then
+    for plugin in @CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d/[0-9][0-9]*.sh; do
         if [[ -n ${SP_SHOW_DEBUG} ]]; then
             echo "sp: loading ${plugin}..."
         fi
@@ -39,7 +39,6 @@ fi
 
 # Loading user plugins
 if [[ -d ~/.@PROJECT_NAME@.d ]]; then
-
     for plugin in ~/.@PROJECT_NAME@.d/[0-9][0-9]*.sh; do
         if [[ -n ${SP_SHOW_DEBUG} ]]; then
             echo "sp: loading ${plugin}..."
@@ -49,11 +48,11 @@ if [[ -d ~/.@PROJECT_NAME@.d ]]; then
 fi
 
 # Include reusable functions into the scope
-if [[ -f @CMAKE_INSTALL_LIBEXECDIR@/@PROJECT_NAME@/@PROJECT_NAME@-functions.sh ]]; then
-    source @CMAKE_INSTALL_LIBEXECDIR@/@PROJECT_NAME@/@PROJECT_NAME@-functions.sh
+if [[ -f @CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/@PROJECT_NAME@-functions.sh ]]; then
+    source @CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/@PROJECT_NAME@-functions.sh
 else
     logger -t @PROJECT_NAME@ "Reusable functions library " \
-        "'@CMAKE_INSTALL_LIBEXECDIR@/@PROJECT_NAME@/@PROJECT_NAME@-functions.sh' "   \
+        "'@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/@PROJECT_NAME@-functions.sh' "   \
         "not found. Installation seems broken!"
     return
 fi
