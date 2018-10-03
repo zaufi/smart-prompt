@@ -55,8 +55,8 @@ function _show_net_ifaces()
                     1*)
                         # TODO What about IPv6 address? Or IPv6 only hosts?
                         local _sni__addr=$(${_sni__ip_bin} addr show ${_sni__iface} \
-                          | grep 'inet ' \
-                          | sed 's,\s\+inet \([^ ]\+\).*,\1,')
+                          | sed -ne '/inet / {s,\s\+inet \([^ ]\+\).*,\1,;p}' \
+                          )
                           _sni__result+="${_sni_delim}${sp_info}${_sni__iface}: ${_sni__addr}"
                         ;;
                     0*)
