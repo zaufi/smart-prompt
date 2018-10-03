@@ -19,6 +19,9 @@ function _get_git_branch()
 {
     local _ggb__output_var=$1
     local _ggb__branch=$(git symbolic-ref --short HEAD 2> /dev/null)
+    if [[ -z ${_ggb__branch} ]]; then
+        _ggb__branch=$(git describe --tags | sed -e 's,-\([0-9]\+\)-g.*, +\1,')
+    fi
     eval "${_ggb__output_var}=\"${_ggb__branch}\""
 }
 
