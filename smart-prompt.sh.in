@@ -27,18 +27,20 @@ fi
 # Declare a global associative array to be filled by found plugins
 declare -A SMART_PROMPT_PLUGINS
 
-# Loading user plugins
-if [[ -d ~/.@PROJECT_NAME@.d ]]; then
-
-    for plugin in ~/.@PROJECT_NAME@.d/[0-9][0-9]*.sh; do
-        #echo "loading ${plugin}..."
+# Loading plugins
+if [[ -d @CMAKE_INSTALL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d ]]; then
+    for plugin in @CMAKE_INSTALL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d/[0-9][0-9]*.sh; do
+        if [[ -n ${SP_SHOW_DEBUG} ]]; then
+            echo "sp: loading ${plugin}..."
+        fi
         source ${plugin}
     done
 fi
 
-# Loading plugins
-if [[ -d @CMAKE_INSTALL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d ]]; then
-    for plugin in @CMAKE_INSTALL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d/[0-9][0-9]*.sh; do
+# Loading user plugins
+if [[ -d ~/.@PROJECT_NAME@.d ]]; then
+
+    for plugin in ~/.@PROJECT_NAME@.d/[0-9][0-9]*.sh; do
         if [[ -n ${SP_SHOW_DEBUG} ]]; then
             echo "sp: loading ${plugin}..."
         fi
