@@ -80,7 +80,7 @@ function _60_is_linked_dir()
 function _show_dir_link()
 {
     local _link_to=$(readlink "${PWD}")
-    printf "${sp_debug}-> ${_link_to}"
+    printf "${sp_debug}→${_link_to}"
 }
 SMART_PROMPT_PLUGINS[_60_is_linked_dir]=_show_dir_link
 
