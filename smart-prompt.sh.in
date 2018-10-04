@@ -34,6 +34,16 @@ if [[ -n ${TERM} && -f ~/.@PROJECT_NAME@rc.${TERM} ]]; then
     source ~/.@PROJECT_NAME@rc.${TERM}
 fi
 
+# Get reusable functions into the scope
+if [[ -f @CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/@PROJECT_NAME@-functions.sh ]]; then
+    source @CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/@PROJECT_NAME@-functions.sh
+else
+    logger -t @PROJECT_NAME@ "Reusable functions library " \
+        "'@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/@PROJECT_NAME@-functions.sh' "   \
+        "not found. Installation seems broken!"
+    return
+fi
+
 # Declare a global associative array to be filled by found plugins
 declare -A SMART_PROMPT_PLUGINS
 
@@ -41,7 +51,7 @@ declare -A SMART_PROMPT_PLUGINS
 if [[ -d @CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d ]]; then
     for plugin in @CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d/[0-9][0-9]*.sh; do
         if [[ -n ${SP_SHOW_DEBUG} ]]; then
-            echo "sp: loading ${plugin}..."
+            echo -e "\e[1;30mloading ${plugin}...\e[38m"
         fi
         source ${plugin}
     done
@@ -51,20 +61,10 @@ fi
 if [[ -d ~/.@PROJECT_NAME@.d ]]; then
     for plugin in ~/.@PROJECT_NAME@.d/[0-9][0-9]*.sh; do
         if [[ -n ${SP_SHOW_DEBUG} ]]; then
-            echo "sp: loading ${plugin}..."
+            echo -e "\e[1;30mloading ${plugin}...\e[38m"
         fi
         source ${plugin}
     done
-fi
-
-# Include reusable functions into the scope
-if [[ -f @CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/@PROJECT_NAME@-functions.sh ]]; then
-    source @CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/@PROJECT_NAME@-functions.sh
-else
-    logger -t @PROJECT_NAME@ "Reusable functions library " \
-        "'@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/@PROJECT_NAME@-functions.sh' "   \
-        "not found. Installation seems broken!"
-    return
 fi
 
 function _get_registered_context_checkers()
@@ -119,17 +119,17 @@ function _smart_prompt()
     local sp_ps=''
     for checker in $(_get_registered_context_checkers); do
         if [[ -n "${SP_SHOW_DEBUG}" ]]; then
-            echo -n "checking ${checker}... "
+            echo -ne "\e[1;30mchecking ${checker}...\e[38m "
         fi
         if ${checker}; then
             if [[ -n "${SP_SHOW_DEBUG}" ]]; then
-                echo "ok"
+                echo -e "\e[1;32mok\e[38m\e[38m"
             fi
             for action in ${SMART_PROMPT_PLUGINS[$checker]}; do
                 sp_ps+="`${action}`${sp_seg}"
             done
         elif [[ -n "${SP_SHOW_DEBUG}" ]]; then
-            echo "!!"
+            echo -e "\e[1;31m!!\e[38m"
         fi
     done
     # Form the final PS1
