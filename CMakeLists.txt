@@ -160,8 +160,6 @@ unset(CMAKE_SIZEOF_VOID_P)
 # Section: "Build" related statements
 #---------------------------------------------------------
 
-set(SMART_PROMPT_CONFIG "${CMAKE_INSTALL_SYSCONFDIR}/${PROJECT_NAME}.conf")
-
 configure_file(${PROJECT_NAME}.sh.in ${PROJECT_NAME}.sh @ONLY)
 
 #---------------------------------------------------------
