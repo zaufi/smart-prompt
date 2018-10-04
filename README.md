@@ -16,7 +16,7 @@ for `/boot` it'll be like
 
 for my `/usr/src/linux`
 
-    zaufi@gentop〉 /usr/src/linux〉 link to: linux-3.10.10-gentoo〉
+    zaufi@gentop〉 /usr/src/linux〉 -> linux-3.10.10-gentoo〉
 
 and so on...
 
@@ -107,9 +107,15 @@ Limitations
 TODO
 ----
 
-* Make prompt segments configurable per directory. For example it could be an XML file rendered into a final
-  bash script to display prompt.
+* Make prompt segments configurable per directory. For example it could be an XML file rendered (and cached)
+  into a final bash script to display prompt.
 * Add cache to some segments and dirs.
 * Make sure some executable exists before run it. It is not about a core utils, but smth rarely used,
   like `schroot`.
 * Themes
+
+
+Known Limitations
+-----------------
+
+* Nowadays I don't really use (care 'bout) prompts w/ non-default background color

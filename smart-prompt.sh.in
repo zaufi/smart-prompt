@@ -84,25 +84,25 @@ function _smart_prompt()
     # NOTE Before set desired color, make sure there is no
     # other styles in effect...it is why `reset' is a leading
     # (and hardcoded) "color" in a sequence...
-    _eval_color_string "reset ${SP_PATH:-bright-blue}" sp_path
+    _eval_color_string "reset ${SP_COLOR_PATH:-bright-blue}" sp_path
     if [[ ${EUID} != 0 ]]; then
-        _eval_color_string "reset ${SP_USER:-bright-green}" sp_user
+        _eval_color_string "reset ${SP_COLOR_USER:-bright-green}" sp_user
     else
-        _eval_color_string "reset ${SP_SUSER:-bright-red}" sp_user
+        _eval_color_string "reset ${SP_COLOR_SUSER:-bright-red}" sp_user
     fi
     _eval_color_string 'reset' sp_reset
     local sp_alert
-    _eval_color_string "reset ${SP_ALERT:-'bright-red'}" sp_alert
+    _eval_color_string "reset ${SP_COLOR_ALERT:-'bright-red'}" sp_alert
     local sp_warn
-    _eval_color_string "reset ${SP_WARN:-'yellow'}" sp_warn
+    _eval_color_string "reset ${SP_COLOR_WARN:-'yellow'}" sp_warn
     local sp_info
-    _eval_color_string "reset ${SP_INFO:-'bright-green'}" sp_info
+    _eval_color_string "reset ${SP_COLOR_INFO:-'bright-green'}" sp_info
     local sp_notice
-    _eval_color_string "reset ${SP_NOTICE:-'bright-cyan'}" sp_notice
+    _eval_color_string "reset ${SP_COLOR_NOTICE:-'bright-cyan'}" sp_notice
     local sp_debug
-    _eval_color_string "reset ${SP_DEBUG:-'dark-grey'}" sp_debug
+    _eval_color_string "reset ${SP_COLOR_DEBUG:-'dark-grey'}" sp_debug
     local sp_misc
-    _eval_color_string "reset ${SP_MISC:-'white'}" sp_misc
+    _eval_color_string "reset ${SP_COLOR_MISC:-'white'}" sp_misc
 
     # Get some other (non color) configurable parameters
     local -r sp_time_fmt=${SP_TIME_FMT:-%H:%M %d/%m}
