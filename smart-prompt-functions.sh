@@ -13,7 +13,7 @@
 #
 # Parse RGB color string.
 #
-# @param $1 -- red component
+# @param $1 -- input string to parse
 # @param $2 -- prefix of variables to assign results. Output can be read
 #              from `<prefix>_r`, `<prefix>_g` and `<prefix>_b`
 #
@@ -30,6 +30,29 @@ function _parse_rgb()
     fi
 
     logger -t 'smart-prompt' "Invalid color specification '${_prbg__input}'"
+    return 1
+}
+
+#
+# Parse hex color string.
+#
+# @param $1 -- input string to parse
+# @param $2 -- prefix of variables to assign results. Output can be read
+#              from `<prefix>_r`, `<prefix>_g` and `<prefix>_b`
+#
+function _parse_hex_color()
+{
+    local -r _phc__input="$1"
+    local -r _phc__prefix=$2
+
+    if [[ ${_phc__input} =~ 0x([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2}) ]]; then
+        eval "${_phc__prefix}_r=$((0x${BASH_REMATCH[1]}))"
+        eval "${_phc__prefix}_g=$((0x${BASH_REMATCH[2]}))"
+        eval "${_phc__prefix}_b=$((0x${BASH_REMATCH[3]}))"
+        return 0
+    fi
+
+    logger -t 'smart-prompt' "Invalid color specification '${_phc__input}'"
     return 1
 }
 
@@ -102,6 +125,18 @@ function _eval_color_string
             local _esc__g
             local _esc__b
             _parse_rgb "${_ecs__c}" _esc_
+
+            if [[ $? = 0 ]]; then
+                local _ecs_rgb
+                _rgb_to_ansi ${_esc__r} ${_esc__g} ${_esc__b} _ecs_rgb
+                _ecs__result_str="${_ecs__result_str}${_ecs_rgb}"
+            fi
+            ;;
+        0x*)
+            local _esc__r
+            local _esc__g
+            local _esc__b
+            _parse_hex_color "${_ecs__c}" _esc_
 
             if [[ $? = 0 ]]; then
                 local _ecs_rgb
