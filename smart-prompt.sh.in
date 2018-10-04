@@ -112,17 +112,17 @@ function _smart_prompt()
     local sp_ps=''
     for checker in $(_get_registered_context_checkers); do
         if [[ -n "${SP_SHOW_DEBUG}" ]]; then
-            echo -ne "${sp_debug}checking ${checker}... "
+            echo -n "checking ${checker}... "
         fi
         if ${checker}; then
             if [[ -n "${SP_SHOW_DEBUG}" ]]; then
-                echo -e "${sp_info}ok${sp_reset}"
+                echo "ok"
             fi
             for action in ${SMART_PROMPT_PLUGINS[$checker]}; do
                 sp_ps+="`${action}`${sp_seg}"
             done
         elif [[ -n "${SP_SHOW_DEBUG}" ]]; then
-            echo -e "${sp_alert}!!${sp_reset}"
+            echo "!!"
         fi
     done
     # Form the final PS1
