@@ -109,7 +109,7 @@ function _eval_color_string
 
     _ecs__colors['reset']='\[\e[0m\]'
     _ecs__colors['bold']='\[\e[1m\]'
-    _ecs__colors['itallic']='\[\e[3m\]'
+    _ecs__colors['italic']='\[\e[3m\]'
     _ecs__colors['underscore']='\[\e[4m\]'
     _ecs__colors['reverse']='\[\e[7m\]'
 
@@ -150,6 +150,27 @@ function _eval_color_string
         esac
     done
     eval "${_ecs__output_var}=\"${_ecs__result_str}\""
+}
+
+
+#
+# Get a value of a color parameter
+#
+# @param $1 -- parameter name
+# @param $2 -- fallback variable w/ default value
+# @param $3 -- name of the variable to assign result
+#
+function _get_color_param()
+{
+    local -r _gcp__param=$1
+    local -r _gcp__fallback=$2
+    local -r _gcp__output_var=$3
+
+    if [[ -n ${!_gcp__param} ]]; then
+        _eval_color_string "${!_gcp__param}" ${_gcp__output_var}
+    else
+        eval "${_gcp__output_var}=\"${!_gcp__fallback}\""
+    fi
 }
 
 #

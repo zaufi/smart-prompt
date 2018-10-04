@@ -76,31 +76,38 @@ function _get_registered_context_checkers()
 
 function _smart_prompt()
 {
-    local sp_path
-    local sp_user
-    local sp_reset
-
     # Get configured colors (or defaults)
     # NOTE Before set desired color, make sure there is no
     # other styles in effect...it is why `reset' is a leading
     # (and hardcoded) "color" in a sequence...
+
+    local sp_path
     _eval_color_string "reset ${SP_COLOR_PATH:-bright-blue}" sp_path
+
+    local sp_user
+    local sp_reset
     if [[ ${EUID} != 0 ]]; then
         _eval_color_string "reset ${SP_COLOR_USER:-bright-green}" sp_user
     else
         _eval_color_string "reset ${SP_COLOR_SUSER:-bright-red}" sp_user
     fi
     _eval_color_string 'reset' sp_reset
+
     local sp_alert
     _eval_color_string "reset ${SP_COLOR_ALERT:-'bright-red'}" sp_alert
+
     local sp_warn
     _eval_color_string "reset ${SP_COLOR_WARN:-'yellow'}" sp_warn
+
     local sp_info
     _eval_color_string "reset ${SP_COLOR_INFO:-'bright-green'}" sp_info
+
     local sp_notice
     _eval_color_string "reset ${SP_COLOR_NOTICE:-'bright-cyan'}" sp_notice
+
     local sp_debug
     _eval_color_string "reset ${SP_COLOR_DEBUG:-'dark-grey'}" sp_debug
+
     local sp_misc
     _eval_color_string "reset ${SP_COLOR_MISC:-'white'}" sp_misc
 
