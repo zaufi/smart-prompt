@@ -10,12 +10,22 @@
 # (at your option) any later version.
 #
 
+
+#
+# Check if given boolean value is `true`
+#
+function _sp_check_bool()
+{
+    local -r _scb__val=$1
+    [[ ${_scb__val} =~ 1|[Yy]([Ee][Ss])?|[Oo][Nn]|[Tt][Rr][Uu][Ee] ]]
+}
+
 #
 # Check if smart-prompt has requested to show some debug spam
 #
 function _sp_is_debug()
 {
-    [[ ${SP_DEBUG} =~ 1|[Yy]([Ee][Ss])? ]]
+    _sp_check_bool ${SP_DEBUG}
 }
 
 #
