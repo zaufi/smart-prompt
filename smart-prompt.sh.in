@@ -113,7 +113,7 @@ function _smart_prompt()
 
     # Get some other (non color) configurable parameters
     local -r sp_time_fmt=${SP_TIME_FMT:-%H:%M %d/%m}
-    local -r sp_seg=${sp_color_path}${SP_SEGMENT_DELIMITER:-"\342\214\252"}
+    local -r sp_seg=${sp_color_seg}${SP_SEGMENT_DELIMITER:-"\342\214\252"}
 
     # Iterate over registered plugins and collect strings to be appended to PS1
     local sp_ps=''
