@@ -17,11 +17,13 @@ function _02_show_pwd()
 
 function _show_pwd()
 {
-    local _dir_stack_size=''
+    local _sp__dir_stack_size=''
     if [[ ${#DIRSTACK[@]} > 1 ]]; then
-        _dir_stack_size="${#DIRSTACK[@]}:"
+        _sp__dir_stack_size="${#DIRSTACK[@]}:"
     fi
-    printf "${sp_path}${_dir_stack_size}\\w"
+    local _sp__pwd_color
+    _get_color_param SP_PWD_COLOR sp_color_info _sp__pwd_color
+    printf "${_sp__pwd_color}${_sp__dir_stack_size}\\w"
 }
 
 SMART_PROMPT_PLUGINS[_02_show_pwd]=_show_pwd

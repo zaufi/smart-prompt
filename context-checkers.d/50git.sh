@@ -30,9 +30,9 @@ function _get_git_dirty_status()
     local _ggds__output_var=$1
     local _ggds__status_color
     if [[ -z $(git status -s) ]]; then
-        _ggds__status_color="${sp_info}"
+        _get_color_param SP_GIT_GREEN_COLOR sp_color_info _ggds__status_color
     else
-        _ggds__status_color="${sp_warn}"
+        _get_color_param SP_GIT_DIRTY_COLOR sp_color_warn _ggds__status_color
     fi
     eval "${_ggds__output_var}=\"${_ggds__status_color}\""
 }

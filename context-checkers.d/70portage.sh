@@ -31,7 +31,9 @@ function _show_tree_timestamp()
     # Transform UTC date/time into local timezone
     local _stamp=$(< /usr/portage/metadata/timestamp.chk)
     local _local_stamp=$(date -d "${_stamp}" +"${sp_time_fmt}")
-    printf "${sp_debug}timestamp: ${_local_stamp}"
+    local _color
+    _get_color_param SP_PORTAGE_SYNC_TIME_COLOR sp_color_misc _color
+    printf "${_color}timestamp: ${_local_stamp}"
 }
 SMART_PROMPT_PLUGINS[_70_is_inside_of_portage_tree_dir]=_show_tree_timestamp
 
@@ -52,7 +54,9 @@ function _show_current_profile()
     fi
     if [[ -n ${_profile} ]]; then
         _profile=$(readlink ${_profile})
-        printf "${sp_debug}profile: %s" $(sed 's,.*default/\(.*\),\1,' <<<${_profile})
+        local _color
+        _get_color_param SP_PORTAGE_PROFILE_COLOR sp_color_debug _color
+        printf "${_color}profile: %s" $(sed 's,.*default/\(.*\),\1,' <<<${_profile})
     fi
 }
 SMART_PROMPT_PLUGINS[_70_is_etc_dir]=_show_current_profile
@@ -74,14 +78,20 @@ function _show_installed_packages()
         local _sip_installed_date=$(< COUNTER)
         _sip_installed_date=$(date --date=@${_sip_installed_date} +"${sp_time_fmt}")
         local _sip_installed_from_repo=$(< REPOSITORY)
-        printf "${sp_info}${_sip_installed_date} from ${_sip_installed_from_repo}"
+        local _sip_repo_color
+        _get_color_param SP_PORTAGE_PKG_DETAILS_COLOR sp_color_info _sip_repo_color
+        printf "${_sip_repo_color}${_sip_installed_date} from ${_sip_installed_from_repo}"
         ;;
     /var/db/pkg/*)
         local -r _sip_pkgs_in_cat=( $(shopt -s nullglob; echo *) )
-        printf "${sp_notice}%d/%d cat/total pkgs" ${#_sip_pkgs_in_cat[@]}  ${_sip_installed_cnt}
+        local _sip_cat_color
+        _get_color_param SP_PORTAGE_CATEGORY_DETAILS_COLOR sp_color_notice _sip_cat_color
+        printf "${_sip_cat_color}%d/%d cat/total pkgs" ${#_sip_pkgs_in_cat[@]}  ${_sip_installed_cnt}
         ;;
     /var/db/pkg)
-        printf "${sp_notice}%d pkgs total" ${_sip_installed_cnt}
+        local _sip_pkgdb_color
+        _get_color_param SP_PORTAGE_PKG_TOTAL_COLOR sp_color_notice _sip_pkgdb_color
+        printf "${_sip_pkgdb_color}%d pkgs total" ${_sip_installed_cnt}
         ;;
     esac
 }
@@ -101,6 +111,8 @@ function _show_world_details()
     local _swd_world_contents=$(< /var/lib/portage/world)
     local _swd_pkgs=$(egrep -v '(\*|@)' <<<"${_swd_world_contents}" | wc -l)
     local _swd_sets=$(egrep '(\*|@)' <<<"${_swd_world_contents}" | wc -l)
-    printf "${sp_notice}%d/%d/%d pkgs/sets/total" ${_swd_pkgs} ${_swd_sets} ${_swd_installed_cnt}
+    local _sip_pkgdb_color
+    _get_color_param SP_PORTAGE_WORLD_COLOR sp_color_notice _sip_pkgdb_color
+    printf "${_sip_pkgdb_color}%d/%d/%d pkgs/sets/total" ${_swd_pkgs} ${_swd_sets} ${_swd_installed_cnt}
 }
 SMART_PROMPT_PLUGINS[_72_is_var_lib_portage_dir]=_show_world_details

@@ -11,6 +11,14 @@
 #
 
 #
+# Check if smart-prompt has requested to show some debug spam
+#
+function _sp_is_debug()
+{
+    [[ ${SP_DEBUG} =~ 1|[Yy]([Ee][Ss])? ]]
+}
+
+#
 # Parse RGB color string.
 #
 # @param $1 -- input string to parse
@@ -167,7 +175,7 @@ function _get_color_param()
     local -r _gcp__output_var=$3
 
     if [[ -n ${!_gcp__param} ]]; then
-        _eval_color_string "${!_gcp__param}" ${_gcp__output_var}
+        _eval_color_string "reset ${!_gcp__param}" ${_gcp__output_var}
     else
         eval "${_gcp__output_var}=\"${!_gcp__fallback}\""
     fi

@@ -18,8 +18,10 @@ function _80_check_virtualenv()
 function _show_virtualenv()
 {
     local _svenv_segment
+    local _svenv__color
     if [[ -n ${VIRTUAL_ENV} ]]; then
-        _svenv_segment="${sp_notice}venv:${VIRTUAL_ENV}"
+        _get_color_param SP_VENV_COLOR sp_color_notice _svenv__color
+        _svenv_segment="${_svenv__color}venv:${VIRTUAL_ENV}"
     fi
     printf "${_svenv_segment}"
 }

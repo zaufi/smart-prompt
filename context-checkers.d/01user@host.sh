@@ -19,13 +19,14 @@ function _show_user_and_host()
 {
     local _optional_ssh_warn
     if [[ -n ${SSH_CONNECTION} ]]; then
-        _optional_ssh_warn="${sp_alert}ssh://"
+        _get_color_param SP_SSH_MARK_COLOR sp_color_alert _optional_ssh_warn
+        _optional_ssh_warn+="ssh://"
     fi
     local _sudo_user
     if [[ -n ${SUDO_USER} ]]; then
         _sudo_user="<${SUDO_USER}>"
     fi
-    printf "${_optional_ssh_warn}${sp_user}"'\\u'"${_sudo_user}"'@\\h'
+    printf "${_optional_ssh_warn}${sp_color_user}"'\\u'"${_sudo_user}"'@\\h'
 }
 
 SMART_PROMPT_PLUGINS[_01_show_user_and_host]=_show_user_and_host

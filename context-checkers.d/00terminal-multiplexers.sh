@@ -26,7 +26,7 @@ function _show_terminal_multiplexer()
     else
         _multiplexer='screen(?)'
     fi
-    printf "${sp_warn}${_multiplexer}"
+    printf "${sp_color_warn}${_multiplexer}"
 }
 
 SMART_PROMPT_PLUGINS[_01_is_under_terminal_multiplexer]=_show_terminal_multiplexer

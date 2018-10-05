@@ -50,7 +50,7 @@ declare -A SMART_PROMPT_PLUGINS
 # Loading plugins
 if [[ -d @CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d ]]; then
     for plugin in @CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d/[0-9][0-9]*.sh; do
-        if [[ -n ${SP_SHOW_DEBUG} ]]; then
+        if _sp_is_debug; then
             echo -e "\e[1;30mloading ${plugin}...\e[38m"
         fi
         source ${plugin}
@@ -60,7 +60,7 @@ fi
 # Loading user plugins
 if [[ -d ~/.@PROJECT_NAME@.d ]]; then
     for plugin in ~/.@PROJECT_NAME@.d/[0-9][0-9]*.sh; do
-        if [[ -n ${SP_SHOW_DEBUG} ]]; then
+        if _sp_is_debug; then
             echo -e "\e[1;30mloading ${plugin}...\e[38m"
         fi
         source ${plugin}
@@ -81,54 +81,54 @@ function _smart_prompt()
     # other styles in effect...it is why `reset' is a leading
     # (and hardcoded) "color" in a sequence...
 
-    local sp_path
-    _eval_color_string "reset ${SP_COLOR_PATH:-bright-blue}" sp_path
-
-    local sp_user
+    local sp_color_user
     local sp_reset
     if [[ ${EUID} != 0 ]]; then
-        _eval_color_string "reset ${SP_COLOR_USER:-bright-green}" sp_user
+        _eval_color_string "reset ${SP_COLOR_USER:-bright-green}" sp_color_user
     else
-        _eval_color_string "reset ${SP_COLOR_SUSER:-bright-red}" sp_user
+        _eval_color_string "reset ${SP_COLOR_SUSER:-bright-red}" sp_color_user
     fi
     _eval_color_string 'reset' sp_reset
 
-    local sp_alert
-    _eval_color_string "reset ${SP_COLOR_ALERT:-'bright-red'}" sp_alert
+    local sp_color_alert
+    _eval_color_string "reset ${SP_COLOR_ALERT:-'bright-red'}" sp_color_alert
 
-    local sp_warn
-    _eval_color_string "reset ${SP_COLOR_WARN:-'yellow'}" sp_warn
+    local sp_color_warn
+    _eval_color_string "reset ${SP_COLOR_WARN:-'yellow'}" sp_color_warn
 
-    local sp_info
-    _eval_color_string "reset ${SP_COLOR_INFO:-'bright-green'}" sp_info
+    local sp_color_info
+    _eval_color_string "reset ${SP_COLOR_INFO:-'bright-green'}" sp_color_info
 
-    local sp_notice
-    _eval_color_string "reset ${SP_COLOR_NOTICE:-'bright-cyan'}" sp_notice
+    local sp_color_notice
+    _eval_color_string "reset ${SP_COLOR_NOTICE:-'bright-cyan'}" sp_color_notice
 
-    local sp_debug
-    _eval_color_string "reset ${SP_COLOR_DEBUG:-'dark-grey'}" sp_debug
+    local sp_color_debug
+    _eval_color_string "reset ${SP_COLOR_DEBUG:-'dark-grey'}" sp_color_debug
 
-    local sp_misc
-    _eval_color_string "reset ${SP_COLOR_MISC:-'white'}" sp_misc
+    local sp_color_misc
+    _eval_color_string "reset ${SP_COLOR_MISC:-'white'}" sp_color_misc
+
+    local sp_color_seg
+    _eval_color_string "reset ${SP_SEGMENT_COLOR:-bright-blue}" sp_color_seg
 
     # Get some other (non color) configurable parameters
     local -r sp_time_fmt=${SP_TIME_FMT:-%H:%M %d/%m}
-    local -r sp_seg=${sp_path}${SP_SEGMENT_DELIMITER:-"\342\214\252"}
+    local -r sp_seg=${sp_color_path}${SP_SEGMENT_DELIMITER:-"\342\214\252"}
 
     # Iterate over registered plugins and collect strings to be appended to PS1
     local sp_ps=''
     for checker in $(_get_registered_context_checkers); do
-        if [[ -n "${SP_SHOW_DEBUG}" ]]; then
+        if _sp_is_debug; then
             echo -ne "\e[1;30mchecking ${checker}...\e[38m "
         fi
         if ${checker}; then
-            if [[ -n "${SP_SHOW_DEBUG}" ]]; then
+            if _sp_is_debug; then
                 echo -e "\e[1;32mok\e[38m\e[38m"
             fi
             for action in ${SMART_PROMPT_PLUGINS[$checker]}; do
                 sp_ps+="`${action}`${sp_seg}"
             done
-        elif [[ -n "${SP_SHOW_DEBUG}" ]]; then
+        elif _sp_is_debug; then
             echo -e "\e[1;31m!!\e[38m"
         fi
     done

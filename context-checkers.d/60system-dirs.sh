@@ -18,7 +18,7 @@
 # Append 'NN modules loaded' segment
 function _show_loaded_modules()
 {
-    printf "${sp_debug}%d modules loaded" $(( $(lsmod | wc -l) - 1 ))
+    printf "${sp_color_debug}%d modules loaded" $(( $(lsmod | wc -l) - 1 ))
 }
 
 # Append segment w/ current uptime
@@ -29,14 +29,14 @@ function _show_uptime()
     local _uptime
     _seconds_to_duration ${_seconds} _uptime
 
-    printf "${sp_misc}${_uptime}"
+    printf "${sp_color_misc}${_uptime}"
 }
 
 # Add segment w/ current kernel name
 function _show_kernel()
 {
     local _kernel=$(uname -r)
-    printf "${sp_debug}${_kernel}"
+    printf "${sp_color_debug}${_kernel}"
 }
 
 # Add segment w/ network interfaces
@@ -57,10 +57,10 @@ function _show_net_ifaces()
                         local _sni__addr=$(${_sni__ip_bin} addr show ${_sni__iface} \
                           | sed -ne '/inet / {s,\s\+inet \([^ ]\+\).*,\1,;p}' \
                           )
-                          _sni__result+="${_sni_delim}${sp_info}${_sni__iface}: ${_sni__addr}"
+                          _sni__result+="${_sni_delim}${sp_color_info}${_sni__iface}: ${_sni__addr}"
                         ;;
                     0*)
-                        _sni__result+="${_sni_delim}${sp_alert}${_sni__iface}"
+                        _sni__result+="${_sni_delim}${sp_color_alert}${_sni__iface}"
                         ;;
                 esac
                 _sni_delim="${sp_seg}"
@@ -80,7 +80,7 @@ function _60_is_linked_dir()
 function _show_dir_link()
 {
     local _link_to=$(readlink "${PWD}")
-    printf "${sp_debug}→${_link_to}"
+    printf "${sp_color_debug}→${_link_to}"
 }
 SMART_PROMPT_PLUGINS[_60_is_linked_dir]=_show_dir_link
 
@@ -97,7 +97,7 @@ function _99_is_empty_dir()
 }
 function _show_empty_mark()
 {
-    printf "${sp_debug}empty dir"
+    printf "${sp_color_debug}empty dir"
 }
 SMART_PROMPT_PLUGINS[_99_is_empty_dir]=_show_empty_mark
 
@@ -137,7 +137,7 @@ function _show_processes_and_load()
     local _all_processes=$(( ${_psax_wc_l} - 2))
     local _user_processes=$(( ${_psu_wc_l} - 2))
 
-    printf "${sp_debug}${_user_processes}/${_all_processes}${sp_seg}${sp_debug}${_load}"
+    printf "${sp_color_debug}${_user_processes}/${_all_processes}${sp_seg}${sp_color_debug}${_load}"
 }
 SMART_PROMPT_PLUGINS[_61_is_proc_dir]=_show_processes_and_load
 
@@ -154,9 +154,9 @@ function _show_kernel_config()
 {
     local _configured
     if [[ -f .config ]]; then
-        _configured="${sp_misc}cfg: $(grep '^[^#]\+=m' .config | wc -l) modules"
+        _configured="${sp_color_misc}cfg: $(grep '^[^#]\+=m' .config | wc -l) modules"
     else
-        _configured="${sp_warn}no .config"
+        _configured="${sp_color_warn}no .config"
     fi
     printf "${_configured}"
 }
@@ -188,12 +188,12 @@ function _61_may_show_mount_info()
 }
 function _show_some_dev_and_mount_info()
 {
-    printf "${sp_debug}${_devs_mounted}%d blk.devs" $(/bin/mount | grep '^/dev/' | wc -l)
+    printf "${sp_color_debug}${_devs_mounted}%d blk.devs" $(/bin/mount | grep '^/dev/' | wc -l)
 
     local _lsusb_bin
     if _find_program lsusb _lsusb_bin; then
         local -i _usb_devs=$(${_lsusb_bin} | grep -iv 'hub$' | wc -l)
-        printf "${sp_seg}${sp_debug}${_usb_devs} usb devs"
+        printf "${sp_seg}${sp_color_debug}${_usb_devs} usb devs"
     fi
 }
 SMART_PROMPT_PLUGINS[_61_may_show_mount_info]=_show_some_dev_and_mount_info
@@ -215,9 +215,9 @@ function _show_fonts_info()
     local _fc_cat_bin
     if _find_program fc-list _fc_list_bin && _find_program fc-cat _fc_cat_bin; then
         if _cur_dir_starts_with /etc/fonts; then
-            printf "${sp_misc}fonts: %d" $(${_fc_list_bin} | wc -l)
+            printf "${sp_color_misc}fonts: %d" $(${_fc_list_bin} | wc -l)
         else
-            printf "${sp_misc}fonts: %d/%d" $(${_fc_cat_bin} . | grep -v '"\.dir"' | wc -l) $(${_fc_list_bin} | wc -l)
+            printf "${sp_color_misc}fonts: %d/%d" $(${_fc_cat_bin} . | grep -v '"\.dir"' | wc -l) $(${_fc_list_bin} | wc -l)
         fi
     fi
 }
@@ -245,7 +245,7 @@ function _show_logged_users()
 {
     local -a _users
     readarray -t _users < <(who | cut -d ' ' -f 1 | sort -nr | uniq -c | sed 's,^\s*,,')
-    local _delim=${sp_misc}
+    local _delim=${sp_color_misc}
     local _user
     local _logged_users
     for _user in "${_users[@]}"; do
@@ -266,6 +266,6 @@ function _62_is_etc_bash_completion_dir()
 function _show_bash_completions_config()
 {
     local -a _sbcc_active=( $(shopt -s nullglob; echo *) )
-    printf "${sp_notice}%d installed" ${#_sbcc_active[@]}
+    printf "${sp_color_notice}%d installed" ${#_sbcc_active[@]}
 }
 SMART_PROMPT_PLUGINS[_62_is_etc_bash_completion_dir]=_show_bash_completions_config

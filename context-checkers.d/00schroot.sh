@@ -18,9 +18,9 @@ function _00_is_under_schroot()
 function _show_schroot()
 {
     if [[ -n ${SCHROOT_CHROOT_NAME} ]]; then
-        printf "${sp_warn}${SCHROOT_CHROOT_NAME}"
+        printf "${sp_color_warn}${SCHROOT_CHROOT_NAME}"
     else
-        printf "${sp_warn}$(< /etc/debian_chroot)"
+        printf "${sp_color_warn}$(< /etc/debian_chroot)"
     fi
 }
 SMART_PROMPT_PLUGINS[_00_is_under_schroot]=_show_schroot
@@ -38,7 +38,7 @@ function _show_schroot_config()
     if _find_program schroot _ssc_schroot_bin; then
         local _ssc_total=$(${_ssc_schroot_bin} -l | wc -l)
         local _ssc_active=$(${_ssc_schroot_bin} --all-sessions -l 2>/dev/null | wc -l)
-        printf "${sp_notice}%d/%d active/total" ${_ssc_active} ${_ssc_total}
+        printf "${sp_color_notice}%d/%d active/total" ${_ssc_active} ${_ssc_total}
     fi
 }
 SMART_PROMPT_PLUGINS[_62_is_etc_schroot_dir]=_show_schroot_config

@@ -35,9 +35,20 @@ function _show_cmake_options()
                 sed -ne '/^CMAKE_PROJECT_VERSION:STATIC=.*$/ {s,CMAKE_PROJECT_VERSION:STATIC=,,; p}' \
                 "${_sco__top_build_dir}"/CMakeCache.txt \
               )
-            printf "${sp_notice}${_sco__build_type:-"default"}${sp_seg}${sp_info}${_sco__version}→${sp_debug}${_sco__prefix}"
+            local _sco__color_build_type
+            _get_color_param SP_CMAKE_BUILD_TYPE_COLOR sp_color_notice _sco__color_build_type
+            local _sco__color_version
+            _get_color_param SP_CMAKE_PROJECT_VERSION_COLOR sp_color_info _sco__color_version
+            local _sco__color_install_pfx
+            _get_color_param SP_CMAKE_INSTALL_PREFIX_COLOR sp_color_debug _sco__color_install_pfx
+
+            printf "${_sco__build_type:-"${_sco__color_build_type}default"}${sp_seg}${_sco__color_version}${_sco__version}→${_sco__color_install_pfx}${_sco__prefix}"
         else
-            printf "${sp_alert}×${sp_warn}${_sco__top_build_dir}"
+            local _sco__color_broken_mark
+            _get_color_param SP_CMAKE_BROKEN_MARK_COLOR sp_color_alert _sco__color_broken_mark
+            local _sco__color_broken_path
+            _get_color_param SP_CMAKE_BROKEN_BUILD_DIR_COLOR sp_color_warn _sco__color_broken_path
+            printf "${_sco__color_broken_mark}×${_sco__color_broken_path}${_sco__top_build_dir}"
         fi
     fi
 }
