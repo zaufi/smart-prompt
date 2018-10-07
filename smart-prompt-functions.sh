@@ -184,6 +184,10 @@ function _get_color_param()
     local -r _gcp__fallback=$2
     local -r _gcp__output_var=$3
 
+    if _sp_is_debug; then
+        echo -e "\e[1;30mGetting color parameter '${_gcp__param}'\e[38m"
+    fi
+
     if [[ -n ${!_gcp__param} ]]; then
         _eval_color_string "reset ${!_gcp__param}" ${_gcp__output_var}
     else
