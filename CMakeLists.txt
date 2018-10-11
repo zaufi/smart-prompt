@@ -184,6 +184,7 @@ install(
         context-checkers.d/01user@host.sh
         context-checkers.d/02pwd.sh
         context-checkers.d/40cmake-build-dir.sh
+        context-checkers.d/41nodejs-project-dir.sh
         $<$<BOOL:${WITH_GIT}>:${PROJECT_SOURCE_DIR}/context-checkers.d/50git.sh>
         $<$<BOOL:${WITH_SVN}>:${PROJECT_SOURCE_DIR}/context-checkers.d/52svn.sh>
         context-checkers.d/60system-dirs.sh

@@ -14,7 +14,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Add option `USE_GENTOO` with default value `AUTO` to install Gentoo
   specific checkers;
 - Colorize CMake build types. One can set `SP_CMAKE_<UPCASE_NAME>_BUILD_TYPE_COLOR`
-  to desired color. If not set, default `SP_CMAKE_BUILD_TYPE_COLOR` will be used.
+  to desired color. If not set, default `SP_CMAKE_BUILD_TYPE_COLOR` will be used;
+- Detect JS project dir and extract package name and version from `package.json`.
 
 ### Changed
 
