@@ -18,7 +18,9 @@
 # Append 'NN modules loaded' segment
 function _show_loaded_modules()
 {
-    printf "${sp_color_debug}%d modules loaded" $(( $(lsmod | wc -l) - 1 ))
+    local _slm__modules_cnt_color
+    _get_color_param SP_KERNEL_MODULES_COUNT_COLOR sp_color_debug _slm__modules_cnt_color
+    printf "${_slm__modules_cnt_color}%d modules loaded" $(( $(lsmod | wc -l) - 1 ))
 }
 
 # Append segment w/ current uptime
@@ -29,14 +31,18 @@ function _show_uptime()
     local _uptime
     _seconds_to_duration ${_seconds} _uptime
 
-    printf "${sp_color_misc}${_uptime}"
+    local _su__uptime_color
+    _get_color_param SP_UPTIME_COLOR sp_color_debug _su__uptime_color
+    printf "${_su__uptime_color}${_uptime}"
 }
 
 # Add segment w/ current kernel name
 function _show_kernel()
 {
     local _kernel=$(uname -r)
-    printf "${sp_color_debug}${_kernel}"
+    local _sk__running_kernel_color
+    _get_color_param SP_CURRENT_KERNEL_COLOR sp_color_debug _sk__running_kernel_color
+    printf "${_sk__running_kernel_color}${_kernel}"
 }
 
 # Add segment w/ network interfaces
@@ -57,10 +63,14 @@ function _show_net_ifaces()
                         local _sni__addr=$(${_sni__ip_bin} addr show ${_sni__iface} \
                           | sed -ne '/inet / {s,\s\+inet \([^ ]\+\).*,\1,;p}' \
                           )
-                          _sni__result+="${_sni_delim}${sp_color_info}${_sni__iface}: ${_sni__addr}"
+                        local _sni__active_iface_color
+                        _get_color_param SP_ACTIVE_NET_IFACE_COLOR sp_color_info _sni__active_iface_color
+                          _sni__result+="${_sni_delim}${_sni__active_iface_color}${_sni__iface}: ${_sni__addr}"
                         ;;
                     0*)
-                        _sni__result+="${_sni_delim}${sp_color_alert}${_sni__iface}"
+                        local _sni__inactive_iface_color
+                        _get_color_param SP_INACTIVE_NET_IFACE_COLOR sp_color_alert _sni__inactive_iface_color
+                        _sni__result+="${_sni_delim}${_sni__inactive_iface_color}${_sni__iface}"
                         ;;
                 esac
                 _sni_delim="${sp_seg}"
@@ -80,7 +90,9 @@ function _60_is_linked_dir()
 function _show_dir_link()
 {
     local _link_to=$(readlink "${PWD}")
-    printf "${sp_color_debug}→${_link_to}"
+    local _sdl__link_color
+    _get_color_param SP_LINKED_DIR_COLOR sp_color_debug _sdl__link_color
+    printf "${_sdl__link_color}→${_link_to}"
 }
 SMART_PROMPT_PLUGINS[_60_is_linked_dir]=_show_dir_link
 
@@ -89,6 +101,9 @@ SMART_PROMPT_PLUGINS[_60_is_linked_dir]=_show_dir_link
 # Append "empty dir" segment for, surprise, empty dirs ;)
 #
 # NOTE W/ priority 99 it will be close to the prompt end
+# NOTE Depending on `dotglobe` shell option it can give
+# a _positive result_ when a current directory has only
+# "hidden" files.
 #
 function _99_is_empty_dir()
 {
@@ -97,7 +112,9 @@ function _99_is_empty_dir()
 }
 function _show_empty_mark()
 {
-    printf "${sp_color_debug}empty dir"
+    local _sem__empty_dir_color
+    _get_color_param SP_EMPTY_DIR_COLOR sp_color_debug _sem__empty_dir_color
+    printf "${_sem__empty_dir_color}empty dir"
 }
 SMART_PROMPT_PLUGINS[_99_is_empty_dir]=_show_empty_mark
 
@@ -137,7 +154,11 @@ function _show_processes_and_load()
     local _all_processes=$(( ${_psax_wc_l} - 2))
     local _user_processes=$(( ${_psu_wc_l} - 2))
 
-    printf "${sp_color_debug}${_user_processes}/${_all_processes}${sp_seg}${sp_color_debug}${_load}"
+    local _spal__processes_color
+    _get_color_param SP_PROCESSES_COUNT_COLOR sp_color_debug _spal__processes_color
+    local _spal__load_stat_color
+    _get_color_param SP_LOAD_STAT_COLOR sp_color_debug _spal__load_stat_color
+    printf "${_spal__processes_color}${_user_processes}/${_all_processes}${sp_seg}${_spal__load_stat_color}${_load}"
 }
 SMART_PROMPT_PLUGINS[_61_is_proc_dir]=_show_processes_and_load
 
@@ -154,9 +175,13 @@ function _show_kernel_config()
 {
     local _configured
     if [[ -f .config ]]; then
-        _configured="${sp_color_misc}cfg: $(grep '^[^#]\+=m' .config | wc -l) modules"
+        local _skc__config_color
+        _get_color_param SP_KERNEL_CONFIG_STAT_COLOR sp_color_misc _skc__config_color
+        _configured="${_skc__config_color}cfg: $(grep '^[^#]\+=m' .config | wc -l) modules"
     else
-        _configured="${sp_color_warn}no .config"
+        local _skc__no_config_color
+        _get_color_param SP_KERNEL_NO_CONFIG_COLOR sp_color_warn _skc__no_config_color
+        _configured="${_skc__no_config_color}no .config"
     fi
     printf "${_configured}"
 }
@@ -188,12 +213,16 @@ function _61_may_show_mount_info()
 }
 function _show_some_dev_and_mount_info()
 {
-    printf "${sp_color_debug}${_devs_mounted}%d blk.devs" $(/bin/mount | grep '^/dev/' | wc -l)
+    local _ssdami__mount_info_color
+    _get_color_param SP_BLOCK_DEVS_COUNT_COLOR sp_color_debug _ssdami__mount_info_color
+    printf "${_ssdami__mount_info_color}${_devs_mounted}%d blk.devs" $(/bin/mount | grep '^/dev/' | wc -l)
 
     local _lsusb_bin
     if _find_program lsusb _lsusb_bin; then
         local -i _usb_devs=$(${_lsusb_bin} | grep -iv 'hub$' | wc -l)
-        printf "${sp_seg}${sp_color_debug}${_usb_devs} usb devs"
+        local _ssdami__mount_info_usb_color
+        _get_color_param SP_USB_DEVS_COUNT_COLOR sp_color_debug _ssdami__mount_info_usb_color
+        printf "${sp_seg}${_ssdami__mount_info_usb_color}${_usb_devs} usb devs"
     fi
 }
 SMART_PROMPT_PLUGINS[_61_may_show_mount_info]=_show_some_dev_and_mount_info
@@ -214,10 +243,12 @@ function _show_fonts_info()
     local _fc_list_bin
     local _fc_cat_bin
     if _find_program fc-list _fc_list_bin && _find_program fc-cat _fc_cat_bin; then
+        local _sfi__fc_color
+        _get_color_param SP_FONTS_COUNT_COLOR sp_color_misc _sfi__fc_color
         if _cur_dir_starts_with /etc/fonts; then
-            printf "${sp_color_misc}fonts: %d" $(${_fc_list_bin} | wc -l)
+            printf "${_sfi__fc_color}fonts: %d" $(${_fc_list_bin} 2>/dev/null | wc -l)
         else
-            printf "${sp_color_misc}fonts: %d/%d" $(${_fc_cat_bin} . | grep -v '"\.dir"' | wc -l) $(${_fc_list_bin} | wc -l)
+            printf "${_sfi__fc_color}fonts: %d/%d" $(${_fc_cat_bin} . 2>/dev/null | grep -v '"\.dir"' | wc -l) $(${_fc_list_bin} | wc -l)
         fi
     fi
 }
@@ -244,12 +275,14 @@ function _61_is_home_dir()
 function _show_logged_users()
 {
     local -a _users
-    readarray -t _users < <(who | cut -d ' ' -f 1 | sort -nr | uniq -c | sed 's,^\s*,,')
-    local _delim=${sp_color_misc}
+    readarray -t _users < <(who | cut -d ' ' -f 1 | sort -nr | uniq -c)
+    local _slu__users_color
+    _get_color_param SP_LOGGED_USERS_COUNT_COLOR sp_color_misc _slu__users_color
+    local _delim=${_slu__users_color}
     local _user
     local _logged_users
     for _user in "${_users[@]}"; do
-        _logged_users+="${_delim}${_user}"
+        _logged_users+="${_delim}$(echo ${_user})"
         _delim=','
     done
     printf "${_logged_users}"
@@ -259,13 +292,18 @@ SMART_PROMPT_PLUGINS[_61_is_home_dir]=_show_logged_users
 #
 # Show installed bash completions details
 #
+# TODO This code is for "static" completions and won't work
+# w/ modern `bash-completions` package.
+#
 function _62_is_etc_bash_completion_dir()
 {
     return $(_is_cur_dir_equals_to /etc/bash_completion.d)
 }
 function _show_bash_completions_config()
 {
-    local -a _sbcc_active=( $(shopt -s nullglob; echo *) )
-    printf "${sp_color_notice}%d installed" ${#_sbcc_active[@]}
+    local -a _sbcc__active=( $(shopt -s nullglob; echo *) )
+    local _sbcc__count_color
+    _get_color_param SP_BASH_COMPLETIONS_COUNT_COLOR sp_color_notice _sbcc__count_color
+    printf "${_sbcc__count_color}%d installed" ${#_sbcc__active[@]}
 }
 SMART_PROMPT_PLUGINS[_62_is_etc_bash_completion_dir]=_show_bash_completions_config

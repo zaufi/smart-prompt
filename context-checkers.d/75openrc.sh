@@ -42,7 +42,9 @@ function _show_started_services()
     local _sss__total_count
     _get_started_services_cnt ${_sss__level} _sss__count
     _get_total_services_cnt ${_sss__level} _sss__total_count
-    printf "${sp_color_notice}%d/%d started" ${_sss__count} ${_sss__total_count}
+    local _sss__services_color
+    _get_color_param SP_OPENRC_SERVICES_COLOR sp_color_notice _sss__services_color
+    printf "${_sss__services_color}%d/%d started" ${_sss__count} ${_sss__total_count}
 }
 SMART_PROMPT_PLUGINS[_75_is_init_d_dir]=_show_started_services
 
