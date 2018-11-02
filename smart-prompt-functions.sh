@@ -91,10 +91,10 @@ function _rgb_to_ansi()
 
     if [[ ${_r2a__r} -le 5 && ${_r2a__g} -le 5 && ${_r2a__b} -le 5 ]]; then
         # 256 colors
-        eval "${_r2a__output_var}='\e[38;5;$(( ${_r2a__r} * 36 + ${_r2a__g} * 6 + ${_r2a__b} + 16 ))m'"
+        eval "${_r2a__output_var}='\[\e[38;5;$(( ${_r2a__r} * 36 + ${_r2a__g} * 6 + ${_r2a__b} + 16 ))m\]'"
     else
         # 16M colors
-        eval "${_r2a__output_var}='\e[38;2;${_r2a__r};${_r2a__g};${_r2a__b}m'"
+        eval "${_r2a__output_var}='\[\e[38;2;${_r2a__r};${_r2a__g};${_r2a__b}m\]'"
     fi
 }
 
