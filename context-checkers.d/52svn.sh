@@ -53,7 +53,7 @@ function _show_svn_status()
     local _sss__status
     _get_svn_dirty_status _sss__status
 
-    printf "${_sss__status}svn:${_sss__branch}"
+    printf "${_sss__status}svn:${_sss__branch}"
 }
 
 SMART_PROMPT_PLUGINS[_52_is_svn_repo]=_show_svn_status

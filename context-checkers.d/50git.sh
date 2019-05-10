@@ -44,7 +44,7 @@ function _show_git_status()
     local _sgs__status
     _get_git_dirty_status _sgs__status
 
-    printf "${_sgs__status}git:${_sgs__branch}"
+    printf "${_sgs__status}:${_sgs__branch}"
 }
 
 SMART_PROMPT_PLUGINS[_50_is_git_repo]=_show_git_status

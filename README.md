@@ -8,7 +8,7 @@ and/or condition.
 
 For example, if you are in git working copy, your command prompt will look like this:
 
-    zaufi@gentop〉 /work/GitHub/smart-prompt〉 git:master〉 $
+    zaufi@gentop〉 /work/GitHub/smart-prompt〉 :master〉 $
 
 for `/boot` it'll be like
 
