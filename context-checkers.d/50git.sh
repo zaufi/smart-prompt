@@ -44,7 +44,12 @@ function _show_git_status()
     local _sgs__status
     _get_git_dirty_status _sgs__status
 
-    printf "${_sgs__status}:${_sgs__branch}"
+    local _sgs__repo
+    if _sp_check_bool ${SP_INDICATE_REPO_TYPE} -o [[ ${SP_INDICATE_REPO_TYPE[@]} =~ git ]]; then
+        _sgs__repo='git:'
+    fi
+
+    printf "${_sgs__status}${_sgs__repo}${SP_VCS_BRANCH_SYMBOL}${_sgs__branch}"
 }
 
 SMART_PROMPT_PLUGINS[_50_is_git_repo]=_show_git_status

@@ -53,7 +53,12 @@ function _show_svn_status()
     local _sss__status
     _get_svn_dirty_status _sss__status
 
-    printf "${_sss__status}svn:${_sss__branch}"
+    local _sss__repo
+    if _sp_check_bool ${SP_INDICATE_REPO_TYPE} -o [[ ${SP_INDICATE_REPO_TYPE[@]} =~ svn ]]; then
+        _sss__repo='svn:'
+    fi
+
+    printf "${_sss__status}${_sss__repo}${SP_VCS_BRANCH_SYMBOL}${_sss__branch}"
 }
 
 SMART_PROMPT_PLUGINS[_52_is_svn_repo]=_show_svn_status
