@@ -76,6 +76,10 @@ function _get_registered_context_checkers()
 
 function _smart_prompt()
 {
+    # NOTE As the very first action, store an exit code of the
+    # previous command...
+    local _sp__prev_cmd_exit_code=$?
+
     # Get configured colors (or defaults)
     # NOTE Before set desired color, make sure there is no
     # other styles in effect...it is why `reset' is a leading

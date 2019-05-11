@@ -193,6 +193,7 @@ install(
         $<$<BOOL:${WITH_OPENRC}>:${PROJECT_SOURCE_DIR}/context-checkers.d/75openrc.sh>
         $<$<BOOL:${WITH_SYSTEMD}>:${PROJECT_SOURCE_DIR}/context-checkers.d/75systemd.sh>
         context-checkers.d/80virtualenv.sh
+        context-checkers.d/99prev-cmd-exit-code.sh
     DESTINATION "${CMAKE_INSTALL_LIBEXECDIR}/${PROJECT_NAME}/context-checkers.d"
   )
 install(
