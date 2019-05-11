@@ -98,28 +98,6 @@ SMART_PROMPT_PLUGINS[_60_is_linked_dir]=_show_dir_link
 
 
 #
-# Append "empty dir" segment for, surprise, empty dirs ;)
-#
-# NOTE W/ priority 99 it will be close to the prompt end
-# NOTE Depending on `dotglobe` shell option it can give
-# a _positive result_ when a current directory has only
-# "hidden" files.
-#
-function _99_is_empty_dir()
-{
-    local -a _content=( $(shopt -s nullglob; echo *) )
-    return $([[ -z ${_content} ]])
-}
-function _show_empty_mark()
-{
-    local _sem__empty_dir_color
-    _get_color_param SP_EMPTY_DIR_COLOR sp_color_debug _sem__empty_dir_color
-    printf "${_sem__empty_dir_color}empty dir"
-}
-SMART_PROMPT_PLUGINS[_99_is_empty_dir]=_show_empty_mark
-
-
-#
 # Show current kernel name and uptime for /boot dir
 #
 function _61_is_boot_dir()
