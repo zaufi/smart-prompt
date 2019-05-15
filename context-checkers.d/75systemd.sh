@@ -10,15 +10,6 @@
 # (at your option) any later version.
 #
 
-#BEGIN Service functions
-function _systemd_get_default_target()
-{
-    local _sgdt__target=$(systemctl get-default)
-    local _sgdt__output_var=$1
-    eval "${_sgdt__output_var}=${_sgdt__target/.target/}"
-}
-#END Service functions
-
 #
 # Show count of started services
 #
@@ -28,10 +19,23 @@ function _75_is_systemd_dir()
 }
 function _systemd_show_default_target()
 {
-    local _sdt__target
-    _systemd_get_default_target _sdt__target
+    local _sdt__target=$(systemctl get-default)
+    # NOTE To capture the exit code of `systemctl is-system-running`
+    # declaration and assign are on the different lines.
+    local _sdt__state
+    _sdt__state=$(systemctl is-system-running)
+    local _sdt__exit_code=$?
+
     local _sdt__target_color
     _get_color_param SP_SYSTEMD_TARGET_COLOR sp_color_notice _sdt__target_color
-    printf "${_sdt__target_color}%s" ${_sdt__target}
+
+    local _sdt__state_color
+    if [[ ${_sdt__exit_code} != 0 ]]; then
+        _get_color_param SP_SYSTEMD_STATE_ALERT_COLOR sp_color_alert _sdt__state_color
+    else
+        _get_color_param SP_SYSTEMD_STATE_OK_COLOR sp_color_info _sdt__state_color
+    fi
+
+    printf "${_sdt__target_color}%s ${_sdt__state_color}%s" ${_sdt__target} ${_sdt__state}
 }
 SMART_PROMPT_PLUGINS[_75_is_systemd_dir]=_systemd_show_default_target
