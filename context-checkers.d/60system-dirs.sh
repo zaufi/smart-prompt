@@ -2,7 +2,7 @@
 #
 # Show various system info depending on a current (system) dir
 #
-# Copyright (c) 2013-2018 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2013-2019 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ function _show_net_ifaces()
         local _sni_delim
         for _sni__item in /sys/class/net/*; do
             local _sni__iface=${_sni__item##*/}
-            if [[ ${_sni__iface} != lo ]]; then
+            if [[ ${SP_NET_IFACE_DISPLAY[@]:-eth0 wlan0} =~ ${_sni__iface} ]]; then
                 local _sni_stat=$(< ${_sni__item}/carrier)
                 case "${_sni_stat}" in
                     1*)
@@ -76,7 +76,7 @@ function _show_net_ifaces()
                 _sni_delim="${sp_seg}"
             fi
         done
-        printf "${_sni__result}"
+        [[ -n ${_sni__result} ]] && printf "${_sni__result}"
     fi
 }
 
@@ -237,9 +237,16 @@ SMART_PROMPT_PLUGINS[_61_is_one_of_fonts_dir]=_show_fonts_info
 #
 function _65_may_show_net_ifaces_status()
 {
-    return $(_cur_dir_starts_with /etc/wpa_supplicant \
+    if _cur_dir_starts_with /etc/wpa_supplicant \
       || _cur_dir_starts_with /etc/NetworkManager \
-      || _is_cur_dir_equals_to /var/lib/dhcpcd)
+      || _is_cur_dir_equals_to /var/lib/dhcpcd \
+      || _is_cur_dir_equals_to /sys/class/net; then
+        local _cur_iface
+        for _cur_iface in /sys/class/net/*; do
+            [[ ${SP_NET_IFACE_DISPLAY[@]:-eth0 wlan0} =~ ${_cur_iface##*/} ]] && return 0
+        done
+    fi
+    return 1
 }
 SMART_PROMPT_PLUGINS[_65_may_show_net_ifaces_status]=_show_net_ifaces
 
