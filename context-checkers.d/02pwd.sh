@@ -28,7 +28,7 @@ function _show_pwd()
     local _sp__pwd_empty_dir_mark
     if [[ -z $(shopt -s nullglob; echo *) ]]; then
         _get_color_param SP_EMPTY_DIR_COLOR sp_color_debug _sp__pwd_color
-        _sp__pwd_empty_dir_mark=${SP_EMPTY_DIR_MARK:- <empty>}
+        _sp__pwd_empty_dir_mark=${SP_EMPTY_DIR_MARK}
     fi
     printf "${_sp__pwd_color}${_sp__dir_stack_size}\\w${_sp__pwd_empty_dir_mark}"
 }

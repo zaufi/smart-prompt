@@ -25,7 +25,7 @@ function _show_virtualenv()
         if [[ ${#VIRTUAL_ENV} -lt ${#_svenv_ve_path} ]]; then
             _svenv_ve_path="${VIRTUAL_ENV}"
         fi
-        _svenv_segment="${_svenv__color}${SP_VIRTUALENV_MARK:-venv:}${_svenv_ve_path}"
+        _svenv_segment="${_svenv__color}${SP_VIRTUALENV_MARK:-\360\237\220\215:}${_svenv_ve_path}"
     fi
     printf "${_svenv_segment}"
 }
