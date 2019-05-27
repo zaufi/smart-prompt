@@ -37,19 +37,60 @@ function _get_git_dirty_status()
     eval "${_ggds__output_var}=\"${_ggds__status_color}\""
 }
 
+# THANX to https://github.com/twolfson/sexy-bash-prompt/blob/master/.bash_prompt
+function _get_git_progress() {
+    local _ggp__output_var=$1
+    # Detect in-progress actions (e.g. merge, rebase)
+    # https://github.com/git/git/blob/v1.9-rc2/wt-status.c#L1199-L1241
+    local _ggp__git_dir="$(git rev-parse --git-dir)"
+
+    # git merge
+    local __ggp__result
+    if [[ -f "${_ggp__git_dir}/MERGE_HEAD" ]]; then
+        __ggp__result=merge
+    elif [[ -d "${_ggp__git_dir}/rebase-apply" ]]; then
+        # git am
+        if [[ -f "${_ggp__git_dir}/rebase-apply/applying" ]]; then
+            __ggp__result=am
+        # git rebase
+        else
+            __ggp__result=rebase
+        fi
+    elif [[ -d "${_ggp__git_dir}/rebase-merge" ]]; then
+        # git rebase --interactive/--merge
+        __ggp__result=rebase
+    elif [[ -f "${_ggp__git_dir}/CHERRY_PICK_HEAD" ]]; then
+        # git cherry-pick
+        __ggp__result=cherry-pick
+    fi
+    if [[ -f "${_ggp__git_dir}/BISECT_LOG" ]]; then
+        # git bisect
+        __ggp__result=bisect
+    fi
+    if [[ -f "${_ggp__git_dir}/REVERT_HEAD" ]]; then
+        # git revert --no-commit
+        __ggp__result=revert
+    fi
+    if [[ -n "${__ggp__result}" ]]; then
+        eval "${_ggp__output_var}='❲${__ggp__result}❳'"
+    fi
+}
+
 function _show_git_status()
 {
     local _sgs__branch
     _get_git_branch _sgs__branch
     local _sgs__status
     _get_git_dirty_status _sgs__status
+    local _sgs__progress
+    _get_git_progress _sgs__progress
 
     local _sgs__repo
     if _sp_check_bool ${SP_INDICATE_REPO_TYPE} -o [[ ${SP_INDICATE_REPO_TYPE[@]} =~ git ]]; then
         _sgs__repo='git:'
     fi
 
-    printf "${_sgs__status}${_sgs__repo}${SP_VCS_BRANCH_SYMBOL}${_sgs__branch}"
+    printf "${_sgs__status}${_sgs__repo}${SP_VCS_BRANCH_SYMBOL}${_sgs__branch}${_sgs__progress}"
 }
 
 SMART_PROMPT_PLUGINS[_50_is_git_repo]=_show_git_status
