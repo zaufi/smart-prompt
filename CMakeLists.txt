@@ -29,7 +29,7 @@ function(auto_option NAME DESCRIPTION)
 endfunction()
 
 # Setup package options
-auto_option(WITH_DOCKER "Include readline macros for Docker")
+option(WITH_INPUTRC "Include readline macros" ON)
 auto_option(WITH_GIT "Add support for git")
 auto_option(WITH_OPENRC "Add support for OpenRC")
 auto_option(WITH_PALUDIS "Add support for Paludis (Gentoo and Exherbo)")
@@ -62,21 +62,6 @@ if(WITH_SVN)
         set(WITH_SVN OFF)
     endif()
     unset(_req)
-endif()
-
-if(WITH_DOCKER)
-    find_program(DOCKER_EXECUTABLE docker DOC "Docker executable")
-    if(NOT DOCKER_EXECUTABLE)
-        if(NOT WITH_DOCKER STREQUAL AUTO)
-            message(
-                WARNING
-                "Docker support has been requested, but `docker` executable not found."
-                "Make sure you have it installed after this package."
-              )
-        else()
-            set(WITH_DOCKER OFF)
-        endif()
-    endif()
 endif()
 
 if(WITH_PALUDIS)
@@ -155,7 +140,7 @@ endif()
 
 
 # Report options
-message(STATUS "WITH_DOCKER=${WITH_DOCKER}")
+message(STATUS "WITH_INPUTRC=${WITH_INPUTRC}")
 message(STATUS "WITH_GIT=${WITH_GIT}")
 message(STATUS "WITH_OPENRC=${WITH_OPENRC}")
 message(STATUS "WITH_PALUDIS=${WITH_PALUDIS}")
@@ -177,12 +162,6 @@ configure_file(${PROJECT_NAME}.sh.in ${PROJECT_NAME}.sh @ONLY)
 # Section: Install project files
 #---------------------------------------------------------
 
-install(
-    FILES
-        "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh"
-        quick-cd.sh
-    DESTINATION "${CMAKE_INSTALL_FULL_SYSCONFDIR}/profile.d"
-  )
 install(
     FILES "${PROJECT_NAME}-functions.sh"
     DESTINATION "${CMAKE_INSTALL_LIBEXECDIR}/${PROJECT_NAME}"
@@ -208,10 +187,22 @@ install(
         context-checkers.d/99prev-cmd-exit-code.sh
     DESTINATION "${CMAKE_INSTALL_LIBEXECDIR}/${PROJECT_NAME}/context-checkers.d"
   )
+if(WITH_INPUTRC)
+    install(
+        FILES
+            "${PROJECT_NAME}.inputrc"
+        DESTINATION "${CMAKE_INSTALL_FULL_SYSCONFDIR}"
+      )
+    install(
+        FILES
+            "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh"
+            quick-cd.sh
+        DESTINATION "${CMAKE_INSTALL_FULL_SYSCONFDIR}/profile.d"
+      )
+endif()
 install(
     FILES
         "${PROJECT_NAME}.conf"
-        "${PROJECT_NAME}.inputrc"
     DESTINATION "${CMAKE_INSTALL_FULL_SYSCONFDIR}"
   )
 install(
@@ -249,6 +240,35 @@ set(CPACK_SOURCE_IGNORE_FILES
     "^.*/build/.*$"
   )
 
+if(WITH_GIT)
+    list(APPEND _deb_aux_deps git)
+    list(APPEND _rpm_aux_deps git)
+endif()
+
+if(WITH_SVN)
+    list(APPEND _deb_aux_deps subversion)
+    list(APPEND _rpm_aux_deps subversion)
+endif()
+
+if(WITH_SCHROOT)
+    list(APPEND _deb_aux_deps schroot)
+endif()
+
+if(WITH_INPUTRC)
+    list(APPEND _deb_aux_deps dialog)
+    list(APPEND _rpm_aux_deps dialog)
+endif()
+
+list(JOIN _deb_aux_deps ", " _deb_aux_deps)
+list(JOIN _rpm_aux_deps ", " _rpm_aux_deps)
+
+if(_deb_aux_deps)
+    string(PREPEND _deb_aux_deps ", ")
+endif()
+if(_rpm_aux_deps)
+    string(PREPEND _rpm_aux_deps ", ")
+endif()
+
 # RPM specific settings
 set(CPACK_RPM_PACKAGE_GROUP "System Environment/Shells")
 set(CPACK_RPM_PACKAGE_RELOCATABLE OFF)
@@ -257,7 +277,9 @@ set(CPACK_RPM_PACKAGE_RELEASE "1")
 set(CPACK_RPM_PACKAGE_LICENSE "GPL3")
 set(CPACK_RPM_FILE_NAME "RPM-DEFAULT")
 set(CPACK_RPM_PACKAGE_ARCHITECTURE "noarch")
-set(CPACK_RPM_PACKAGE_REQUIRES "dialog, bash")
+set(CPACK_RPM_PACKAGE_REQUIRES "bash, coreutils, grep, procps-ng, sed, util-linux${_rpm_aux_deps}")
+# ALERT The tag `Suggests:` doesn't supported (properly) by `rpmbuild` shipped in CentOS
+#set(CPACK_RPM_PACKAGE_SUGGESTS "fontconfig, iproute, jq, kmod, systemd, usbutils")
 set(CPACK_RPM_PACKAGE_DESCRIPTION [[
  **Smart bash Prompt** is a pluggable system to show various
  context information in a command prompt. The initial idea was
@@ -270,7 +292,8 @@ set(CPACK_RPM_PACKAGE_DESCRIPTION [[
 set(CPACK_DEBIAN_PACKAGE_SECTION "shells")
 set(CPACK_DEBIAN_FILE_NAME "DEB-DEFAULT")
 set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "all")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "dialog, bash")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "bash, coreutils, grep, mount, procps, sed${_deb_aux_deps}")
+set(CPACK_DEBIAN_PACKAGE_SUGGESTS "fontconfig, iproute2, jq, kmod, systemd, usbutils")
 set(
     CPACK_DEBIAN_PACKAGE_DESCRIPTION
     "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}\n${CPACK_RPM_PACKAGE_DESCRIPTION}"
