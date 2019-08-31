@@ -1,17 +1,22 @@
 #---------------------------------------------------------
 # Section: Initialize CMake
 #---------------------------------------------------------
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.14)
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
 project(
-    smart-prompt VERSION 1.5.0
-    DESCRIPTION "Fancy bash prompt and some other helpful things"
+    smart-prompt VERSION 1.6.0
+    DESCRIPTION "The fancy bash prompt and some other helpful things"
+    HOMEPAGE_URL "https://github.com/zaufi/smart-prompt"
     LANGUAGES NONE
   )
+
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+
+include(GetDistribInfo)
 
 function(auto_option NAME DESCRIPTION)
     if(DEFINED ARGV2)
@@ -149,12 +154,8 @@ message(STATUS "WITH_SVN=${WITH_SVN}")
 message(STATUS "WITH_SCHROOT=${WITH_SCHROOT}")
 message(STATUS "WITH_SYSTEMD=${WITH_SYSTEMD}")
 
-# NOTE Cheat the `GNUInstallDirs` module a little, so it can
-# set `libdir` some way (this package do not use it anyway)
-set(CMAKE_SIZEOF_VOID_P 8)
 # Setup package paths
 include(GNUInstallDirs)
-unset(CMAKE_SIZEOF_VOID_P)
 
 #---------------------------------------------------------
 # Section: "Build" related statements
@@ -170,7 +171,7 @@ install(
     FILES
         "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh"
         quick-cd.sh
-    DESTINATION "${CMAKE_INSTALL_SYSCONFDIR}/profile.d"
+    DESTINATION "${CMAKE_INSTALL_FULL_SYSCONFDIR}/profile.d"
   )
 install(
     FILES "${PROJECT_NAME}-functions.sh"
@@ -200,7 +201,7 @@ install(
     FILES
         "${PROJECT_NAME}.conf"
         "${PROJECT_NAME}.inputrc"
-    DESTINATION "${CMAKE_INSTALL_SYSCONFDIR}"
+    DESTINATION "${CMAKE_INSTALL_FULL_SYSCONFDIR}"
   )
 install(
     FILES ChangeLog.md LICENSE README.md
@@ -211,21 +212,21 @@ install(
 # Section: Configure package options
 #---------------------------------------------------------
 
-# CPack version numbers for release tarball name.
-set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
-set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
-set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
-set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE)
-set(
-    CPACK_PACKAGE_DESCRIPTION_SUMMARY
-    "Smart prompt: easy way to show various context info in a command prompt"
-  )
-set(CPACK_PACKAGE_VENDOR "Alex Turbov")
-set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/README.md)
+set(CPACK_PACKAGE_RELOCATABLE OFF)
 set(CPACK_SET_DESTDIR ON)
+set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
 
+# "Binary" package settings
+set(CPACK_GENERATOR ${DISTRIB_PKG_FMT})
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
+set(CPACK_PACKAGE_VENDOR "Alex Turbov")
+set(CPACK_PACKAGE_CONTACT "i.zaufi@gmail.com")
+set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_SOURCE_DIR}/LICENSE")
+
+# Source tarball settings
 set(CPACK_SOURCE_PACKAGE_FILE_NAME ${PROJECT_NAME}-${PROJECT_VERSION})
 set(CPACK_SOURCE_GENERATOR TGZ)
+
 # The following components are regex's to match anywhere (unless anchored)
 # in absolute path + filename to find files or directories to be excluded
 # from source tarball.
@@ -236,4 +237,32 @@ set(CPACK_SOURCE_IGNORE_FILES
     "^.*/\\\\.git.*$"
     "^.*/build/.*$"
   )
+
+# RPM specific settings
+set(CPACK_RPM_PACKAGE_GROUP "System Environment/Shells")
+set(CPACK_RPM_PACKAGE_RELOCATABLE OFF)
+set(CPACK_RPM_PACKAGE_RELEASE_DIST ON)
+set(CPACK_RPM_PACKAGE_RELEASE "1")
+set(CPACK_RPM_PACKAGE_LICENSE "GPL3")
+set(CPACK_RPM_FILE_NAME "RPM-DEFAULT")
+set(CPACK_RPM_PACKAGE_ARCHITECTURE "noarch")
+set(CPACK_RPM_PACKAGE_REQUIRES "dialog, bash")
+set(CPACK_RPM_PACKAGE_DESCRIPTION [[
+ **Smart bash Prompt** is a pluggable system to show various
+ context information in a command prompt. The initial idea was
+ to create an extensible engine to have a dynamically changing
+ command prompt instead of a <strike>boring</strike> static one,
+ capable of displaying some aux info depending on a particular
+ location and/or condition.]])
+
+# DEB specific settings
+set(CPACK_DEBIAN_PACKAGE_SECTION "shells")
+set(CPACK_DEBIAN_FILE_NAME "DEB-DEFAULT")
+set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "all")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "dialog, bash")
+set(
+    CPACK_DEBIAN_PACKAGE_DESCRIPTION
+    "${CPACK_PACKAGE_DESCRIPTION_SUMMARY}\n${CPACK_RPM_PACKAGE_DESCRIPTION}"
+)
+
 include(CPack)

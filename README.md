@@ -3,8 +3,8 @@ What Is This?
 
 **Smart bash prompt** is a pluggable system to show various context information in a command prompt.
 The initial idea was to create an extensible engine to have a dynamically changing command prompt instead
-of a <strike>boring</strike> static one, capable to display some aux info depending on a particular location
-and/or condition.
+of a <strike>boring</strike> static one, capable of displaying some aux info depending on a particular
+location and/or condition.
 
 For example, if you are in git working copy, your command prompt will look like this:
 
