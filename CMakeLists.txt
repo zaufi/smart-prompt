@@ -8,7 +8,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 project(
-    smart-prompt VERSION 1.6.0
+    smart-prompt VERSION 1.5.0
     DESCRIPTION "The fancy bash prompt and some other helpful things"
     HOMEPAGE_URL "https://github.com/zaufi/smart-prompt"
     LANGUAGES NONE
