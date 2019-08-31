@@ -3,7 +3,7 @@
 # This is a `main` module of the SmartPrompt engine.
 #
 # Smart Prompt @PROJECT_VERSION@
-# Copyright (c) 2013-2018 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2013-2019 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,13 +15,13 @@
 [[ -z "$BASH_VERSION" || -z "$PS1" || -n "$SMART_PROMPT_PLUGINS" ]] && return
 
 # Load configuration file
-if [[ -f @CMAKE_INSTALL_FULL_SYSCONFDIR@/@PROJECT_NAME@.conf ]]; then
-    source @CMAKE_INSTALL_FULL_SYSCONFDIR@/@PROJECT_NAME@.conf
+if [[ -f "@CMAKE_INSTALL_FULL_SYSCONFDIR@/@PROJECT_NAME@.conf" ]]; then
+    source "@CMAKE_INSTALL_FULL_SYSCONFDIR@/@PROJECT_NAME@.conf"
 fi
 
 # Try load terminal specific config file
-if [[ -n ${TERM} && -f @CMAKE_INSTALL_FULL_SYSCONFDIR@/@PROJECT_NAME@.${TERM}.conf ]]; then
-    source @CMAKE_INSTALL_FULL_SYSCONFDIR@/@PROJECT_NAME@.${TERM}.conf
+if [[ -n ${TERM} && -f "@CMAKE_INSTALL_FULL_SYSCONFDIR@/@PROJECT_NAME@.${TERM}.conf" ]]; then
+    source "@CMAKE_INSTALL_FULL_SYSCONFDIR@/@PROJECT_NAME@.${TERM}.conf"
 fi
 
 # Try load user level overrides...
@@ -35,8 +35,8 @@ if [[ -n ${TERM} && -f ~/.@PROJECT_NAME@rc.${TERM} ]]; then
 fi
 
 # Get reusable functions into the scope
-if [[ -f @CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/@PROJECT_NAME@-functions.sh ]]; then
-    source @CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/@PROJECT_NAME@-functions.sh
+if [[ -f "@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/@PROJECT_NAME@-functions.sh" ]]; then
+    source "@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/@PROJECT_NAME@-functions.sh"
 else
     logger -t @PROJECT_NAME@ "Reusable functions library " \
         "'@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/@PROJECT_NAME@-functions.sh' "   \
@@ -48,8 +48,8 @@ fi
 declare -A SMART_PROMPT_PLUGINS
 
 # Loading plugins
-if [[ -d @CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d ]]; then
-    for plugin in @CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d/[0-9][0-9]*.sh; do
+if [[ -d "@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d" ]]; then
+    for plugin in "@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d/[0-9][0-9]*.sh"; do
         if _sp_is_debug; then
             echo -e "\e[1;30mloading ${plugin}...\e[38m"
         fi
