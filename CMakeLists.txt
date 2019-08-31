@@ -190,7 +190,7 @@ install(
 
 install(
     FILES
-        $<$<BOOL:${WITH_SCHROOT}>:${PROJECT_SOURCE_DIR}/context-checkers.d/00schroot.sh>
+        context-checkers.d/00debian_chroot.sh
         context-checkers.d/00terminal-multiplexers.sh
         context-checkers.d/01user@host.sh
         context-checkers.d/02pwd.sh
@@ -199,6 +199,7 @@ install(
         $<$<BOOL:${WITH_GIT}>:${PROJECT_SOURCE_DIR}/context-checkers.d/50git.sh>
         $<$<BOOL:${WITH_SVN}>:${PROJECT_SOURCE_DIR}/context-checkers.d/52svn.sh>
         context-checkers.d/60system-dirs.sh
+        $<$<BOOL:${WITH_SCHROOT}>:${PROJECT_SOURCE_DIR}/context-checkers.d/62schroot.sh>
         $<$<BOOL:${WITH_PALUDIS}>:${PROJECT_SOURCE_DIR}/context-checkers.d/70paludis.sh>
         $<$<BOOL:${WITH_PORTAGE}>:${PROJECT_SOURCE_DIR}/context-checkers.d/70portage.sh>
         $<$<BOOL:${WITH_OPENRC}>:${PROJECT_SOURCE_DIR}/context-checkers.d/75openrc.sh>
