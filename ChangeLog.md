@@ -25,6 +25,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   Speed up a little: avoid some calls to external programs;
 - CMake options changed from `USE_xxx` to `WITH_xxx`;
 - Use unicode symbols for VCS branch and Python virtual env;
-- Use XDG specification to get the user configs.
+- Use XDG specification to get the user configs;
+- CLI binding to search for running process learned to use pipe instead of
+  shell variables and can highlight found substring.
 
 [Unreleased]: https://github.com/zaufi/smart-prompt/compare/version-1.4.0...HEAD

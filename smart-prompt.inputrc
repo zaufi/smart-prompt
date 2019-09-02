@@ -48,7 +48,7 @@ $if Bash
 "\eO6S": "\C-e \C-ugrep -nlr --exclude-dir={.{svn,hg,git},build,__pycache__} --include=*.{c,h,cc,hh,icc,inl,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-y\b\" * | while read i; do sed -i 's,\C-y\b,,g' \"$i\"; done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
 
 # Bind search of substring in a list of running processes to F7
-"\e[18~": "\C-a pgrep \"\C-e\" | xargs --no-run-if-empty ps wwup\n"
+"\e[18~": "\C-e \C-a\C-k pgrep \"\C-y\C-b\" | xargs --no-run-if-empty ps wwup | sed \"s,\C-y\C-b,$(tput setaf ${SP_PROCESS_HL_COLOR:-1})&$(tput sgr0),\"\n"
 
 # Bind `cd ..` to Ctrl+Up
 "\e[1;5A": "\C-e \C-a\C-k cd ..\n\C-y\b"
