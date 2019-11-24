@@ -25,13 +25,13 @@ if [[ -n ${TERM} && -f "@CMAKE_INSTALL_FULL_SYSCONFDIR@/@PROJECT_NAME@.${TERM}.c
 fi
 
 # Try load user level overrides...
-if [[ -f "${XDG_CONFIG_HOME:-~/.config}/@PROJECT_NAME@rc" ]]; then
-    source "${XDG_CONFIG_HOME:-~/.config}/@PROJECT_NAME@rc"
+if [[ -f "${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@rc" ]]; then
+    source "${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@rc"
 fi
 
 # ... and terminal specific overrides as well
-if [[ -n ${TERM} && -f "${XDG_CONFIG_HOME:-~/.config}/@PROJECT_NAME@rc.${TERM}" ]]; then
-    source "${XDG_CONFIG_HOME:-~/.config}/@PROJECT_NAME@rc.${TERM}"
+if [[ -n ${TERM} && -f "${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@rc.${TERM}" ]]; then
+    source "${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@rc.${TERM}"
 fi
 
 # Get reusable functions into the scope
@@ -58,8 +58,8 @@ if [[ -d "@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d" ]];
 fi
 
 # Loading user plugins
-if [[ -d "${XDG_CONFIG_HOME:-~/.config}/@PROJECT_NAME@.d" ]]; then
-    for plugin in ${XDG_CONFIG_HOME:-~/.config}/@PROJECT_NAME@.d/[0-9][0-9]*.sh; do
+if [[ -d "${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@.d" ]]; then
+    for plugin in ${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@.d/[0-9][0-9]*.sh; do
         if _sp_is_debug; then
             echo -e "\e[1;30mloading ${plugin}...\e[38m"
         fi
