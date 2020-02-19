@@ -15,6 +15,11 @@ function _50_is_git_repo()
     return $(git status -s 1>/dev/null 2>&1)
 }
 
+function _51_is_git_dir()
+{
+    return $(_cur_dir_matches '\.git$')
+}
+
 function _get_git_branch()
 {
     local _ggb__output_var=$1
@@ -93,4 +98,12 @@ function _show_git_status()
     printf "${_sgs__status}${_sgs__repo}${SP_VCS_BRANCH_SYMBOL}${_sgs__branch}${_sgs__progress}"
 }
 
+function _show_git_git()
+{
+    local _sgg__org=$(git config --local --get remote.origin.url)
+    _get_color_param SP_GIT_ORIGIN_COLOR sp_color_info _sgg__origin_color
+    printf "${_sgg__origin_color}${_sgg__org}"
+}
+
 SMART_PROMPT_PLUGINS[_50_is_git_repo]=_show_git_status
+SMART_PROMPT_PLUGINS[_51_is_git_dir]=_show_git_git
