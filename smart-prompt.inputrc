@@ -38,14 +38,14 @@ $if Bash
 #"\eO2R": "\C-agrep -nir --exclude-dir={.{svn,hg,git},build,__pycache__} \"\C-e\" *"
 
 # Bind grep substring in C/C++ files to F4 (execute immediately)
-"\eOS": "\C-a\C-kgrep -nr --exclude-dir={.{svn,hg,git},build,__pycache__} --include=*.{c,h,cc,hh,icc,inl,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-y\" *\n\C-y"
+"\eOS": "\C-a\C-kgrep -nr --exclude-dir={.{svn,hg,git},build} --include=*.{c,h,cc,hh,icc,inl,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-y\" *\n\C-y"
 # Bind grep substring in Python files to Shift+F4 (execute immediately)
-"\eO2S": "\C-a\C-kgrep -nr --exclude-dir={.{svn,hg,git},build,__pycache__} --include=*.py \"\C-y\" *\n\C-y"
+"\eO2S": "\C-a\C-kgrep -nr --exclude-dir={.{venv,svn,hg,git},build,__pycache__} --include=*.py \"\C-y\" *\n\C-y"
 
 # Ctrl+Shift+F3: Iterate over matched files, initiate search'n'replace using `sed`
 "\eO6R": "\C-e \C-ugrep -nlr --exclude-dir={.{svn,hg,git},build,__pycache__} \"\C-y\b\" * | while read i; do sed -i 's,\C-y\b,,g' \"$i\"; done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
 # Ctrl+Shift+F4: Iterate over matched files, initiate search'n'replace using `sed`
-"\eO6S": "\C-e \C-ugrep -nlr --exclude-dir={.{svn,hg,git},build,__pycache__} --include=*.{c,h,cc,hh,icc,inl,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-y\b\" * | while read i; do sed -i 's,\C-y\b,,g' \"$i\"; done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
+"\eO6S": "\C-e \C-ugrep -nlr --exclude-dir={.{svn,hg,git},build} --include=*.{c,h,cc,hh,icc,inl,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-y\b\" * | while read i; do sed -i 's,\C-y\b,,g' \"$i\"; done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
 
 # Bind search of substring in a list of running processes to F7
 "\e[18~": "\C-e \C-a\C-k pgrep \"\C-y\C-b\" | xargs --no-run-if-empty ps wwup | sed \"s,\C-y\C-b,$(tput setaf ${SP_PROCESS_HL_COLOR:-1})&$(tput sgr0),\"\n"
