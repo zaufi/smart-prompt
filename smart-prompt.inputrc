@@ -57,7 +57,7 @@ $if Bash
 "\e[1;5B": "\C-e \C-a\C-k cd -\n\C-y\b"
 
 # Show hot dirs list (Alt+RightArrow) (from MidnightCommander) and `pushd` into choosed one
-"\e[1;3C": "\C-e \C-a\C-k quick-cd\n\C-y\b"
+"\e[1;3C": "\C-e \C-a\C-k quick_cd\n\C-y\b"
 
 # popd on Alt+LeftArrow
 "\e[1;3D": "\C-e \C-u popd\n\C-y\b"
