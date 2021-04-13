@@ -10,16 +10,13 @@
 # (at your option) any later version.
 #
 
-# Disable POSIX-mode to relax constraints for func names.
-set +o posix
-
 #
 # Select a dir to go from a hot list using `dialog`
 # It uses a `hotlist` file from Midnight Commander by default
 #
 # TODO Add functions to edit (add/remove) hot list entries
 #
-function quick-cd()
+function quick_cd()
 {
     local -r hl=${SMART_PROMPT_HOTLIST:-~/.config/mc/hotlist}
     test -r ${hl} || { echo "* No hotlist file exists yet or read permission is not granted *" > /dev/stderr && exit 1; }
