@@ -82,6 +82,9 @@ $if Bash
 # Quote the current or previous word
 "\C-xq": "\eb\"\ef\""
 
+# Ctrl+x,c: Execute last command w/ argument(s) from the prompt
+"\C-xc": "\C-a!:0 \C-e\n"
+
 # Bind execution of current command w/ --help option and restore a previous text
 # TODO Rewrite to avoid '--help' to be in a history
 "\eOP": "\C-e \C-a\e[1;1C\C-k --help\n\C-p\C-a\e[1;1C\C-y\b\C-k"
