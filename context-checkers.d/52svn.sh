@@ -58,7 +58,7 @@ function _show_svn_status()
         _sss__repo='svn:'
     fi
 
-    printf "${_sss__status}${_sss__repo}${SP_VCS_BRANCH_SYMBOL}${_sss__branch}"
+    printf "${_sss__status}${_sss__repo}${SP_VCS_BRANCH_SYMBOL:-\356\202\240:}${_sss__branch}"
 }
 
 SMART_PROMPT_PLUGINS[_52_is_svn_repo]=_show_svn_status

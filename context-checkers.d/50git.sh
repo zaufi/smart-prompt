@@ -95,7 +95,7 @@ function _show_git_status()
         _sgs__repo='git:'
     fi
 
-    printf "${_sgs__status}${_sgs__repo}${SP_VCS_BRANCH_SYMBOL}${_sgs__branch}${_sgs__progress}"
+    printf "${_sgs__status}${_sgs__repo}${SP_VCS_BRANCH_SYMBOL:-\356\202\240:}${_sgs__branch}${_sgs__progress}"
 }
 
 function _show_git_git()
