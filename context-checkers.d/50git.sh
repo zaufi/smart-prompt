@@ -90,12 +90,17 @@ function _show_git_status()
     local _sgs__progress
     _get_git_progress _sgs__progress
 
+    local _sgs__wt
+    if [[ $(git rev-parse --is-inside-work-tree) == 'true' ]]; then
+        _sgs__wt=${SP_VCS_WT_SYMBOL:-\\360\\237\\214\\262}
+    fi
+
     local _sgs__repo
     if _sp_check_bool ${SP_INDICATE_REPO_TYPE} -o [[ ${SP_INDICATE_REPO_TYPE[@]} =~ git ]]; then
         _sgs__repo='git:'
     fi
 
-    printf "${_sgs__status}${_sgs__repo}${SP_VCS_BRANCH_SYMBOL:-\356\202\240:}${_sgs__branch}${_sgs__progress}"
+    printf "${_sgs__status}${_sgs__repo}${_sgs__wt}${SP_VCS_BRANCH_SYMBOL:-\\356\\202\\240:}${_sgs__branch}${_sgs__progress}"
 }
 
 function _show_git_git()
