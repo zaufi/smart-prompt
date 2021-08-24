@@ -91,8 +91,15 @@ function _show_git_status()
     _get_git_progress _sgs__progress
 
     local _sgs__wt
-    if [[ $(git rev-parse --is-inside-work-tree) == 'true' ]]; then
+    if [[ $(git rev-parse --git-path config.worktree) =~ .*/\.git/worktrees/.* ]]; then
         _sgs__wt=${SP_VCS_WT_SYMBOL:-\\360\\237\\214\\262}
+    fi
+
+    local _sgs__wtc=$(git worktree list | wc -l)
+    if [[ ${_sgs__wtc} < 2 ]]; then
+        unset _sgs__wtc
+    else
+        _sgs__wtc="❲${_sgs__wtc}${SP_VCS_WT_SYMBOL:-\\360\\237\\214\\262}❳"
     fi
 
     local _sgs__repo
@@ -100,7 +107,7 @@ function _show_git_status()
         _sgs__repo='git:'
     fi
 
-    printf "${_sgs__status}${_sgs__repo}${_sgs__wt}${SP_VCS_BRANCH_SYMBOL:-\\356\\202\\240:}${_sgs__branch}${_sgs__progress}"
+    printf "${_sgs__status}${_sgs__repo}${_sgs__wt}${SP_VCS_BRANCH_SYMBOL:-\\356\\202\\240:}${_sgs__branch}${_sgs__wtc}${_sgs__progress}"
 }
 
 function _show_git_git()
