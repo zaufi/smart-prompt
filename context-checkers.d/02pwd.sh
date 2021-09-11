@@ -36,13 +36,13 @@ function _show_pwd()
     if [[ -f Makefile ]]; then
         local _sp__pwd_mk_color
         _get_color_param SP_MAKEFILE_MARK_COLOR sp_color_info _sp__pwd_mk_color
-        _sp__pwd_buildable_mark="${_sp__pwd_mk_color}${SP_MAKEFILE_MARK:-❲mk❳}"
+        _sp__pwd_buildable_mark="${_sp__pwd_mk_color}${SP_MAKEFILE_MARK:-❲🚧❳}"
     fi
 
     if [[ -f build.ninja ]]; then
         local _sp__pwd_nj_color
         _get_color_param SP_NINJA_MARK_COLOR sp_color_info _sp__pwd_nj_color
-        _sp__pwd_buildable_mark="${_sp__pwd_nj_color}${SP_NINJA_MARK:-❲nj❳}"
+        _sp__pwd_buildable_mark="${_sp__pwd_nj_color}${SP_NINJA_MARK:-❲🥷❳}"
     fi
 
     printf "${_sp__pwd_color}${_sp__dir_stack_size}\\w${_sp__pwd_empty_dir_mark}${_sp__pwd_buildable_mark}"
