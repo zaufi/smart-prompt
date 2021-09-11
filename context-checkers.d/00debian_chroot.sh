@@ -25,3 +25,19 @@ function _show_debian_chroot()
     fi
 }
 SMART_PROMPT_PLUGINS[_00_is_under_schroot]=_show_debian_chroot
+
+#
+# Try to display a docker name
+# NOTE Docker images may have their names in the `/etc/debian_chroot` file.
+#
+function _00_is_under_docker()
+{
+    return $([[ -e /.dockerenv && -e /etc/debian_chroot ]])
+}
+
+function _show_docker_debian_chroot()
+{
+    _get_color_param SP_CHROOT_NAME sp_color_warn _sdc__chroot_name
+    printf "${_sdc__chroot_name}${SP_DOCKER_MARK:-🐳:}$(< /etc/debian_chroot)"
+}
+SMART_PROMPT_PLUGINS[_00_is_under_docker]=_show_docker_debian_chroot
