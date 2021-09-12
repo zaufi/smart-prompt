@@ -3,7 +3,7 @@
 # This is a `main` module of the SmartPrompt engine.
 #
 # Smart Prompt @PROJECT_VERSION@
-# Copyright (c) 2013-2019 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2013-2021 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -121,6 +121,7 @@ function _smart_prompt()
 
     # Iterate over registered plugins and collect strings to be appended to PS1
     local sp_ps=''
+    local checker
     for checker in $(_get_registered_context_checkers); do
         if _sp_is_debug; then
             echo -ne "\e[1;30mchecking ${checker}...\e[38m "
@@ -129,9 +130,13 @@ function _smart_prompt()
             if _sp_is_debug; then
                 echo -e "\e[1;32mok\e[38m\e[38m"
             fi
-            for action in ${SMART_PROMPT_PLUGINS[$checker]}; do
-                sp_ps+="`${action}`${sp_seg}"
+
+            for action in ${SMART_PROMPT_PLUGINS[${checker}]}; do
+                [[ ${SP_TRACE} == ${checker} ]] && set -x
+                sp_ps+="$(${action})${sp_seg}"
+                [[ ${SP_TRACE} == ${checker} ]] && set +x
             done
+
         elif _sp_is_debug; then
             echo -e "\e[1;31m!!\e[38m"
         fi
