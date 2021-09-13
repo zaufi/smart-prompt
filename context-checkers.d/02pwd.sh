@@ -28,23 +28,23 @@ function _show_pwd()
     local _sp__pwd_marks
     if [[ -z $(shopt -s nullglob; echo *) ]]; then
         _get_color_param SP_EMPTY_DIR_COLOR sp_color_debug _sp__pwd_empty_dir_color
-        _sp__pwd_marks=${_sp__pwd_empty_dir_color}${SP_EMPTY_DIR_MARK}
-    fi
+        _sp__pwd_marks=${_sp__pwd_empty_dir_color}${SP_EMPTY_DIR_MARK}${sp_reset}
+    else
+        local _sp__pwd_pair
+        local _sp__pwd_key
+        local _sp__pwd_glob
+        for _sp__pwd_pair in "${SP_MARKS_MAP[@]}"; do
+            IFS=': ' read -r _sp__pwd_key _sp__pwd_glob <<<${_sp__pwd_pair}
+            _sp__pwd_marks+=$([[ -e ${_sp__pwd_glob} ]] && echo ${_sp__pwd_key})
+        done
+        for _sp__pwd_pair in "${SP_MARK_PATTERNS_MAP[@]}"; do
+            IFS=':' read -r _sp__pwd_key _sp__pwd_glob <<<${_sp__pwd_pair}
+            _sp__pwd_marks+=$([[ -n $(shopt -s extglob globstar nullglob; echo ${_sp__pwd_glob}) ]] && echo ${_sp__pwd_key})
+        done
 
-    local _sp__pwd_pair
-    local _sp__pwd_key
-    local _sp__pwd_glob
-    for _sp__pwd_pair in "${SP_MARKS_MAP[@]}"; do
-        IFS=': ' read -r _sp__pwd_key _sp__pwd_glob <<<${_sp__pwd_pair}
-        _sp__pwd_marks+=$([[ -e ${_sp__pwd_glob} ]] && echo ${_sp__pwd_key})
-    done
-    for _sp__pwd_pair in "${SP_MARK_PATTERNS_MAP[@]}"; do
-        IFS=':' read -r _sp__pwd_key _sp__pwd_glob <<<${_sp__pwd_pair}
-        _sp__pwd_marks+=$([[ -n $(shopt -s extglob globstar nullglob; echo ${_sp__pwd_glob}) ]] && echo ${_sp__pwd_key})
-    done
-
-    if [[ -n ${_sp__pwd_marks} ]]; then
-        _sp__pwd_marks=${SP_OPEN_MARK:-❲}${_sp__pwd_marks}${SP_CLOSE_MARKS:-❳}
+        if [[ -n ${_sp__pwd_marks} ]]; then
+            _sp__pwd_marks=${SP_OPEN_MARK:-❲}${_sp__pwd_marks}${SP_CLOSE_MARKS:-❳}
+        fi
     fi
 
     printf "${_sp__pwd_color}${_sp__dir_stack_size}\\w${_sp__pwd_marks}"
