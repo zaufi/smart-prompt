@@ -51,7 +51,7 @@ declare -A SMART_PROMPT_PLUGINS
 if [[ -d "@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d" ]]; then
     for plugin in @CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d/[0-9][0-9]*.sh; do
         if _sp_is_debug; then
-            echo -e "\e[1;30mloading ${plugin}...\e[38m"
+            echo -e "\e[1;30mloading ${plugin}…\e[38m"
         fi
         source ${plugin}
     done
@@ -61,7 +61,7 @@ fi
 if [[ -d "${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@.d" ]]; then
     for plugin in ${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@.d/[0-9][0-9]*.sh; do
         if _sp_is_debug; then
-            echo -e "\e[1;30mloading ${plugin}...\e[38m"
+            echo -e "\e[1;30mloading ${plugin}…\e[38m"
         fi
         source ${plugin}
     done
@@ -124,7 +124,7 @@ function _smart_prompt()
     local checker
     for checker in $(_get_registered_context_checkers); do
         if _sp_is_debug; then
-            echo -ne "\e[1;30mchecking ${checker}...\e[38m "
+            echo -ne "\e[1;30mchecking ${checker}…\e[38m "
         fi
         if ${checker}; then
             if _sp_is_debug; then
