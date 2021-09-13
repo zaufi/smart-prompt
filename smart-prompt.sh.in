@@ -117,7 +117,7 @@ function _smart_prompt()
 
     # Get some other (non color) configurable parameters
     local -r sp_time_fmt=${SP_TIME_FMT:-%H:%M %d/%m}
-    local -r sp_seg=${sp_color_seg}${SP_SEGMENT_DELIMITER:-"\342\214\252"}
+    local -r sp_seg=${sp_color_seg}${SP_SEGMENT_DELIMITER:-"〉"}
 
     # Iterate over registered plugins and collect strings to be appended to PS1
     local sp_ps=''
@@ -146,5 +146,6 @@ function _smart_prompt()
 }
 
 export PROMPT_COMMAND=_smart_prompt
+export PS2="$(_eval_color_string "reset ${SP_CONTINUE_MARKER_COLOR:-red}" sp_color_ps2; echo ${sp_color_ps2})${SP_CONTINUE_MARKER:-…}$(_eval_color_string "reset ${SP_SEGMENT_COLOR:-bright-blue}" sp_color_seg; echo ${sp_color_seg})${SP_SEGMENT_DELIMITER:-"〉"$(_eval_color_string 'reset' sp_reset; echo ${sp_reset})}"
 
 # kate: hl bash;
