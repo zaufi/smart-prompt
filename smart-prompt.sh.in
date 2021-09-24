@@ -145,7 +145,44 @@ function _smart_prompt()
     PS1="${sp_ps}${sp_reset}"
 }
 
+function _smart_prompt_ps2()
+{
+    local sp_color_ps2
+    _eval_color_string "reset ${SP_CONTINUE_MARKER_COLOR:-red}" sp_color_ps2
+
+    local sp_color_seg
+    _eval_color_string "reset ${SP_SEGMENT_COLOR:-bright-blue}" sp_color_seg
+
+    local sp_reset
+    _eval_color_string 'reset' sp_reset
+
+    echo "${sp_color_ps2}${SP_CONTINUE_MARKER:-…}${sp_color_seg}${SP_SEGMENT_DELIMITER:-〉}${sp_reset}"
+}
+
+function _smart_prompt_ps4()
+{
+    local sp_color_seg
+    _eval_color_string "reset ${SP_SEGMENT_COLOR:-bright-blue}" sp_color_seg
+
+    local sp_reset
+    _eval_color_string 'reset' sp_reset
+
+    local sp_trace_src
+    _eval_color_string "reset ${SP_TRACE_FILE_COLOR:-dark-grey}" sp_trace_src
+
+    local sp_trace_line
+    _eval_color_string "reset ${SP_TRACE_LINENO_COLOR:-dark-grey}" sp_trace_line
+
+    local sp_trace_code
+    _eval_color_string "reset ${SP_TRACE_CODE_COLOR:-grey}" sp_trace_code
+
+    local sp_src="${sp_trace_src}\${BASH_SOURCE/#.\//}:${sp_trace_line}\${LINENO}"
+
+    echo "${SP_TRACE_MARK:-+ } ${sp_src}${sp_color_seg}${SP_SEGMENT_DELIMITER:-〉}${sp_reset}${sp_trace_code}\033[50D\033[30C"
+}
+
 export PROMPT_COMMAND=_smart_prompt
-export PS2="$(_eval_color_string "reset ${SP_CONTINUE_MARKER_COLOR:-red}" sp_color_ps2; echo ${sp_color_ps2})${SP_CONTINUE_MARKER:-…}$(_eval_color_string "reset ${SP_SEGMENT_COLOR:-bright-blue}" sp_color_seg; echo ${sp_color_seg})${SP_SEGMENT_DELIMITER:-"〉"$(_eval_color_string 'reset' sp_reset; echo ${sp_reset})}"
+export PS2="$(_smart_prompt_ps2)"
+export PS4="$(_smart_prompt_ps4)"
 
 # kate: hl bash;
