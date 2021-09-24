@@ -178,7 +178,7 @@ function _smart_prompt_ps4()
 
     local sp_src="${sp_trace_src}\${BASH_SOURCE/#.\//}:${sp_trace_line}\${LINENO}"
 
-    echo "${SP_TRACE_MARK:-+ } ${sp_src}${sp_color_seg}${SP_SEGMENT_DELIMITER:-〉}${sp_reset}${sp_trace_code}\033[50D\033[30C"
+    echo "${SP_TRACE_MARK:-+ } ${sp_src}${sp_color_seg}${SP_SEGMENT_DELIMITER:-〉}${sp_reset}${sp_trace_code}"
 }
 
 export PROMPT_COMMAND=_smart_prompt
