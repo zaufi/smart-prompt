@@ -18,10 +18,10 @@
 #
 function quick_cd()
 {
-    local -r hl="${SMART_PROMPT_HOTLIST:-~/.config/mc/hotlist}"
+    local -r hl="${SMART_PROMPT_HOTLIST:-${XDG_CONFIG_HOME:-${HOME}/.config}/mc/hotlist}"
     if [[ ! -r ${hl} ]]; then
       echo "* No hotlist file exists yet or read permission is not granted *" > /dev/stderr
-      exit 1
+      return 1
     fi
 
     local -r dirs=$(grep 'ENTRY' "${hl}" \
@@ -40,7 +40,6 @@ function quick_cd()
       )
 
     if [[ -n ${selected_dir} ]]; then
-        # shellcheck disable=SC2164
-        pushd "${selected_dir}" >/dev/null 2>&1
+        pushd "${selected_dir}" >/dev/null 2>&1 || return
     fi
 }
