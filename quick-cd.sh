@@ -40,6 +40,7 @@ function quick_cd()
       )
 
     if [[ -n ${selected_dir} ]]; then
-        pushd "${selected_dir}" >/dev/null 2>&1 || return
+        # shellcheck disable=SC2164
+        pushd "${selected_dir}" >/dev/null 2>&1
     fi
 }
