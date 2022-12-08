@@ -1,0 +1,6 @@
+[codespell]
+builtin = clear,rare,names,code,en-GB_to_en-US
+check-filenames =
+context = 2
+enable-colors = true
+quiet-level = 3

@@ -2,7 +2,7 @@
 #
 # Show various systemd related info depending on a current dir
 #
-# Copyright (c) 2013-2018 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2013-2022 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 function _75_is_systemd_dir()
 {
-    return $(_cur_dir_starts_with /etc/systemd || _cur_dir_matches '/usr/(.*/)?lib/systemd')
+    _cur_dir_starts_with /etc/systemd || _cur_dir_matches '/usr/(.*/)?lib/systemd'
 }
 function _systemd_show_default_target()
 {
@@ -36,6 +36,6 @@ function _systemd_show_default_target()
         _get_color_param SP_SYSTEMD_STATE_OK_COLOR sp_color_info _sdt__state_color
     fi
 
-    printf "${_sdt__target_color}%s ${_sdt__state_color}%s" ${_sdt__target} ${_sdt__state}
+    printf '%s%s %s%s' "${_sdt__target_color}" "${_sdt__target}" "${_sdt__state_color}" "${_sdt__state}"
 }
 SMART_PROMPT_PLUGINS[_75_is_systemd_dir]=_systemd_show_default_target

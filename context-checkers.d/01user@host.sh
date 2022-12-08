@@ -2,7 +2,7 @@
 #
 # Append user@host segment
 #
-# Copyright (c) 2014-2018 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2014-2022 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,10 +26,10 @@ function _show_user_and_host()
     if [[ -n ${SUDO_USER} ]]; then
         _user_tail="<${SUDO_USER}>"
     fi
-    if _sp_check_bool ${SP_SHOW_LOCALHOST:-true}; then
+    if _sp_check_bool "${SP_SHOW_LOCALHOST:-true}"; then
         _user_tail+='@\\h'
     fi
-    printf "${_optional_ssh_warn}${sp_color_user}"'\\u'"${_user_tail}"
+    printf '%s%s\\u%s' "${_optional_ssh_warn}" "${sp_color_user}" "${_user_tail}"
 }
 
 SMART_PROMPT_PLUGINS[_01_show_user_and_host]=_show_user_and_host

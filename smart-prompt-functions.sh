@@ -2,7 +2,7 @@
 #
 # Functions that can be used by context checkers
 #
-# Copyright (c) 2013-2018 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2013-2022 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ function _sp_check_bool()
 #
 function _sp_is_debug()
 {
-    _sp_check_bool ${SP_DEBUG}
+    _sp_check_bool "${SP_DEBUG}"
 }
 
 #
@@ -91,7 +91,7 @@ function _rgb_to_ansi()
 
     if [[ ${_r2a__r} -le 5 && ${_r2a__g} -le 5 && ${_r2a__b} -le 5 ]]; then
         # 256 colors
-        eval "${_r2a__output_var}='\[\e[38;5;$(( ${_r2a__r} * 36 + ${_r2a__g} * 6 + ${_r2a__b} + 16 ))m\]'"
+        eval "${_r2a__output_var}='\[\e[38;5;$(( _r2a__r * 36 + _r2a__g * 6 + _r2a__b + 16 ))m\]'"
     else
         # 16M colors
         eval "${_r2a__output_var}='\[\e[38;2;${_r2a__r};${_r2a__g};${_r2a__b}m\]'"
@@ -142,11 +142,9 @@ function _eval_color_string
             local _esc__r
             local _esc__g
             local _esc__b
-            _parse_rgb "${_ecs__c}" _esc_
-
-            if [[ $? = 0 ]]; then
+            if _parse_rgb "${_ecs__c}" _esc_; then
                 local _ecs_rgb
-                _rgb_to_ansi ${_esc__r} ${_esc__g} ${_esc__b} _ecs_rgb
+                _rgb_to_ansi "${_esc__r}" "${_esc__g}" "${_esc__b}" _ecs_rgb
                 _ecs__result_str="${_ecs__result_str}${_ecs_rgb}"
             fi
             ;;
@@ -154,11 +152,9 @@ function _eval_color_string
             local _esc__r
             local _esc__g
             local _esc__b
-            _parse_hex_color "${_ecs__c}" _esc_
-
-            if [[ $? = 0 ]]; then
+            if _parse_hex_color "${_ecs__c}" _esc_; then
                 local _ecs_rgb
-                _rgb_to_ansi ${_esc__r} ${_esc__g} ${_esc__b} _ecs_rgb
+                _rgb_to_ansi "${_esc__r}" "${_esc__g}" "${_esc__b}" _ecs_rgb
                 _ecs__result_str="${_ecs__result_str}${_ecs_rgb}"
             fi
             ;;
@@ -189,7 +185,7 @@ function _get_color_param()
     fi
 
     if [[ -n ${!_gcp__param} ]]; then
-        _eval_color_string "reset ${!_gcp__param}" ${_gcp__output_var}
+        _eval_color_string "reset ${!_gcp__param}" "${_gcp__output_var}"
     else
         eval "${_gcp__output_var}=\"${!_gcp__fallback}\""
     fi
@@ -206,9 +202,9 @@ function _seconds_to_duration()
     local -ir _s2d__seconds=$1
     local -r _s2d__output_var=$2
 
-    local -ir _s2d__d=$(( ${_s2d__seconds} / (3600 * 24) ))
-    local -ir _s2d__h=$(( (${_s2d__seconds} % (3600 * 24)) / 3600 ))
-    local -ir _s2d__m=$(( ((${_s2d__seconds} % (3600 * 24)) % 3600) / 60 ))
+    local -ir _s2d__d=$(( _s2d__seconds / (3600 * 24) ))
+    local -ir _s2d__h=$(( (_s2d__seconds % (3600 * 24)) / 3600 ))
+    local -ir _s2d__m=$(( ((_s2d__seconds % (3600 * 24)) % 3600) / 60 ))
 
     local _s2d__result
     if [[ ${_s2d__d} != 0 ]]; then
@@ -226,7 +222,7 @@ function _seconds_to_duration()
 #
 function _cur_dir_starts_with()
 {
-    return $([[ ${PWD} =~ ^${1} ]])
+    [[ ${PWD} =~ ^${1} ]]
 }
 
 #
@@ -236,7 +232,7 @@ function _cur_dir_starts_with()
 #
 function _is_cur_dir_equals_to()
 {
-    return $([[ ${PWD} = ${1} ]])
+    [[ ${PWD} == "${1}" ]]
 }
 
 #
@@ -246,7 +242,7 @@ function _is_cur_dir_equals_to()
 #
 function _cur_dir_matches()
 {
-    return $([[ ${PWD} =~ ${1} ]])
+    [[ ${PWD} =~ ${1} ]]
 }
 
 #

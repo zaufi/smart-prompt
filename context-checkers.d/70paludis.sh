@@ -2,7 +2,7 @@
 #
 # Show various Paludis related info depending on a current dir
 #
-# Copyright (c) 2013-2018 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2013-2022 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 #
 function _70_is_inside_of_paludis_sysconf_dir()
 {
-    return $(_cur_dir_starts_with /etc/paludis)
+    _cur_dir_starts_with /etc/paludis
 }
 function _show_paludis_info()
 {
@@ -23,7 +23,7 @@ function _show_paludis_info()
     if _find_program cave _cave_bin; then
         local _spi__repos_color
         _get_color_param SP_PALUDIS_REPOS_COLOR sp_color_misc _spi__repos_color
-        printf "${_spi__repos_color}%d reps" $(${_cave_bin} print-repositories | wc -l)
+        printf "%s%d reps" "${_spi__repos_color}" "$("${_cave_bin}" print-repositories | wc -l)"
     fi
 }
 SMART_PROMPT_PLUGINS[_70_is_inside_of_paludis_sysconf_dir]=_show_paludis_info

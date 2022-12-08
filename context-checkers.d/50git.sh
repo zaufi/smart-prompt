@@ -2,7 +2,7 @@
 #
 # Show status of a git repository
 #
-# Copyright (c) 2013-2019 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2013-2022 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,12 +12,12 @@
 
 function _50_is_git_repo()
 {
-    return $(git status -s 1>/dev/null 2>&1)
+    git status -s 1>/dev/null 2>&1
 }
 
 function _51_is_git_dir()
 {
-    return $(_cur_dir_matches '\.git$')
+    _cur_dir_matches '\.git$'
 }
 
 function _get_git_branch()
@@ -96,25 +96,32 @@ function _show_git_status()
     fi
 
     local _sgs__wtc=$(git worktree list | wc -l)
-    if [[ ${_sgs__wtc} < 2 ]]; then
+    if [[ ${_sgs__wtc} -lt 2 ]]; then
         unset _sgs__wtc
     else
         _sgs__wtc="❲${_sgs__wtc}${SP_VCS_WT_SYMBOL:-\\360\\237\\214\\262}❳"
     fi
 
     local _sgs__repo
-    if _sp_check_bool ${SP_INDICATE_REPO_TYPE} -o [[ ${SP_INDICATE_REPO_TYPE[@]} =~ git ]]; then
+    if _sp_check_bool "${SP_INDICATE_REPO_TYPE}" -o [[ "${SP_INDICATE_REPO_TYPE[@]}" =~ git ]]; then
         _sgs__repo='git:'
     fi
 
-    printf "${_sgs__status}${_sgs__repo}${_sgs__wt}${SP_VCS_BRANCH_SYMBOL:-\\356\\202\\240:}${_sgs__branch}${_sgs__wtc}${_sgs__progress}"
+    printf '%s%s%s%s%s%s%s' \
+        "${_sgs__status}" \
+        "${_sgs__repo}" \
+        "${_sgs__wt}" \
+        "${SP_VCS_BRANCH_SYMBOL:-\\356\\202\\240:}" \
+        "${_sgs__branch}" \
+        "${_sgs__wtc}" \
+        "${_sgs__progress}"
 }
 
 function _show_git_git()
 {
     local _sgg__org=$(git config --local --get remote.origin.url)
     _get_color_param SP_GIT_ORIGIN_COLOR sp_color_info _sgg__origin_color
-    printf "${_sgg__origin_color}${_sgg__org}"
+    printf '%s%s' "${_sgg__origin_color}" "${_sgg__org}"
 }
 
 SMART_PROMPT_PLUGINS[_50_is_git_repo]=_show_git_status

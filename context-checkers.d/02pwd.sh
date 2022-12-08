@@ -2,7 +2,7 @@
 #
 # Append current path segment
 #
-# Copyright (c) 2014-2021 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2014-2022 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@ function _02_show_pwd()
 function _show_pwd()
 {
     local _sp__dir_stack_size=''
-    if [[ ${#DIRSTACK[@]} > 1 ]]; then
+    if [[ "${#DIRSTACK[@]}" -gt 1 ]]; then
         _sp__dir_stack_size="${#DIRSTACK[@]}:"
     fi
 
@@ -34,12 +34,12 @@ function _show_pwd()
         local _sp__pwd_key
         local _sp__pwd_glob
         for _sp__pwd_pair in "${SP_MARKS_MAP[@]}"; do
-            IFS=': ' read -r _sp__pwd_key _sp__pwd_glob <<<${_sp__pwd_pair}
-            _sp__pwd_marks+=$([[ -e ${_sp__pwd_glob} ]] && echo ${_sp__pwd_key})
+            IFS=': ' read -r _sp__pwd_key _sp__pwd_glob <<<"${_sp__pwd_pair}"
+            _sp__pwd_marks+=$([[ -e ${_sp__pwd_glob} ]] && echo "${_sp__pwd_key}")
         done
         for _sp__pwd_pair in "${SP_MARK_PATTERNS_MAP[@]}"; do
-            IFS=':' read -r _sp__pwd_key _sp__pwd_glob <<<${_sp__pwd_pair}
-            _sp__pwd_marks+=$([[ -n $(shopt -s extglob globstar nullglob; echo ${_sp__pwd_glob}) ]] && echo ${_sp__pwd_key})
+            IFS=':' read -r _sp__pwd_key _sp__pwd_glob <<<"${_sp__pwd_pair}"
+            _sp__pwd_marks+=$([[ -n $(shopt -s extglob globstar nullglob; echo "${_sp__pwd_glob}") ]] && echo "${_sp__pwd_key}")
         done
 
         if [[ -n ${_sp__pwd_marks} ]]; then
@@ -47,7 +47,7 @@ function _show_pwd()
         fi
     fi
 
-    printf "${_sp__pwd_color}${_sp__dir_stack_size}\\w${_sp__pwd_marks}"
+    printf '%s%s\w%s' "${_sp__pwd_color}" "${_sp__dir_stack_size}" "${_sp__pwd_marks}"
 }
 
 SMART_PROMPT_PLUGINS[_02_show_pwd]=_show_pwd

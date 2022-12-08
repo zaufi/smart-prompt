@@ -3,7 +3,7 @@
 # Detect working under terminal multiplexers.
 # Supports `tmux` and `screen`
 #
-# Copyright (c) 2015-2018 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2015-2022 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,7 +13,7 @@
 
 function _01_is_under_terminal_multiplexer()
 {
-    return $([[ -n "${TMUX_PANE}" || -n "${STY}" || "${TERM}" = screen ]])
+    [[ -n ${TMUX_PANE} || -n ${STY} || ${TERM} == 'screen' ]]
 }
 
 function _show_terminal_multiplexer()
@@ -26,7 +26,7 @@ function _show_terminal_multiplexer()
     else
         _multiplexer='screen(?)'
     fi
-    printf "${sp_color_warn}${_multiplexer}"
+    printf '%s%s' "${sp_color_warn}" "${_multiplexer}"
 }
 
 SMART_PROMPT_PLUGINS[_01_is_under_terminal_multiplexer]=_show_terminal_multiplexer

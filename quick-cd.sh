@@ -2,7 +2,7 @@
 #
 # This is a `quick_cd` module of the SmartPrompt.
 #
-# Copyright (c) 2014-2020 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2014-2022 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,15 +18,18 @@
 #
 function quick_cd()
 {
-    local -r hl=${SMART_PROMPT_HOTLIST:-~/.config/mc/hotlist}
-    test -r ${hl} || { echo "* No hotlist file exists yet or read permission is not granted *" > /dev/stderr && exit 1; }
+    local -r hl="${SMART_PROMPT_HOTLIST:-~/.config/mc/hotlist}"
+    if [[ ! -r ${hl} ]]; then
+      echo "* No hotlist file exists yet or read permission is not granted *" > /dev/stderr
+      exit 1
+    fi
 
     local -r dirs=$(grep 'ENTRY' "${hl}" \
       | grep -v 'sh://' \
       | grep -v 'ftp://' \
       | sed 's,.*URL "\(.*\)",\1,g' \
       )
-
+    # shellcheck disable=SC2086
     local -r selected_dir=$(dialog --keep-tite \
         --begin 0 2 \
         --output-fd 1 \
@@ -37,6 +40,6 @@ function quick_cd()
       )
 
     if [[ -n ${selected_dir} ]]; then
-        pushd "${selected_dir}" >/dev/null 2>&1
+        pushd "${selected_dir}" >/dev/null 2>&1 || return
     fi
 }

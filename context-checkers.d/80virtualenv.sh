@@ -2,7 +2,7 @@
 #
 # Check if we are inside a `virtualenv`
 #
-# Copyright (c) 2016-2019 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2016-2022 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
 
 function _80_check_virtualenv()
 {
-    return $([[ -n ${VIRTUAL_ENV} ]])
+    [[ -n ${VIRTUAL_ENV} ]]
 }
 
 function _show_virtualenv()
@@ -27,7 +27,7 @@ function _show_virtualenv()
         fi
         _svenv_segment="${_svenv__color}${SP_VIRTUALENV_MARK:-🐍:}${_svenv_ve_path}"
     fi
-    printf "${_svenv_segment}"
+    printf '%s' "${_svenv_segment}"
 }
 
 SMART_PROMPT_PLUGINS[_80_check_virtualenv]=_show_virtualenv

@@ -2,9 +2,9 @@
 #
 # The most "right" segment (to attract user's attention)
 # w/ the exit code of the previous command.
-# NOTE Do not show enything for "success" exit code.
+# NOTE Do not show anything for "success" exit code.
 #
-# Copyright (c) 2019 Alex Turbov <i.zaufi@gmail.com>
+# Copyright (c) 2019-2022 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,12 +14,12 @@
 
 function _99_check_prev_cmd_exit_code()
 {
-    return $([[ ${_sp__prev_cmd_exit_code} != 0 ]])
+    [[ ${_sp__prev_cmd_exit_code} -ne 0 ]]
 }
 
 function _show_prev_cmd_exit_code()
 {
-    printf "${sp_color_alert}${_sp__prev_cmd_exit_code}"
+    printf '%s%s' "${sp_color_alert}" "${_sp__prev_cmd_exit_code}"
 }
 
 SMART_PROMPT_PLUGINS[_99_check_prev_cmd_exit_code]=_show_prev_cmd_exit_code
