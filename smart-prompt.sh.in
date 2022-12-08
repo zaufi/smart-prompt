@@ -12,31 +12,36 @@
 #
 
 # Check for interactive bash and that we haven't already been sourced.
-[[ -z "$BASH_VERSION" || -z "$PS1" || -n "$SMART_PROMPT_PLUGINS" ]] && return
+[[ -z ${BASH_VERSION} || -z ${PS1} || -n ${SMART_PROMPT_PLUGINS} ]] && return
 
 # Load configuration file
-if [[ -f "@CMAKE_INSTALL_FULL_SYSCONFDIR@/@PROJECT_NAME@.conf" ]]; then
-    source "@CMAKE_INSTALL_FULL_SYSCONFDIR@/@PROJECT_NAME@.conf"
+if [[ -f @CMAKE_INSTALL_FULL_SYSCONFDIR@/@PROJECT_NAME@.conf ]]; then
+    # shellcheck source=/dev/null
+    . "@CMAKE_INSTALL_FULL_SYSCONFDIR@/@PROJECT_NAME@.conf"
 fi
 
 # Try load terminal specific config file
 if [[ -n ${TERM} && -f "@CMAKE_INSTALL_FULL_SYSCONFDIR@/@PROJECT_NAME@.${TERM}.conf" ]]; then
-    source "@CMAKE_INSTALL_FULL_SYSCONFDIR@/@PROJECT_NAME@.${TERM}.conf"
+    # shellcheck source=/dev/null
+    . "@CMAKE_INSTALL_FULL_SYSCONFDIR@/@PROJECT_NAME@.${TERM}.conf"
 fi
 
 # Try load user level overrides...
 if [[ -f "${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@rc" ]]; then
-    source "${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@rc"
+    # shellcheck source=/dev/null
+    . "${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@rc"
 fi
 
 # ... and terminal specific overrides as well
 if [[ -n ${TERM} && -f "${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@rc.${TERM}" ]]; then
-    source "${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@rc.${TERM}"
+    # shellcheck source=/dev/null
+    . "${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@rc.${TERM}"
 fi
 
 # Get reusable functions into the scope
 if [[ -f "@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/@PROJECT_NAME@-functions.sh" ]]; then
-    source "@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/@PROJECT_NAME@-functions.sh"
+    # shellcheck source=/dev/null
+    . "@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/@PROJECT_NAME@-functions.sh"
 else
     logger -t @PROJECT_NAME@ "Reusable functions library " \
         "'@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/@PROJECT_NAME@-functions.sh' "   \
@@ -53,17 +58,19 @@ if [[ -d "@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d" ]];
         if _sp_is_debug; then
             echo -e "\e[1;30mloading ${plugin}…\e[38m"
         fi
-        source ${plugin}
+        # shellcheck source=/dev/null
+        . "${plugin}"
     done
 fi
 
 # Loading user plugins
 if [[ -d "${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@.d" ]]; then
-    for plugin in ${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@.d/[0-9][0-9]*.sh; do
+    for plugin in "${XDG_CONFIG_HOME:-${HOME}/.config}"/@PROJECT_NAME@.d/[0-9][0-9]*.sh; do
         if _sp_is_debug; then
             echo -e "\e[1;30mloading ${plugin}…\e[38m"
         fi
-        source ${plugin}
+        # shellcheck source=/dev/null
+        . "${plugin}"
     done
 fi
 
@@ -132,9 +139,9 @@ function _smart_prompt()
             fi
 
             for action in ${SMART_PROMPT_PLUGINS[${checker}]}; do
-                [[ ${SP_TRACE} == ${checker} ]] && set -x
+                [[ ${SP_TRACE} == "${checker}" ]] && set -x
                 sp_ps+="$(${action})${sp_seg}"
-                [[ ${SP_TRACE} == ${checker} ]] && set +x
+                [[ ${SP_TRACE} == "${checker}" ]] && set +x
             done
 
         elif _sp_is_debug; then

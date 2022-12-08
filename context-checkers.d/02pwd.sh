@@ -39,7 +39,8 @@ function _show_pwd()
         done
         for _sp__pwd_pair in "${SP_MARK_PATTERNS_MAP[@]}"; do
             IFS=':' read -r _sp__pwd_key _sp__pwd_glob <<<"${_sp__pwd_pair}"
-            _sp__pwd_marks+=$([[ -n $(shopt -s extglob globstar nullglob; echo "${_sp__pwd_glob}") ]] && echo "${_sp__pwd_key}")
+            # shellcheck disable=SC2086
+            _sp__pwd_marks+=$([[ -n $(shopt -s extglob globstar nullglob; echo ${_sp__pwd_glob}) ]] && echo "${_sp__pwd_key}")
         done
 
         if [[ -n ${_sp__pwd_marks} ]]; then

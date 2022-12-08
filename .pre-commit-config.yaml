@@ -39,7 +39,7 @@ repos:
     hooks:
       - id: shellcheck
         args: ['--shell=bash', '--color=always']
-        files: '(oh-my-konsole|\.sh)$'
+        files: '\.sh(\.in)?$'
         types: ['file', 'text']
 
 # kate: indent-width 2; tab-width 2;
