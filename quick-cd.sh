@@ -24,20 +24,37 @@ function quick_cd()
       return 1
     fi
 
-    local -r dirs=$(grep 'ENTRY' "${hl}" \
-      | grep -v 'sh://' \
-      | grep -v 'ftp://' \
-      | sed 's,.*URL "\(.*\)",\1,g' \
+    local -a cmd=( \
+        dialog \
+            --keep-tite \
+            ${SMART_PROMPT_QCD_NOTAGS:+--no-tags} \
+            --output-fd 1 \
+            --colors \
+            --begin 0 2 \
+            --menu ' \ZbHot dirs to go\Zn' 0 0 0 \
       )
+    local line
+    while read -r line; do
+        if [[ ${line} =~ (sh|ftp):// ]]; then
+            continue
+        elif [[ ! ${line} =~ ENTRY ]]; then
+            continue
+        fi
+
+        local item
+        # shellcheck disable=SC2001
+        item=$(sed 's,\s*ENTRY "\([^"]\+\).*",\1,' <<< "${line}")
+
+        local dir
+        # shellcheck disable=SC2001
+        dir=$(sed 's,.*URL "\([^"]\+\)".*,\1,' <<< "${line}")
+
+        cmd+=("${dir}")
+        cmd+=("${item}")
+    done < "${hl}"
+
     # shellcheck disable=SC2086
-    local -r selected_dir=$(dialog --keep-tite \
-        --begin 0 2 \
-        --output-fd 1 \
-        --colors \
-        --no-items \
-        --menu ' \ZbHot dirs to go\Zn' 0 0 0 \
-        ${dirs} \
-      )
+    local -r selected_dir=$("${cmd[@]}")
 
     if [[ -n ${selected_dir} ]]; then
         pushd "${selected_dir}" >/dev/null 2>&1 || return
