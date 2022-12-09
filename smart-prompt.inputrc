@@ -14,7 +14,7 @@ set enable-meta-key on
 # Reread config, so changes to ~/.inputrc will act immediately w/ reexec shell
 "\C-x\C-r": re-read-init-file
 
-# Set gentoo style PgUp/PgDown behaviour
+# Set gentoo style PgUp/PgDown behavior
 "\e[5~": history-search-backward
 "\e[6~": history-search-forward
 
@@ -56,7 +56,7 @@ $if Bash
 # Bind `cd -` to Ctrl+Down
 "\e[1;5B": "\C-e \C-a\C-k cd -\n\C-y\b"
 
-# Show hot dirs list (Alt+RightArrow) (from MidnightCommander) and `pushd` into choosed one
+# Show hot dirs list (Alt+RightArrow) (from MidnightCommander) and `pushd` into chosen one
 "\e[1;3C": "\C-e \C-a\C-k quick_cd\n\C-y\b"
 
 # popd on Alt+LeftArrow

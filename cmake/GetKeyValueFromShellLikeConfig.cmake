@@ -2,7 +2,7 @@
 #   trivial config file
 #
 # Some data needed for build configuration may resides in a
-# simple form of `key=value` wich is widely used to store
+# simple form of `key=value` which is widely used to store
 # configuration data for shell scripts.
 #
 #

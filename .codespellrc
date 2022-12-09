@@ -4,3 +4,4 @@ check-filenames =
 context = 2
 enable-colors = true
 quiet-level = 3
+skip = .git,.venv,build

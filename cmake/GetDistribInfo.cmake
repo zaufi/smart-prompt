@@ -136,7 +136,7 @@ if(NOT DISTRIB_ID)
                 OUTPUT_STRIP_TRAILING_WHITESPACE
                 ERROR_QUIET
               )
-            # NOTE DISTRIB_ARCH can be overriden (tuned) later
+            # NOTE DISTRIB_ARCH can be overridden (tuned) later
             _debug("`uname -m` returns ${DISTRIB_ARCH}")
         endif()
     endif()
@@ -188,7 +188,7 @@ if(NOT DISTRIB_ID)
         set(DISTRIB_PKG_FMT "TXZ")
         # Try to tune DISTRIB_ARCH
         if(DISTRIB_ARCH STREQUAL "x86_64")
-            # 64-bit packets usualy named amd64 here...
+            # 64-bit packets usually named amd64 here...
             set(DISTRIB_ARCH "amd64")
         endif()
         # TODO Get more details
@@ -230,7 +230,7 @@ if(NOT DISTRIB_ID)
             set(DISTRIB_HAS_PACKAGE_MANAGER TRUE)
             # Try tune DISTRIB_ARCH
             if(DISTRIB_ARCH STREQUAL "x86_64")
-                # 64-bit packets usualy named amd64 here...
+                # 64-bit packets usually named amd64 here...
                 set(DISTRIB_ARCH "amd64")
             endif()
         else()
@@ -248,7 +248,7 @@ if(NOT DISTRIB_ID)
             set(DISTRIB_HAS_PACKAGE_MANAGER TRUE)
             # Try tune DISTRIB_ARCH
             if(DISTRIB_ARCH STREQUAL "x86_64")
-                # 64-bit packets usualy named amd64 here...
+                # 64-bit packets usually named amd64 here...
                 set(DISTRIB_ARCH "amd64")
             endif()
         else()
