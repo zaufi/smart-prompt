@@ -27,7 +27,7 @@ function _show_user_and_host()
         _user_tail="<${SUDO_USER}>"
     fi
     if _sp_check_bool "${SP_SHOW_LOCALHOST:-true}"; then
-        _user_tail+='@\\h'
+        _user_tail+='@\h'
     fi
     printf '%s%s\\u%s' "${_optional_ssh_warn}" "${sp_color_user}" "${_user_tail}"
 }

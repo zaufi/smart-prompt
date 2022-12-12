@@ -93,4 +93,16 @@ $if Bash
 # TODO Rewrite to avoid 'man blah' to be in a history
 "\eO2P": "\C-e \C-a\e[1;1C\C-k\C-aman \C-e\n\C-p\C-y\b\C-a\e[1;1C\e[C\C-u\C-e"
 
+# Ctrl+x,b: append PWD as the `/work/` and `build/` as `/work/build/` to the `docker run` volumes
+"\C-xb": "-v $(pwd):/work -v $(pwd)/build:/work/build -w /work/build "
+
+# Ctrl+x,k: append PWD as the `/work/` to the `docker run` volumes
+"\C-xk": "-v $(pwd):/work -w /work "
+
+# Ctrl+x,e:
+"\C-xe": " && echo OK || echo Fail"
+
+# Ctrl+x,f:
+"\C-xf": "\C-afor i in ${\C-e}; do echo ${i}; done"
+
 $endif
