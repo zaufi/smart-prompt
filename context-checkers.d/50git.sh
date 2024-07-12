@@ -12,7 +12,7 @@
 
 function _50_is_git_repo()
 {
-    git status -s 1>/dev/null 2>&1
+    git rev-parse --is-inside-work-tree > /dev/null 2>&1
 }
 
 function _51_is_git_dir()
