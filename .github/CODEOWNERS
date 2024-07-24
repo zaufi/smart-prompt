@@ -1,0 +1,8 @@
+#
+# SPDX-FileCopyrightText: 2024 Alex Turbov <i.zaufi@gmail.com>
+# SPDX-License-Identifier: CC0-1.0
+#
+# Lines starting with '#' are comments.
+# Each line is a file pattern followed by one or more owners.
+
+* @zaufi
