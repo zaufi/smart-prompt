@@ -1,15 +1,11 @@
 #!/bin/bash
+
+# SPDX-FileCopyrightText: 2014 - 2024 Alex Turbov <i.zaufi@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 #
 # This is a `quick_cd` module of the SmartPrompt.
 #
-# Copyright (c) 2014-2022 Alex Turbov <i.zaufi@gmail.com>
-#
-# This file is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
-# (at your option) any later version.
-#
-
 #
 # Select a dir to go from a hot list using `dialog`
 # It uses a `hotlist` file from Midnight Commander by default

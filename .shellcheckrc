@@ -1,2 +1,5 @@
+# SPDX-FileCopyrightText: 2024 Alex Turbov <i.zaufi@gmail.com>
+# SPDX-License-Identifier: CC0-1.0
+
 disable=SC2034,SC2155,SC2154
 external-sources=true

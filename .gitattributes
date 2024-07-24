@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2024 Alex Turbov <i.zaufi@gmail.com>
+# SPDX-License-Identifier: CC0-1.0
+
 # Custom attribute to mark ignored sources. Example:
 # third-party sources, IDE files, data files used for unit tests, &etc.
 [attr]noqa              whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,-tab-in-indent,-indent-with-non-tab

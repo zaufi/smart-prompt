@@ -1,8 +1,10 @@
 #!/bin/bash
+
+# SPDX-FileCopyrightText: 2013 - 2024 Alex Turbov <i.zaufi@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 #
 # Show various Paludis related info depending on a current dir
-#
-# Copyright (c) 2013-2022 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

@@ -1,9 +1,11 @@
 #!/bin/bash
+
+# SPDX-FileCopyrightText: 2013 - 2024 Alex Turbov <i.zaufi@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 #
 # Append CMAKE_BUILD_TYPE and CMAKE_INSTALL_PREFIX to a command prompt
 # for build dirs under cmake control.
-#
-# Copyright (c) 2013-2022 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

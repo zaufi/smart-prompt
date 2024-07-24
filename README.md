@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: 2024 Alex Turbov <i.zaufi@gmail.com>
+SPDX-License-Identifier: GPL-3.0-or-later
+-->
+
 What Is This?
 =============
 

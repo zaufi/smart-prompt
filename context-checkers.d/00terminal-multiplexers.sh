@@ -1,9 +1,11 @@
 #!/bin/bash
+
+# SPDX-FileCopyrightText: 2015 - 2024 Alex Turbov <i.zaufi@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 #
 # Detect working under terminal multiplexers.
 # Supports `tmux` and `screen`
-#
-# Copyright (c) 2015-2022 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

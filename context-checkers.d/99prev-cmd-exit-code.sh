@@ -1,10 +1,12 @@
 #!/bin/bash
+
+# SPDX-FileCopyrightText: 2019 - 2024 Alex Turbov <i.zaufi@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 #
 # The most "right" segment (to attract user's attention)
 # w/ the exit code of the previous command.
 # NOTE Do not show anything for "success" exit code.
-#
-# Copyright (c) 2019-2022 Alex Turbov <i.zaufi@gmail.com>
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
