@@ -103,6 +103,8 @@ $if Bash
 "\C-xe": " && echo OK || echo Fail"
 
 # Ctrl+x,f:
+# NOQA: spellcheck off
 "\C-xf": "\C-afor i in ${\C-e}; do echo ${i}; done"
+# NOQA: spellcheck on
 
 $endif

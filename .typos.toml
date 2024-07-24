@@ -1,0 +1,17 @@
+#
+# NOTE The manual about all configuration options is here:
+# https://github.com/crate-ci/typos/blob/master/docs/reference.md
+#
+
+[default]
+check-file = true
+check-filename = true
+extend-ignore-re = ["(?s)(#|//)\\s*NOQA: spellcheck(: *|=| +)off.*?\\n\\s*(#|//)\\s*NOQA: spellcheck(: *|=| +)on"]
+locale = "en-us"
+
+[default.extend-words]
+# NOTE Add repo-wide false positives here in the form of `word = "word"`.
+# Check the manual for details.
+
+[files]
+ignore-vcs = true

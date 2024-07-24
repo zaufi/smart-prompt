@@ -34,11 +34,11 @@ function _get_svn_branch()
 function _get_svn_dirty_status()
 {
     local _gsds__output_var=$1
-    local _gsds__wrk_root=$(svn info \
+    local _gsds__work_root=$(svn info \
       | grep 'Working Copy Root Path' \
       | sed 's,Working Copy Root Path:\s*\(.*\)$,\1,')
     local _gsds__status_color
-    if [[ -z $(svn status -q "${_gsds__wrk_root}" 2>/dev/null) ]]; then
+    if [[ -z $(svn status -q "${_gsds__work_root}" 2>/dev/null) ]]; then
         _get_color_param SP_SVN_GREEN_COLOR sp_color_info _gsds__status_color
     else
         _get_color_param SP_SVN_DIRTY_COLOR sp_color_warn _gsds__status_color

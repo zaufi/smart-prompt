@@ -1,0 +1,11 @@
+# See docs here:
+# https://github.com/DavidAnson/markdownlint/blob/main/README.md#rules--aliases
+
+default: true
+
+MD012:
+  # Consecutive blank lines
+  maximum: 2
+
+MD013:
+  line_length: 120

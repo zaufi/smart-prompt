@@ -1,0 +1,21 @@
+# Custom attribute to mark ignored sources. Example:
+# third-party sources, IDE files, data files used for unit tests, &etc.
+[attr]noqa              whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,-tab-in-indent,-indent-with-non-tab
+
+# Custom attribute to mark microformat files (MD, RST, &etc.)
+# to setup VCS conflict marker to be long enough to be distinctive
+# from possible _header_ markup.
+[attr]doc               conflict-marker-size=79
+
+# Prevent some VCS related service files to be exported
+.codespellrc            export-ignore
+.editorconfig           export-ignore
+.git*                   export-ignore
+.mailmap                export-ignore
+.pre-commit-config.yaml export-ignore
+
+# NOTE Keep project-specifics below
+
+# NOTE Tabulation symbols prohibited for all text files by default
+*                       text=auto whitespace=tab-in-indent
+*.md                    doc
