@@ -1,7 +1,7 @@
 #---------------------------------------------------------
 # Section: Initialize CMake
 #---------------------------------------------------------
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.25)
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
@@ -15,8 +15,6 @@ project(
   )
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
-
-include(GetDistribInfo)
 
 function(auto_option NAME DESCRIPTION)
     if(DEFINED ARGV2)
@@ -213,13 +211,15 @@ install(
 #---------------------------------------------------------
 # Section: Configure package options
 #---------------------------------------------------------
-
 set(CPACK_PACKAGE_RELOCATABLE OFF)
 set(CPACK_SET_DESTDIR ON)
 set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
 
 # "Binary" package settings
-set(CPACK_GENERATOR ${DISTRIB_PKG_FMT})
+cmake_host_system_information(RESULT DISTRIB_ID QUERY DISTRIB_ID)
+if(DISTRIB_ID STREQUAL "ubuntu")
+    set(CPACK_GENERATOR DEB)
+endif()
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
 set(CPACK_PACKAGE_VENDOR "Alex Turbov")
 set(CPACK_PACKAGE_CONTACT "i.zaufi@gmail.com")
