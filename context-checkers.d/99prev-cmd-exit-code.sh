@@ -8,11 +8,6 @@
 # w/ the exit code of the previous command.
 # NOTE Do not show anything for "success" exit code.
 #
-# This file is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
-# (at your option) any later version.
-#
 
 function _99_check_prev_cmd_exit_code()
 {

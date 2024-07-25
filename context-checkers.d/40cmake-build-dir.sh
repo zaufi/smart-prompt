@@ -7,11 +7,6 @@
 # Append CMAKE_BUILD_TYPE and CMAKE_INSTALL_PREFIX to a command prompt
 # for build dirs under cmake control.
 #
-# This file is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
-# (at your option) any later version.
-#
 
 function _40_is_cmake_build_dir()
 {
