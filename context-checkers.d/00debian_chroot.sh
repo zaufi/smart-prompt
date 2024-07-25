@@ -14,7 +14,7 @@
 
 function _00_is_under_schroot()
 {
-    [[ -n ${SCHROOT_CHROOT_NAME} || -f /etc/debian_chroot ]]
+    [[ ( -n ${SCHROOT_CHROOT_NAME} || -f /etc/debian_chroot ) && ! -e /.dockerenv ]]
 }
 
 function _show_debian_chroot()
