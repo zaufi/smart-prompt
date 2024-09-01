@@ -44,7 +44,7 @@ repos:
         stages: [commit-msg]
 
   - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
-    rev: 2.7.3
+    rev: 3.0.3
     hooks:
       - id: editorconfig-checker
 
@@ -54,7 +54,7 @@ repos:
       - id: codespell
 
   - repo: https://github.com/crate-ci/typos
-    rev: v1.23.5
+    rev: typos-dict-v0.11.27
     hooks:
       - id: typos
         # NOTE Override hook provided args to prevent automatic
