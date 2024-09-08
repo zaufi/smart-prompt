@@ -44,7 +44,7 @@ repos:
         stages: [commit-msg]
 
   - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
-    rev: 2.7.3
+    rev: 3.0.3
     hooks:
       - id: editorconfig-checker
 
@@ -52,14 +52,16 @@ repos:
     rev: v2.3.0
     hooks:
       - id: codespell
+        stages: [commit-msg, pre-commit]
 
   - repo: https://github.com/crate-ci/typos
-    rev: v1.23.5
+    rev: v1.24.5
     hooks:
       - id: typos
         # NOTE Override hook provided args to prevent automatic
         # fixing of found typos. Let the dev decide what to fix!
         args: [--force-exclude]
+        stages: [commit-msg, pre-commit]
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.41.0
