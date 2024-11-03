@@ -9,7 +9,15 @@
 [default]
 check-file = true
 check-filename = true
-extend-ignore-re = ["(?s)(#|//)\\s*NOQA: spellcheck(: *|=| +)off.*?\\n\\s*(#|//)\\s*NOQA: spellcheck(: *|=| +)on"]
+extend-ignore-re = [
+    # NOTE Allow to mark block of text to exclude from spellchecking
+    "(?s)(#|//)\\s*(NOQA|noqa):? spellcheck(: *|=| +)off.*?\\n\\s*(#|//)\\s*(NOQA|noqa):? spellcheck(: *|=| +)on"
+    # NOTE Allow to mark a line to exclude from spellchecking
+  , "(?Rm)^.*(#|//)\\s*(NOQA|noqa):? spellcheck(: *|=| +)disable-line$"
+    # Exclude Git hashes (a whole line with `index` in the `COMMIT_EDITMSG` file)
+    # BUG https://github.com/crate-ci/typos/issues/1117
+  , "(?Rm)^index [0-9a-f]{9}\\.\\.[0-9a-f]{9} [0-9]+$"
+  ]
 locale = "en-us"
 
 [default.extend-words]
