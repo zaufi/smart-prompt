@@ -55,7 +55,7 @@ repos:
         stages: [commit-msg, pre-commit]
 
   - repo: https://github.com/crate-ci/typos
-    rev: v1.27.0
+    rev: v1.27.3
     hooks:
       - id: typos
         # NOTE Override hook provided args to prevent automatic
@@ -69,7 +69,7 @@ repos:
       - id: markdownlint
 
   - repo: https://github.com/fsfe/reuse-tool
-    rev: v4.0.3
+    rev: v5.0.2
     hooks:
       - id: reuse
 
