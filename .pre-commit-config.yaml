@@ -55,7 +55,7 @@ repos:
         stages: [commit-msg, pre-commit]
 
   - repo: https://github.com/crate-ci/typos
-    rev: v1.28.0
+    rev: typos-dict-v0.11.37
     hooks:
       - id: typos
         # NOTE Override hook provided args to prevent automatic
