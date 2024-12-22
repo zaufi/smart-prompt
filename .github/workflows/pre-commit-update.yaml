@@ -32,7 +32,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: update/pre-commit-hooks
           delete-branch: true
-          title: 'misc: version bump `pre-commit` hook plugins'
+          title: 'ci: version bump `pre-commit` hook plugins'
           commit-message: 'misc: version bump `pre-commit` hook plugins'
           body: |
             # Changes in this PR
