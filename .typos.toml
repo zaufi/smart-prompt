@@ -16,7 +16,7 @@ extend-ignore-re = [
   , "(?Rm)^.*(#|//)\\s*(NOQA|noqa):? spellcheck(: *|=| +)disable-line$"
     # Exclude Git hashes (a whole line with `index` in the `COMMIT_EDITMSG` file)
     # BUG https://github.com/crate-ci/typos/issues/1117
-  , "(?Rm)^index [0-9a-f]{9}\\.\\.[0-9a-f]{9} [0-9]+$"
+  , "(?m)^index [0-9a-f]{7}\\.\\.[0-9a-f]{7}( [0-9]+)?$"
   ]
 locale = "en-us"
 
