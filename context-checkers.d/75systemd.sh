@@ -21,7 +21,7 @@ function _systemd_show_default_target()
     # declaration and assign are on the different lines.
     local _sdt__state
     _sdt__state=$(systemctl is-system-running)
-    local _sdt__exit_code=$?
+    local -i _sdt__exit_code=$?
 
     local _sdt__target_color
     _get_color_param SP_SYSTEMD_TARGET_COLOR sp_color_notice _sdt__target_color
@@ -35,4 +35,7 @@ function _systemd_show_default_target()
 
     printf '%s%s %s%s' "${_sdt__target_color}" "${_sdt__target}" "${_sdt__state_color}" "${_sdt__state}"
 }
-SMART_PROMPT_PLUGINS[_75_is_systemd_dir]=_systemd_show_default_target
+
+if command -v systemctl &>/dev/null; then
+    SMART_PROMPT_PLUGINS[_75_is_systemd_dir]=_systemd_show_default_target
+fi

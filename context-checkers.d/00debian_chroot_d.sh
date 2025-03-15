@@ -22,4 +22,5 @@ function _show_docker_debian_chroot()
     fi
     printf '%s%s%s' "${_sdc__chroot_name}" "${_mark}" "$(< /etc/debian_chroot)"
 }
+
 SMART_PROMPT_PLUGINS[_00_is_under_docker]=_show_docker_debian_chroot

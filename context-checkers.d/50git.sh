@@ -121,5 +121,7 @@ function _show_git_git()
     printf '%s%s' "${_sgg__origin_color}" "${_sgg__org}"
 }
 
-SMART_PROMPT_PLUGINS[_50_is_git_repo]=_show_git_status
-SMART_PROMPT_PLUGINS[_51_is_git_dir]=_show_git_git
+if command -v git &>/dev/null; then
+    SMART_PROMPT_PLUGINS[_50_is_git_repo]=_show_git_status
+    SMART_PROMPT_PLUGINS[_51_is_git_dir]=_show_git_git
+fi
