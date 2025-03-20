@@ -94,9 +94,17 @@ function _show_git_status()
 
     local _sgs__wtc=$(git worktree list | wc -l)
     if [[ ${_sgs__wtc} -lt 2 ]]; then
-        unset _sgs__wtc
+        if [[ -n ${_sgs__wt} ]]; then
+            _sgs__wtc="❲${_sgs__wt}❳"
+        else
+            unset _sgs__wtc
+        fi
     else
-        _sgs__wtc="❲${_sgs__wtc}${SP_VCS_WT_SYMBOL:-\\360\\237\\214\\262}❳"
+        if [[ -n ${_sgs__wt} ]]; then
+            _sgs__wtc="❲${_sgs__wt}/${_sgs__wtc}❳"
+        else
+            _sgs__wtc="❲${_sgs__wtc}${SP_VCS_WT_SYMBOL:-\\360\\237\\214\\262}❳"
+        fi
     fi
 
     local _sgs__repo
@@ -104,10 +112,9 @@ function _show_git_status()
         _sgs__repo='git:'
     fi
 
-    printf '%s%s%s%s%s%s%s' \
+    printf '%s%s%s%s%s%s' \
         "${_sgs__status}" \
         "${_sgs__repo}" \
-        "${_sgs__wt}" \
         "${SP_VCS_BRANCH_SYMBOL:-\\356\\202\\240:}" \
         "${_sgs__branch}" \
         "${_sgs__wtc}" \
