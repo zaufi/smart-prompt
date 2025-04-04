@@ -48,6 +48,9 @@ fi
 # Declare a global associative array to be filled by found plugins
 declare -A SMART_PROMPT_PLUGINS
 
+declare _sp__nullglob_status=$(shopt -p nullglob || true)
+shopt -s nullglob
+
 # Loading plugins
 if [[ -d "@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d" ]]; then
     for plugin in @CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d/[0-9][0-9]*.sh; do
@@ -69,6 +72,9 @@ if [[ -d "${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@.d" ]]; then
         . "${plugin}"
     done
 fi
+
+$_sp__nullglob_status
+unset _sp__nullglob_status
 
 function _get_registered_context_checkers()
 {
