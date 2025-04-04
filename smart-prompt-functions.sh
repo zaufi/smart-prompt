@@ -252,8 +252,14 @@ function _find_program()
 {
     local -r _fp__name=${1}
     local -r _fp__output_var=${2}
-    local -r _fp__bin=$(which "${_fp__name}" 2>/dev/null)
-    if [[ -n "${_fp__bin}" ]]; then
+    local _fp__bin=$(hash -t "${_fp__name}" 2>/dev/null)
+    if [[ -z ${_fp__bin} ]]; then
+        _fp__bin=$(command -v "${_fp__name}" || return 1)
+        if [[ -n ${_fp__bin} ]]; then
+            hash -p "${_fp__bin}" "${_fp__name}"
+        fi
+    fi
+    if [[ -n ${_fp__bin} ]]; then
         eval "${_fp__output_var}=\"${_fp__bin}\""
         return 0
     fi
