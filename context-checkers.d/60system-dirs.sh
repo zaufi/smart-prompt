@@ -229,18 +229,20 @@ function _show_fonts_info()
 {
     local _fc_list_bin
     local _fc_cat_bin
-    if _find_program fc-list _fc_list_bin && _find_program fc-cat _fc_cat_bin; then
+    if _find_program fc-list _fc_list_bin; then
         local _sfi__fc_color
         _get_color_param SP_FONTS_COUNT_COLOR sp_color_misc _sfi__fc_color
+        local -i _sfi__total="$("${_fc_list_bin}" 2>/dev/null | wc -l)"
         if _cur_dir_starts_with /etc/fonts; then
-            printf '%sfonts: %d' "${_sfi__fc_color}" "$("${_fc_list_bin}" 2>/dev/null | wc -l)"
+            printf '%s%s %d' "${_sfi__fc_color}" "${SP_FONT_DIR_MARK:-fonts:}" "${_sfi__total}"
         else
             # TODO Refactor this!
             # shellcheck disable=SC2126
-            printf '%sfonts: %d/%d' \
+            printf '%s%s %d/%d' \
                 "${_sfi__fc_color}" \
-                "$("${_fc_cat_bin}" . 2>/dev/null | grep -v '"\.dir"' | wc -l)" \
-                "$("${_fc_list_bin}" | wc -l)"
+                "${SP_FONT_DIR_MARK:-fonts:}" \
+                "$("${_fc_list_bin}" 2>/dev/null | grep "${PWD}" | wc -l)" \
+                "${_sfi__total}"
         fi
     fi
 }
