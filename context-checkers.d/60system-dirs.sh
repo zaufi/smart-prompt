@@ -220,8 +220,9 @@ SMART_PROMPT_PLUGINS[_61_may_show_mount_info]=_show_some_dev_and_mount_info
 #
 function _61_is_one_of_fonts_dir()
 {
-    _cur_dir_starts_with /usr/share/fonts \
-      || _cur_dir_starts_with /etc/fonts \
+    _cur_dir_starts_with /etc/fonts \
+      || _cur_dir_starts_with /usr/share/fonts \
+      || _cur_dir_starts_with "${XDG_DATA_HOME:-${HOME}/.local}"/fonts \
       || _cur_dir_starts_with "${HOME}"/.fonts
 }
 function _show_fonts_info()
