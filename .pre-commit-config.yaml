@@ -45,7 +45,7 @@ repos:
         stages: [commit-msg]
 
   - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
-    rev: 3.2.0
+    rev: 3.2.1
     hooks:
       - id: editorconfig-checker
 
@@ -55,8 +55,9 @@ repos:
       - id: codespell
         stages: [commit-msg, pre-commit]
 
-  - repo: https://github.com/crate-ci/typos
-    rev: v1.30.2
+    # NOTE See BUG https://github.com/crate-ci/typos/issues/390
+  - repo: https://github.com/adhtruong/mirrors-typos
+    rev: v1.31.1
     hooks:
       - id: typos
         # NOTE Override hook provided args to prevent automatic
