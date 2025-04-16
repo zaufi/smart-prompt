@@ -109,7 +109,7 @@ function _show_git_status()
 
     local _sgs__repo
     if _sp_check_bool "${SP_INDICATE_REPO_TYPE}" -o [[ "${SP_INDICATE_REPO_TYPE[@]}" =~ git ]]; then
-        _sgs__repo='git:'
+        _sgs__repo="${SP_REPO_GIT_MARK:-git:}"
     fi
 
     printf '%s%s%s%s%s%s' \
