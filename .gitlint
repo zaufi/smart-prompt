@@ -17,9 +17,7 @@
 # B6 body-is-missing
 # T5 title-must-not-contain-word
 ignore=B5,B6,T5
-# Whether to use Python re.search() instead of re.match() semantics in all built-in
-# rules thatuse regular expressions.
-regex-style-search=true
+
 # verbosity should be a value between 1 and 3, the commandline -v flags take precedence over this
 verbosity = 2
 
@@ -46,7 +44,7 @@ verbosity = 2
 # Whether to use Python `search` instead of `match` semantics in rules that use
 # regexes. Context: https://github.com/jorisroovers/gitlint/issues/254
 # Disabled by default, but will be enabled by default in the future.
-# regex-style-search=true
+regex-style-search=true
 
 # Enable debug mode (prints more output). Disabled by default.
 # debug=true
@@ -63,6 +61,7 @@ contrib=contrib-title-conventional-commits
 # This is an example of how to configure the "title-max-length" rule and
 # set the line-length it enforces to 50
 [title-max-length]
+# GitHub trims titles longer than this value
 line-length=72
 
 # Conversely, you can also enforce minimal length of a title with the
@@ -85,7 +84,7 @@ min-length=5
 # regex=^[^:]+: [a-z].*
 
 [body-max-line-length]
-line-length=120
+line-length=100
 
 [body-min-length]
 min-length=0
@@ -109,16 +108,21 @@ min-length=0
 
 # [author-valid-email]
 # python-style regex that the commit author email address must match.
-# regex=[^@]+@foo.com
+# regex=[^@]+@example.com
 
-# [ignore-by-title]
+[ignore-by-title]
 # Ignore certain rules for commits of which the title matches a regex
 # E.g. Match commit titles that start with "Release"
 # regex=^Release(.*)
 
+# NOTE GitHub can add `(#NNN)` to the end of a title on merge
+# that can violate the total length rule. Ignore it!
+regex=\(#[0-9]+\)$
+
 # Ignore certain rules, you can reference them by their id or by their full name
 # Use 'all' to ignore all rules
-# ignore=T1,body-min-length
+# NOTE This ignore list overrides the one from `[general]`!
+ignore=B5,B6,T1,T5
 
 # [ignore-by-body]
 # Ignore certain rules for commits of which the body has a line that matches a regex
@@ -129,10 +133,13 @@ min-length=0
 # Use 'all' to ignore all rules
 # ignore=T1,body-min-length
 
-# [ignore-body-lines]
+[ignore-body-lines]
 # Ignore certain lines in a commit body that match a regex.
 # E.g. Ignore all lines that start with 'Co-Authored-By'
 # regex=^Co-Authored-By
+
+# Ignore link targets in Markdown syntax.
+regex=^\[[^\]]+\]: https?://
 
 # [ignore-by-author-name]
 # Ignore certain rules for commits of which the author name matches a regex

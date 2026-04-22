@@ -1,14 +1,36 @@
 # SPDX-FileCopyrightText: 2024 Alex Turbov <i.zaufi@gmail.com>
 # SPDX-License-Identifier: CC0-1.0
-
+#
 # See docs here:
 # https://github.com/DavidAnson/markdownlint/blob/main/README.md#rules--aliases
 
 default: true
 
+# Multiple consecutive blank lines
 MD012:
-  # Consecutive blank lines
   maximum: 2
 
+# Line length
 MD013:
-  line_length: 120
+  line_length: 100
+  tables: false
+
+# Multiple headings with the same content
+MD024:
+  siblings_only: true
+
+# Proper names should have the correct capitalization
+MD044:
+  code_blocks: false
+
+# Code fence style
+MD048:
+  style: backtick
+
+# Emphasis style
+MD049:
+  style: underscore
+
+# Strong style
+MD050:
+  style: asterisk

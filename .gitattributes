@@ -12,10 +12,12 @@
 
 # Prevent some VCS related service files to be exported
 .codespellrc            export-ignore
-.editorconfig           export-ignore
+.editorconfig*          export-ignore
 .git*                   export-ignore
 .mailmap                export-ignore
+.markdownlint*          export-ignore
 .pre-commit-config.yaml export-ignore
+.typos.toml             export-ignore
 
 # NOTE Keep project-specifics below
 

@@ -1,28 +1,53 @@
 # SPDX-FileCopyrightText: 2024 Alex Turbov <i.zaufi@gmail.com>
 # SPDX-License-Identifier: CC0-1.0
-
 #
 # NOTE The manual about all configuration options is here:
 # https://github.com/crate-ci/typos/blob/master/docs/reference.md
+#
+# NOTE The manual about supported regex syntax is here:
+# https://docs.rs/regex/latest/regex/index.html#syntax
 #
 
 [default]
 check-file = true
 check-filename = true
 extend-ignore-re = [
-    # NOTE Allow to mark block of text to exclude from spellchecking
+    # NOTE Allow to mark block of text to exclude from spellchecking inside C++ or Python comments
     "(?s)(#|//)\\s*(NOQA|noqa):? spellcheck(: *|=| +)off.*?\\n\\s*(#|//)\\s*(NOQA|noqa):? spellcheck(: *|=| +)on"
     # NOTE Allow to mark a line to exclude from spellchecking
   , "(?Rm)^.*(#|//)\\s*(NOQA|noqa):? spellcheck(: *|=| +)disable-line$"
-    # Exclude Git hashes (a whole line with `index` in the `COMMIT_EDITMSG` file)
-    # BUG https://github.com/crate-ci/typos/issues/1117
-  , "(?m)^index [0-9a-f]{7}\\.\\.[0-9a-f]{7}( [0-9]+)?$"
+    # NOTE Stop checking from this line to the end of file
+    # This line is a marker added by Git to the `COMMIT_EDITMSG`.
+  , "(?sm)^# ------------------------ >8 ------------------------$.*"
   ]
 locale = "en-us"
 
-[default.extend-words]
 # NOTE Add repo-wide false positives here in the form of `word = "word"`.
+
 # Check the manual for details.
+[default.extend-words]
+# codespell:ignore-begin
+# TODO Add exceptions/extensions here
+# codespell:ignore-end
+
+[default.extend-identifiers]
+# codespell:ignore-begin
+# TODO Add exceptions/extensions here
+# codespell:ignore-end
 
 [files]
 ignore-vcs = true
+
+# BEGIN Type-specific settings
+[type.rst]
+extend-ignore-re = [
+    # NOTE Allow to mark block of text to exclude from spellchecking as RST comments
+    "(?s)\\.\\.\\s+(NOQA|noqa):? spellcheck(: *|=| +)off.*?\\n\\.\\.\\s+(NOQA|noqa):? spellcheck(: *|=| +)on"
+  ]
+
+[type.md]
+extend-ignore-re = [
+    # NOTE Allow to mark block of text to exclude from spellchecking as HTML comments
+    "(?s)<!--\\s*(NOQA|noqa):? spellcheck(: *|=| +)off\\s*-->.*?\\n<!--\\s*(NOQA|noqa):? spellcheck(: *|=| +)on\\s*-->"
+  ]
+# END Type-specific settings

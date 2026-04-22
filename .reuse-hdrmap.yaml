@@ -3,15 +3,15 @@
 
 templates:
   - patterns:
-      - "*.md"
+      - '*.md'
     extra_reuse_cli_options:
       style: html
   - patterns:
-      - "*.jinja2"
+      - '*.jinja2'
     extra_reuse_cli_options:
       force_dot_license: true
   - patterns:
-      - "*"
+      - '*'
     extra_reuse_cli_options:
       style: python
       template: hash
@@ -21,17 +21,17 @@ licenses:
     patterns:
       - CMakeLists.txt
       - README.md
-      - "*.inputrc"
-      - "*.sh"
-      - "*.sh.in"
+      - '*.inputrc'
+      - '*.sh'
+      - '*.sh.in'
   - ref: CC0-1.0
     patterns:
-      - "*"
+      - '*'
 
 copyright_headers:
-  - text: "%reuse.name% <%reuse.email%>"
+  - text: '%reuse.name% <%reuse.email%>'
     patterns:
-      - "*"
+      - '*'
 
 extra_reuse_cli_options:
   copyright_prefix: spdx

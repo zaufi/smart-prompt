@@ -1,10 +1,22 @@
 # SPDX-FileCopyrightText: 2024 Alex Turbov <i.zaufi@gmail.com>
 # SPDX-License-Identifier: CC0-1.0
 
+# In-source ignore comments:
+# - one line (or word): `codespell:ignore [word]`
+# - a block:
+#   codespell:ignore-begin
+#   ...
+#   codespell:ignore-end
+
 [codespell]
 builtin = clear,rare,names,code,en-GB_to_en-US
 check-filenames =
 context = 2
 enable-colors = true
 quiet-level = 3
-skip = .git,.venv,build
+# TODO Add files/directories to ignore to the list below.
+# skip =
+# TODO Add _false positives_ to the ignore list below.
+# noqa: spellcheck off
+# ignore-words-list =
+# noqa: spellcheck on
