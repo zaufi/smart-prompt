@@ -126,7 +126,7 @@ if(WITH_SCHROOT)
 endif()
 
 if(WITH_SYSTEMD)
-    find_program(SYSTEMCTL_EXECUTABLE cave DOC "systemctl executable")
+    find_program(SYSTEMCTL_EXECUTABLE systemctl DOC "systemctl executable")
     if(NOT SYSTEMCTL_EXECUTABLE)
         if(NOT WITH_SYSTEMD STREQUAL AUTO)
             message(
