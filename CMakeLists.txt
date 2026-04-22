@@ -166,6 +166,7 @@ message(STATUS "WITH_SCHROOT=${WITH_SCHROOT}")
 message(STATUS "WITH_SYSTEMD=${WITH_SYSTEMD}")
 
 # Setup package paths
+set(CMAKE_SIZEOF_VOID_P 8)
 include(GNUInstallDirs)
 
 #---------------------------------------------------------
