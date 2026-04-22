@@ -13,8 +13,14 @@
 #
 function _sp_check_bool()
 {
-    local -r _scb__val=$1
-    [[ ${_scb__val} =~ 1|[Yy]([Ee][Ss])?|[Oo][Nn]|[Tt][Rr][Uu][Ee] ]]
+    case "${1,,}" in
+        1|y|yes|on|true)
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
 }
 
 #
