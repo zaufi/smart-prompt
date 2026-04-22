@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: 2009-2026 Alex Turbov <i.zaufi@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Bind grep substring in all files to F3
+"\eOR": "\C-a\C-kgrep -nir --exclude-dir={.git,build,__pycache__} \"\C-y\" *\n\C-y"
+# Shit+F3: same as above but allow to edit command line
+#"\eO2R": "\C-agrep -nir --exclude-dir={.git,build,__pycache__} \"\C-e\" *"
+
+# Bind grep substring in C/C++ files to F4
+"\eOS": "\C-a\C-kgrep -nr --exclude-dir={.git,build} --include=*.{c,h,cc,hh,icc,inl,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-y\" *\n\C-y"
+# Bind grep substring in Python files to Shift+F4
+"\eO2S": "\C-a\C-kgrep -nr --exclude-dir={.{git,venv},build,__pycache__} --include=*.py \"\C-y\" *\n\C-y"
+
+# Ctrl+Shift+F3: Iterate over matched files, initiate search'n'replace using `sed`
+"\eO6R": "\C-e \C-ugrep -nlr --exclude-dir={.git,build,__pycache__} \"\C-y\b\" * | while read i% do sed -i 's,\C-y\b,,g' \"$i\"% done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
+# Ctrl+Shift+F4: Iterate over matched files, initiate search'n'replace using `sed`
+"\eO6S": "\C-e \C-ugrep -nlr --exclude-dir={.git,build} --include=*.{c,h,cc,hh,icc,inl,ipp,tcc,cxx,hxx,cpp,hpp} \"\C-y\b\" * | while read i% do sed -i 's,\C-y\b,,g' \"$i\"% done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"

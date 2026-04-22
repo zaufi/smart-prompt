@@ -35,6 +35,7 @@ auto_option(WITH_GIT "Add support for git")
 auto_option(WITH_OPENRC "Add support for OpenRC")
 auto_option(WITH_PALUDIS "Add support for Paludis (Gentoo and Exherbo)")
 auto_option(WITH_PORTAGE "Add support for Portage (Gentoo)")
+auto_option(WITH_RG "Use ripgrep instead of grep")
 auto_option(WITH_SVN "Add support for subversion")
 auto_option(WITH_SCHROOT "Add support for schroot")
 auto_option(WITH_SYSTEMD "Add support for systemd")
@@ -139,6 +140,19 @@ if(WITH_SYSTEMD)
     endif()
 endif()
 
+if(WITH_RG)
+    if(NOT WITH_RG STREQUAL AUTO)
+        set(_req REQUIRED)
+    endif()
+    find_program(RG_EXECUTABLE rg DOC "ripgrep executable")
+    if(RG_EXECUTABLE)
+        set(WITH_RG ON)
+    else()
+        set(WITH_RG OFF)
+    endif()
+    unset(_req)
+endif()
+
 
 # Report options
 message(STATUS "WITH_INPUTRC=${WITH_INPUTRC}")
@@ -146,6 +160,7 @@ message(STATUS "WITH_GIT=${WITH_GIT}")
 message(STATUS "WITH_OPENRC=${WITH_OPENRC}")
 message(STATUS "WITH_PALUDIS=${WITH_PALUDIS}")
 message(STATUS "WITH_PORTAGE=${WITH_PORTAGE}")
+message(STATUS "WITH_RG=${WITH_RG}")
 message(STATUS "WITH_SVN=${WITH_SVN}")
 message(STATUS "WITH_SCHROOT=${WITH_SCHROOT}")
 message(STATUS "WITH_SYSTEMD=${WITH_SYSTEMD}")
@@ -158,6 +173,18 @@ include(GNUInstallDirs)
 #---------------------------------------------------------
 
 configure_file(${PROJECT_NAME}.sh.in ${PROJECT_NAME}.sh @ONLY)
+
+if(WITH_RG)
+    file(STRINGS ${PROJECT_NAME}-rg.inputrc search_bindings)
+else()
+    file(STRINGS ${PROJECT_NAME}-grep.inputrc search_bindings)
+endif()
+
+list(POP_FRONT search_bindings _ _ _)
+list(JOIN search_bindings "\n" search_bindings)
+string(REPLACE "%" ";" search_bindings "${search_bindings}")
+
+configure_file(${PROJECT_NAME}.inputrc.in ${PROJECT_NAME}.inputrc @ONLY)
 
 #---------------------------------------------------------
 # Section: Install project files
@@ -192,7 +219,7 @@ install(
 if(WITH_INPUTRC)
     install(
         FILES
-            "${PROJECT_NAME}.inputrc"
+            "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.inputrc"
         DESTINATION "${CMAKE_INSTALL_FULL_SYSCONFDIR}"
       )
     install(

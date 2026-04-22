@@ -1,0 +1,15 @@
+# SPDX-FileCopyrightText: 2009-2026 Alex Turbov <i.zaufi@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Bind search substring in all files to F3
+"\eOR": "\C-a\C-krg --hidden --no-ignore --glob '!.git/**' \"\C-y\" *\n\C-y"
+
+# Bind search substring in C/C++ files to F4
+"\eOS": "\C-a\C-krg -t cpp \"\C-y\"\n\C-y"
+# Bind search substring in Python files to Shift+F4
+"\eO2S": "\C-a\C-krg -t py \"\C-y\"\n\C-y"
+
+# Ctrl+Shift+F3: Iterate over matched files, initiate search'n'replace using `sed`
+"\eO6R": "\C-e \C-urg -l \"\C-y\b\" | while read i% do sed -i 's,\C-y\b,,g' \"$i\"% done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
+# Ctrl+Shift+F4: Iterate over matched files, initiate search'n'replace using `sed`
+"\eO6S": "\C-e \C-urg -t cpp -l \"\C-y\b\" * | while read i% do sed -i 's,\C-y\b,,g' \"$i\"% done\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b\C-b"
