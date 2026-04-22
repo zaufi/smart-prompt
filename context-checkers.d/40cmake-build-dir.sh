@@ -4,8 +4,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 #
-# Append CMAKE_BUILD_TYPE and CMAKE_INSTALL_PREFIX to a command prompt
-# for build dirs under cmake control.
+# Append `CMAKE_BUILD_TYPE` and `CMAKE_INSTALL_PREFIX` to the command prompt
+# for build directories under CMake control.
 #
 
 function _40_is_cmake_build_dir()

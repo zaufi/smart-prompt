@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 #
-# This is a `main` module of the SmartPrompt engine.
+# This is the main module of the SmartPrompt engine.
 #
 
 # Check for interactive bash and that we haven't already been sourced.
@@ -16,13 +16,13 @@ if [[ -f @CMAKE_INSTALL_FULL_SYSCONFDIR@/@PROJECT_NAME@.conf ]]; then
     . "@CMAKE_INSTALL_FULL_SYSCONFDIR@/@PROJECT_NAME@.conf"
 fi
 
-# Try load terminal specific config file
+# Try to load the terminal-specific config file
 if [[ -n ${TERM} && -f "@CMAKE_INSTALL_FULL_SYSCONFDIR@/@PROJECT_NAME@.${TERM}.conf" ]]; then
     # shellcheck source=/dev/null
     . "@CMAKE_INSTALL_FULL_SYSCONFDIR@/@PROJECT_NAME@.${TERM}.conf"
 fi
 
-# Try load user level overrides...
+# Try to load user-level overrides...
 if [[ -f "${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@rc" ]]; then
     # shellcheck source=/dev/null
     . "${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@rc"
@@ -34,7 +34,7 @@ if [[ -n ${TERM} && -f "${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@rc.${T
     . "${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@rc.${TERM}"
 fi
 
-# Get reusable functions into the scope
+# Load reusable functions into scope
 if [[ -f "@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/@PROJECT_NAME@-functions.sh" ]]; then
     # shellcheck source=/dev/null
     . "@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/@PROJECT_NAME@-functions.sh"
@@ -45,13 +45,13 @@ else
     return
 fi
 
-# Declare a global associative array to be filled by found plugins
+# Declare a global associative array to be filled by the discovered plugins
 declare -A SMART_PROMPT_PLUGINS
 
 declare _sp__nullglob_status=$(shopt -p nullglob || true)
 shopt -s nullglob
 
-# Loading plugins
+# Load plugins
 if [[ -d "@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d" ]]; then
     for plugin in @CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d/[0-9][0-9]*.sh; do
         if _sp_is_debug; then
@@ -62,7 +62,7 @@ if [[ -d "@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d" ]];
     done
 fi
 
-# Loading user plugins
+# Load user plugins
 if [[ -d "${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@.d" ]]; then
     for plugin in "${XDG_CONFIG_HOME:-${HOME}/.config}"/@PROJECT_NAME@.d/[0-9][0-9]*.sh; do
         if _sp_is_debug; then
@@ -90,9 +90,9 @@ function _smart_prompt()
     local _sp__prev_cmd_exit_code=$?
 
     # Get configured colors (or defaults)
-    # NOTE Before set desired color, make sure there is no
-    # other styles in effect...it is why `reset' is a leading
-    # (and hardcoded) "color" in a sequence...
+    # NOTE Before setting the desired color, make sure there are no
+    # other styles in effect. That is why `reset` is the leading
+    # (and hardcoded) "color" in a sequence.
 
     local sp_color_user
     local sp_reset
@@ -124,11 +124,11 @@ function _smart_prompt()
     local sp_color_seg
     _eval_color_string "reset ${SP_SEGMENT_COLOR:-bright-blue}" sp_color_seg
 
-    # Get some other (non color) configurable parameters
+    # Get some other (non-color) configurable parameters
     local -r sp_time_fmt=${SP_TIME_FMT:-%H:%M %d/%m}
     local -r sp_seg=${sp_color_seg}${SP_SEGMENT_DELIMITER:-"〉"}
 
-    # Iterate over registered plugins and collect strings to be appended to PS1
+    # Iterate over registered plugins and collect strings to append to PS1
     local sp_ps=''
     local checker
     for checker in $(_get_registered_context_checkers); do

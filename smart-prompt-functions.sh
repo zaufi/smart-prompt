@@ -18,7 +18,7 @@ function _sp_check_bool()
 }
 
 #
-# Check if smart-prompt has requested to show some debug spam
+# Check whether smart-prompt has been asked to show debug output
 #
 function _sp_is_debug()
 {
@@ -72,7 +72,7 @@ function _parse_hex_color()
 }
 
 #
-# Calculate a color for 256-colors or 16M-colors terminals
+# Calculate a color for 256-color or 16M-color terminals
 #
 # @param $1 -- red component
 # @param $2 -- green component
@@ -96,9 +96,9 @@ function _rgb_to_ansi()
 }
 
 #
-# Expand string w/ color names into a string suitable to `printf'
+# Expand a string with color names into a string suitable for `printf`
 #
-# @param $1 -- string w/ color names (like 'bright-red itallic')
+# @param $1 -- string with color names (like 'bright-red italic')
 # @param $2 -- name of the variable to assign result
 #
 function _eval_color_string
@@ -168,7 +168,7 @@ function _eval_color_string
 # Get a value of a color parameter
 #
 # @param $1 -- parameter name
-# @param $2 -- fallback variable w/ default value
+# @param $2 -- fallback variable with the default value
 # @param $3 -- name of the variable to assign result
 #
 function _get_color_param()
@@ -213,7 +213,7 @@ function _seconds_to_duration()
 }
 
 #
-# Check if current dir name starts w/ a given prefix
+# Check whether the current directory name starts with a given prefix
 #
 # @param $1 -- dirname to match
 #
@@ -223,7 +223,7 @@ function _cur_dir_starts_with()
 }
 
 #
-# Check if current dir name equals to a given one
+# Check whether the current directory name equals a given one
 #
 # @param $1 -- dirname to check against
 #
@@ -233,7 +233,7 @@ function _is_cur_dir_equals_to()
 }
 
 #
-# Check if current dir matches to a given pattern
+# Check whether the current directory matches a given pattern
 #
 # @param $1 -- regex pattern to check match
 #
@@ -243,10 +243,10 @@ function _cur_dir_matches()
 }
 
 #
-# Find a given program in PATHs, set specified variable and return a result code
+# Find a given program in `PATH`, set the specified variable, and return a result code
 #
 # @param $1 -- a program to find
-# @param $2 -- a variable to set to a full path to executable
+# @param $2 -- a variable to set to the full path of the executable
 #
 function _find_program()
 {

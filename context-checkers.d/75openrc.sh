@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 #
-# Show various OpenRC related info depending on a current dir
+# Show various OpenRC-related details depending on the current directory
 #
 
 #BEGIN Service functions
@@ -61,7 +61,7 @@ function _show_started_services_at_level()
 SMART_PROMPT_PLUGINS[_75_is_inside_of_runlevels_dir]=_show_started_services_at_level
 
 #
-# Show network interfaces status and loaded modules
+# Show network interface status and loaded modules
 #
 function _81_is_etc_conf_d_dir()
 {

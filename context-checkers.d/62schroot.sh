@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 #
-# Show info about secure chroots
+# Show information about secure chroots
 #
 
 #

@@ -4,15 +4,15 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 #
-# Show various system info depending on a current (system) dir
+# Show various system details depending on the current system directory
 #
 
 
 #
-# Reusable helper functions to display various info
+# Reusable helper functions for displaying various details
 #
 
-# Append 'NN modules loaded' segment
+# Append an `NN modules loaded` segment
 function _show_loaded_modules()
 {
     local _slm__modules_cnt_color
@@ -20,7 +20,7 @@ function _show_loaded_modules()
     printf '%s%d modules loaded' "${_slm__modules_cnt_color}" "$(lsmod | grep -c '[A-Za-z0-9_]\+\s\+[0-9]\+')"
 }
 
-# Append segment w/ current uptime
+# Append a segment with the current uptime
 # TODO Make sure /proc is available
 function _show_uptime()
 {
@@ -33,7 +33,7 @@ function _show_uptime()
     printf '%s%s' "${_su__uptime_color}" "${_uptime}"
 }
 
-# Add segment w/ current kernel name
+# Add a segment with the current kernel name
 function _show_kernel()
 {
     local _sk__running_kernel_color
@@ -41,7 +41,7 @@ function _show_kernel()
     printf '%s%s' "${_sk__running_kernel_color}" "$(uname -r)"
 }
 
-# Add segment w/ network interfaces
+# Add a segment with network interfaces
 function _show_net_ifaces()
 {
     local _sni__iface
@@ -77,7 +77,7 @@ function _show_net_ifaces()
 }
 
 #
-# Show "link to: <dirname>" if current dir is a symlink
+# Show `link to: <dirname>` if the current directory is a symlink
 #
 function _60_is_linked_dir()
 {
@@ -94,7 +94,7 @@ SMART_PROMPT_PLUGINS[_60_is_linked_dir]=_show_dir_link
 
 
 #
-# Show current kernel name and uptime for /boot dir
+# Show the current kernel name and uptime for the `/boot` directory
 #
 function _61_is_boot_dir()
 {
@@ -104,7 +104,7 @@ SMART_PROMPT_PLUGINS[_61_is_boot_dir]='_show_kernel _show_uptime'
 
 
 #
-# Show uptime for /run
+# Show uptime for `/run`
 #
 function _61_is_run_dir()
 {
@@ -114,7 +114,7 @@ SMART_PROMPT_PLUGINS[_61_is_run_dir]=_show_uptime
 
 
 #
-# Show user/all processes and load average for /proc
+# Show user/all process counts and the load average for `/proc`
 #
 function _61_is_proc_dir()
 {
@@ -144,7 +144,7 @@ SMART_PROMPT_PLUGINS[_61_is_proc_dir]=_show_processes_and_load
 
 
 #
-# Show some configuration stats for selected kernel sources dir
+# Show some configuration stats for the selected kernel source directory
 #
 function _65_is_in_usr_src_linux_dir()
 {
@@ -169,7 +169,7 @@ SMART_PROMPT_PLUGINS[_65_is_in_usr_src_linux_dir]=_show_kernel_config
 
 
 #
-# Show current kernel and loaded modules count for /modules
+# Show the current kernel and the loaded module count for `/lib/modules`
 #
 function _64_is_lib_modules_dir()
 {
@@ -185,7 +185,7 @@ SMART_PROMPT_PLUGINS[_65_may_show_modules_loaded]=_show_loaded_modules
 
 
 #
-# Show count of block devices mounted and USB devices connected for /dev dir
+# Show the count of mounted block devices and connected USB devices for the `/dev` directory
 #
 function _61_may_show_mount_info()
 {
@@ -216,7 +216,7 @@ SMART_PROMPT_PLUGINS[_61_may_show_mount_info]=_show_some_dev_and_mount_info
 
 
 #
-# Show total fonts known in the system
+# Show the total number of fonts known to the system
 #
 function _61_is_one_of_fonts_dir()
 {
@@ -249,7 +249,7 @@ function _show_fonts_info()
 SMART_PROMPT_PLUGINS[_61_is_one_of_fonts_dir]=_show_fonts_info
 
 #
-# Show network interfaces status for networking related dirs in /etc
+# Show network interface status for networking-related directories in `/etc`
 #
 function _65_may_show_net_ifaces_status()
 {
@@ -267,7 +267,7 @@ function _65_may_show_net_ifaces_status()
 SMART_PROMPT_PLUGINS[_65_may_show_net_ifaces_status]=_show_net_ifaces
 
 #
-# Show users logged in
+# Show logged-in users
 #
 function _61_is_home_dir()
 {
@@ -291,10 +291,10 @@ function _show_logged_users()
 SMART_PROMPT_PLUGINS[_61_is_home_dir]=_show_logged_users
 
 #
-# Show installed bash completions details
+# Show details about installed bash completions
 #
 # TODO This code is for "static" completions and won't work
-# w/ modern `bash-completions` package.
+# with the modern `bash-completions` package.
 #
 function _62_is_etc_bash_completion_dir()
 {

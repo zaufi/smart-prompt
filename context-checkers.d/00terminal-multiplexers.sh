@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 #
-# Detect working under terminal multiplexers.
+# Detect whether we are running under terminal multiplexers.
 # Supports `tmux` and `screen`
 #
 

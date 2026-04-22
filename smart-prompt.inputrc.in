@@ -15,14 +15,14 @@ set output-meta on
 set convert-meta off
 set enable-meta-key on
 
-# Reread config, so changes to ~/.inputrc will act immediately w/ reexec shell
+# Re-read the config so changes to `~/.inputrc` take effect immediately after the shell restarts
 "\C-x\C-r": re-read-init-file
 
 # Set gentoo style PgUp/PgDown behavior
 "\e[5~": history-search-backward
 "\e[6~": history-search-forward
 
-# Alt-Space -- one more way to complete the words
+# Alt+Space: another way to complete words
 "\e ": menu-complete
 
 # Bind Ctrl+X,x to yank current command line
@@ -32,7 +32,7 @@ $if Bash
 
 # Win+Left/Right arrow to move between words
 # (a word is a sequence of characters between non-space characters)
-# NOTE This bindings will be used in F1/Shift+F1
+# NOTE These bindings will be used in F1/Shift+F1
 "\e[1;1D": shell-backward-word
 "\e[1;1C": shell-forward-word
 
@@ -73,15 +73,15 @@ $if Bash
 # Quote the current or previous word
 "\C-xq": "\eb\"\ef\""
 
-# Ctrl+x,c: Execute last command w/ argument(s) from the prompt
+# Ctrl+x,c: Execute the last command with argument(s) from the prompt
 "\C-xc": "\C-a!:0 \C-e\n"
 
-# Bind execution of current command w/ --help option and restore a previous text
-# TODO Rewrite to avoid '--help' to be in a history
+# Bind execution of the current command with the `--help` option and restore the previous text
+# TODO Rewrite to avoid having `--help` added to the history
 "\eOP": "\C-e \C-a\e[1;1C\C-k --help\n\C-p\C-a\e[1;1C\C-y\b\C-k"
 
-# Bind `man` on current command and restore a previous text after quit from `man`
-# TODO Rewrite to avoid 'man blah' to be in a history
+# Bind `man` to the current command and restore the previous text after quitting `man`
+# TODO Rewrite to avoid having `man blah` added to the history
 "\eO2P": "\C-e \C-a\e[1;1C\C-k\C-aman \C-e\n\C-p\C-y\b\C-a\e[1;1C\e[C\C-u\C-e"
 
 # Ctrl+x,k: append PWD as the `/work/` to the `docker run` volumes

@@ -101,8 +101,8 @@ if(WITH_OPENRC)
         if(NOT WITH_OPENRC STREQUAL AUTO)
             message(
                 WARNING
-                "Openrc support has been requested, but seems it doesn't installed."
-                "Make sure you have it installed after this package."
+                "OpenRC support has been requested, but it does not seem to be installed."
+                "Make sure you install it alongside this package."
               )
         else()
             set(WITH_OPENRC OFF)
@@ -131,8 +131,8 @@ if(WITH_SYSTEMD)
         if(NOT WITH_SYSTEMD STREQUAL AUTO)
             message(
                 WARNING
-                "Systemd support has been requested, but `systemclt` executable and configuration not found."
-                "Make sure you have it installed after this package."
+                "systemd support has been requested, but the `systemctl` executable and configuration were not found."
+                "Make sure you install it alongside this package."
               )
         else()
             set(WITH_SYSTEMD OFF)
@@ -313,11 +313,11 @@ set(CPACK_RPM_PACKAGE_REQUIRES "bash, coreutils, grep, procps-ng, sed, util-linu
 # ALERT The tag `Suggests:` doesn't supported (properly) by `rpmbuild` shipped in CentOS
 #set(CPACK_RPM_PACKAGE_SUGGESTS "fontconfig, iproute, jq, kmod, systemd, usbutils")
 set(CPACK_RPM_PACKAGE_DESCRIPTION [[
- **Smart bash Prompt** is a pluggable system to show various
- context information in a command prompt. The initial idea was
- to create an extensible engine to have a dynamically changing
+ **Smart bash Prompt** is a pluggable system for showing various
+ pieces of context information in a command prompt. The initial idea was
+ to create an extensible engine with a dynamically changing
  command prompt instead of a <strike>boring</strike> static one,
- capable of displaying some aux info depending on a particular
+ capable of displaying auxiliary information depending on a particular
  location and/or condition.]])
 
 # DEB specific settings

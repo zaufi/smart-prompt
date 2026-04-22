@@ -4,8 +4,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 #
-# The most "right" segment (to attract user's attention)
-# w/ the exit code of the previous command.
+# The rightmost segment, used to attract the user's attention,
+# with the exit code of the previous command.
 # NOTE Do not show anything for "success" exit code.
 #
 

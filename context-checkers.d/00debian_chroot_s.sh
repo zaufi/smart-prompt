@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 #
-# Append schroot name if `schroot` detected or `/etc/debian_chroot` exists
+# Append the schroot name if `schroot` is detected or `/etc/debian_chroot` exists
 #
 
 function _00_is_under_schroot()

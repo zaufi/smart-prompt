@@ -4,9 +4,9 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 #
-# Try to display a docker name
+# Try to display a Docker name
 #
-# NOTE Docker images expected to have their names in the `/etc/debian_chroot` file.
+# NOTE Docker images are expected to have their names in the `/etc/debian_chroot` file.
 #
 function _00_is_under_docker()
 {

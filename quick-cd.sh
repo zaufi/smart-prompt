@@ -4,19 +4,19 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 #
-# This is a `quick_cd` module of the SmartPrompt.
+# This is the `quick_cd` module of SmartPrompt.
 #
 #
-# Select a dir to go from a hot list using `dialog`
-# It uses a `hotlist` file from Midnight Commander by default
+# Select a directory from a hotlist using `dialog`
+# It uses the `hotlist` file from Midnight Commander by default
 #
-# TODO Add functions to edit (add/remove) hot list entries
+# TODO Add functions to edit (add/remove) hotlist entries
 #
 function quick_cd()
 {
     local -r hl="${SMART_PROMPT_HOTLIST:-${XDG_CONFIG_HOME:-${HOME}/.config}/mc/hotlist}"
     if [[ ! -r ${hl} ]]; then
-      echo "* No hotlist file exists yet or read permission is not granted *" > /dev/stderr
+      echo "* No hotlist file exists yet, or read permission has not been granted *" > /dev/stderr
       return 1
     fi
 

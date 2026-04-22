@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 #
-# Show various Portage related info depending on a current dir
+# Show various Portage-related details depending on the current directory
 #
 
 #BEGIN Service functions
@@ -19,7 +19,7 @@ function _get_total_packages_installed()
 #END Service functions
 
 #
-# Show portage tree timestamp for /usr/portage
+# Show the Portage tree timestamp for `/usr/portage`
 #
 function _70_is_inside_of_portage_tree_dir()
 {
@@ -37,7 +37,7 @@ function _show_tree_timestamp()
 SMART_PROMPT_PLUGINS[_70_is_inside_of_portage_tree_dir]=_show_tree_timestamp
 
 #
-# Show current profile for /etc
+# Show the current profile for `/etc`
 #
 function _70_is_etc_dir()
 {
@@ -63,7 +63,7 @@ SMART_PROMPT_PLUGINS[_70_is_etc_dir]=_show_current_profile
 
 
 #
-# Show installed packages count and some details for particular category/package
+# Show the installed package count and some details for a particular category/package
 #
 function _72_is_var_db_pkg_dir()
 {
@@ -100,7 +100,7 @@ function _show_installed_packages()
 SMART_PROMPT_PLUGINS[_72_is_var_db_pkg_dir]=_show_installed_packages
 
 #
-# Show details about packages/sets in a world file
+# Show details about packages/sets in the world file
 #
 function _72_is_var_lib_portage_dir()
 {

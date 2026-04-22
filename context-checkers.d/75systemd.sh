@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 #
-# Show various systemd related info depending on a current dir
+# Show various systemd-related details depending on the current directory
 #
 
 #
