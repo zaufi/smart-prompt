@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # Bind search substring in all files to F3
-"\eOR": "\C-a\C-krg --hidden --no-ignore --glob '!.git/**' \"\C-y\" *\n\C-y"
+"\eOR": "\C-a\C-krg \"\C-y\"\n\C-y"
 
 # Bind search substring in C/C++ files to F4
 "\eOS": "\C-a\C-krg -t cpp \"\C-y\"\n\C-y"
