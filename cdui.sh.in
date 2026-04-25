@@ -1,0 +1,65 @@
+#!/bin/bash
+
+# SPDX-FileCopyrightText: 2026 Alex Turbov <i.zaufi@gmail.com>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+#
+# Helper functions for caching Midnight Commander's hotlist as JSON.
+# This file is meant to be sourced from `/etc/profile.d`.
+#
+
+function _cdui_hotlist_path()
+{
+    printf '%s\n' "${SMART_PROMPT_HOTLIST:-${XDG_CONFIG_HOME:-${HOME}/.config}/mc/hotlist}"
+}
+
+function _cdui_cache_dir()
+{
+    printf '%s\n' "${XDG_CACHE_HOME:-${HOME}/.cache}/@PROJECT_NAME@"
+}
+
+function _cdui_cache_file()
+{
+    printf '%s/mc-hotlist.json\n' "$(_cdui_cache_dir)"
+}
+
+function _cdui_converter()
+{
+    printf '%s/@PROJECT_NAME@/hotlist2json.awk\n' "@CMAKE_INSTALL_FULL_LIBEXECDIR@"
+}
+
+function cdui_refresh_hotlist_cache()
+{
+    local -r hotlist=$(_cdui_hotlist_path)
+    if [[ ! -r ${hotlist} ]]; then
+        printf 'cdui: hotlist file is not readable: %s\n' "${hotlist}" >&2
+        return 1
+    fi
+
+    local -r converter=$(_cdui_converter)
+    if [[ ! -r ${converter} ]]; then
+        printf 'cdui: converter is not readable: %s\n' "${converter}" >&2
+        return 1
+    fi
+
+    local -r cache_dir=$(_cdui_cache_dir)
+    local -r cache_file=$(_cdui_cache_file)
+    mkdir -p -- "${cache_dir}"
+
+    if [[ ! -e ${cache_file} || ${hotlist} -nt ${cache_file} || ${converter} -nt ${cache_file} ]]; then
+        local tmp_file
+        tmp_file=$(mktemp "${cache_file}.XXXXXX") || return
+        if ! gawk -f "${converter}" "${hotlist}" > "${tmp_file}"; then
+            rm -f -- "${tmp_file}"
+            return 1
+        fi
+        mv -f -- "${tmp_file}" "${cache_file}"
+    fi
+
+    printf '%s\n' "${cache_file}"
+}
+
+function cdui_cache_file()
+{
+    _cdui_cache_file
+}

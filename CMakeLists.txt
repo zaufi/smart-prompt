@@ -189,6 +189,7 @@ include(GNUInstallDirs)
 #---------------------------------------------------------
 
 configure_file(${PROJECT_NAME}.sh.in ${PROJECT_NAME}.sh @ONLY)
+configure_file(cdui.sh.in cdui.sh @ONLY)
 
 if(WITH_RIPGREP)
     file(STRINGS ${PROJECT_NAME}-rg.inputrc search_bindings)
@@ -253,7 +254,9 @@ if(WITH_INPUTRC)
           )
     endif()
     install(
-        FILES "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh"
+        FILES
+            "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh"
+            "${CMAKE_BINARY_DIR}/cdui.sh"
         DESTINATION "${CMAKE_INSTALL_FULL_SYSCONFDIR}/profile.d"
       )
 endif()
