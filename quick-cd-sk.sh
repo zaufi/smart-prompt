@@ -76,7 +76,7 @@ function quick_cd()
         --tac
         --height="${widget_height}"
         --delimiter=$'\t'
-        --prompt='Hot dirs to go> '
+        --prompt='📁 Select a directory to jump into〉'
     )
     if [[ -n ${SMART_PROMPT_QCD_NOTAGS} ]]; then
         cmd+=(--with-nth=2)
