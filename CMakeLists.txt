@@ -207,7 +207,9 @@ configure_file(${PROJECT_NAME}.inputrc.in ${PROJECT_NAME}.inputrc @ONLY)
 #---------------------------------------------------------
 
 install(
-    FILES "${PROJECT_NAME}-functions.sh"
+    FILES
+        ${PROJECT_NAME}-functions.sh
+        hotlist2json.awk
     DESTINATION "${CMAKE_INSTALL_LIBEXECDIR}/${PROJECT_NAME}"
   )
 
