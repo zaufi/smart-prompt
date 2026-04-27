@@ -30,7 +30,7 @@ fi
 
 declare -x _cdui_url_color
 declare -x _cdui_reset_color
-_eval_ansi_color_string "reset ${SP_CDUI_URL_COLOR:-cyan italic}" _cdui_url_color
+_eval_ansi_color_string "${SP_CDUI_URL_COLOR:-cyan italic}" _cdui_url_color
 _eval_ansi_color_string 'reset' _cdui_reset_color
 
 # shellcheck disable=SC2016
@@ -59,7 +59,8 @@ declare -rx _JQ_TABLE='
       tostring
     end;
 
-  map([.origin, (.entry | entry_to_display), .url]) as $rows
+  map(.url = if .url == $pwd then "" else .url end)
+  | map([.origin, (.entry | entry_to_display), .url]) as $rows
   | [
       ($rows | map(.[0] | length) | max),
       ($rows | map(.[1] | length) | max),
@@ -84,6 +85,7 @@ export -f cdui_cache_dir
 function _cdui_format_table()
 {
     jq -r \
+      --arg pwd "${PWD}" \
       --arg url_color_prefix "${_cdui_url_color}" \
       --arg url_color_suffix "${_cdui_reset_color}" \
       "${_JQ_TABLE}"
