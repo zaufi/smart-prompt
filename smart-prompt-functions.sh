@@ -66,7 +66,19 @@ function _parse_hex_color()
     local -r _phc__input="$1"
     local -r _phc__prefix=$2
 
-    if [[ ${_phc__input} =~ 0x([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2}) ]]; then
+    if [[ ${_phc__input} =~ ^0x([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$ ]]; then
+        eval "${_phc__prefix}_r=$((0x${BASH_REMATCH[1]}))"
+        eval "${_phc__prefix}_g=$((0x${BASH_REMATCH[2]}))"
+        eval "${_phc__prefix}_b=$((0x${BASH_REMATCH[3]}))"
+        return 0
+    fi
+    if [[ ${_phc__input} =~ ^#([0-9A-Fa-f])([0-9A-Fa-f])([0-9A-Fa-f])$ ]]; then
+        eval "${_phc__prefix}_r=$((0x${BASH_REMATCH[1]}${BASH_REMATCH[1]}))"
+        eval "${_phc__prefix}_g=$((0x${BASH_REMATCH[2]}${BASH_REMATCH[2]}))"
+        eval "${_phc__prefix}_b=$((0x${BASH_REMATCH[3]}${BASH_REMATCH[3]}))"
+        return 0
+    fi
+    if [[ ${_phc__input} =~ ^#([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$ ]]; then
         eval "${_phc__prefix}_r=$((0x${BASH_REMATCH[1]}))"
         eval "${_phc__prefix}_g=$((0x${BASH_REMATCH[2]}))"
         eval "${_phc__prefix}_b=$((0x${BASH_REMATCH[3]}))"
@@ -151,7 +163,7 @@ function _eval_color_string
                 _ecs__result_str="${_ecs__result_str}${_ecs_rgb}"
             fi
             ;;
-        0x*)
+        0x*|\#*)
             local _esc__r
             local _esc__g
             local _esc__b
