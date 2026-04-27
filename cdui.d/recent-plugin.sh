@@ -107,8 +107,9 @@ function cdui_update_recent_dirs_stats()
     _cdui_load_recent_dirs_stats
 
     local -i count=0
+    local _timestamp
     if [[ -n ${_CDUI_RECENT_DIRS_STATS["${dir_name}"]+x} ]]; then
-        read -r count <<< "${_CDUI_RECENT_DIRS_STATS["${dir_name}"]}"
+        read -r count _timestamp <<< "${_CDUI_RECENT_DIRS_STATS["${dir_name}"]}"
     fi
 
     _CDUI_RECENT_DIRS_STATS["${dir_name}"]="$((count + 1)) $(date +%s)"
