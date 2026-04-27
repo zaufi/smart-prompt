@@ -36,7 +36,6 @@ auto_option(WITH_OPENRC "Add support for OpenRC")
 auto_option(WITH_PALUDIS "Add support for Paludis (Gentoo and Exherbo)")
 auto_option(WITH_PORTAGE "Add support for Portage (Gentoo)")
 auto_option(WITH_RIPGREP "Use ripgrep instead of grep")
-auto_option(WITH_SKIM "Use Skim instead of dialog for quick_cd")
 auto_option(WITH_SVN "Add support for subversion")
 auto_option(WITH_SCHROOT "Add support for schroot")
 auto_option(WITH_SYSTEMD "Add support for systemd")
@@ -154,19 +153,6 @@ if(WITH_RIPGREP)
     unset(_req)
 endif()
 
-if(WITH_SKIM)
-    if(NOT WITH_SKIM STREQUAL AUTO)
-        set(_req REQUIRED)
-    endif()
-    find_program(SK_EXECUTABLE sk DOC "skim executable")
-    if(SK_EXECUTABLE)
-        set(WITH_SKIM ON)
-    else()
-        set(WITH_SKIM OFF)
-    endif()
-    unset(_req)
-endif()
-
 
 # Report options
 message(STATUS "WITH_GIT=${WITH_GIT}")
@@ -176,7 +162,6 @@ message(STATUS "WITH_PALUDIS=${WITH_PALUDIS}")
 message(STATUS "WITH_PORTAGE=${WITH_PORTAGE}")
 message(STATUS "WITH_RIPGREP=${WITH_RIPGREP}")
 message(STATUS "WITH_SCHROOT=${WITH_SCHROOT}")
-message(STATUS "WITH_SKIM=${WITH_SKIM}")
 message(STATUS "WITH_SVN=${WITH_SVN}")
 message(STATUS "WITH_SYSTEMD=${WITH_SYSTEMD}")
 
@@ -188,6 +173,18 @@ find_program(
     YQ_EXECUTABLE yq REQUIRED
     DOC "Portable command-line YAML, JSON, XML, CSV, TOML and properties processor"
   )
+
+# Try to find mandatory runtime dependencies and warn if smth not found
+foreach(_dep IN ITEMS sk jq grep sed bash cut sort head)
+    find_program(${_dep}_EXECUTABLE ${_dep} DOC "Runtime dependency (${_dep})")
+    if(NOT ${_dep}_EXECUTABLE)
+        message(
+            WARNING
+            "Missed runtime dependency: `${_dep}`. "
+            "It's not needed to build, but being installed this package gonna be broken!"
+          )
+    endif()
+endforeach()
 
 #---------------------------------------------------------
 # Section: "Build" related statements
@@ -298,18 +295,6 @@ if(WITH_INPUTRC)
             "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.inputrc"
         DESTINATION "${CMAKE_INSTALL_FULL_SYSCONFDIR}"
       )
-    if(WITH_SKIM)
-        install(
-            FILES quick-cd-sk.sh
-            RENAME quick-cd.sh
-            DESTINATION "${CMAKE_INSTALL_FULL_SYSCONFDIR}/profile.d"
-          )
-    else()
-        install(
-            FILES quick-cd.sh
-            DESTINATION "${CMAKE_INSTALL_FULL_SYSCONFDIR}/profile.d"
-          )
-    endif()
     install(
         FILES
             "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh"
@@ -373,14 +358,7 @@ if(WITH_SCHROOT)
     list(APPEND _deb_aux_deps schroot)
 endif()
 
-if(WITH_INPUTRC)
-    if(WITH_SKIM)
-        # TODO Unlikely any distro have it ;-(
-    else()
-        list(APPEND _deb_aux_deps dialog)
-        list(APPEND _rpm_aux_deps dialog)
-    endif()
-endif()
+# TODO Any distro has `skim` packaged? Need to add a dependency on it.
 
 list(JOIN _deb_aux_deps ", " _deb_aux_deps)
 list(JOIN _rpm_aux_deps ", " _rpm_aux_deps)
