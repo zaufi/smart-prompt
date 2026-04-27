@@ -1,65 +1,59 @@
 #!/bin/bash
-
+#
 # SPDX-FileCopyrightText: 2026 Alex Turbov <i.zaufi@gmail.com>
 # SPDX-License-Identifier: GPL-3.0-or-later
-
-#
-# Helper functions for caching Midnight Commander's hotlist as JSON.
-# This file is meant to be sourced from `/etc/profile.d`.
 #
 
-function _cdui_hotlist_path()
-{
-    printf '%s\n' "${SMART_PROMPT_HOTLIST:-${XDG_CONFIG_HOME:-${HOME}/.config}/mc/hotlist}"
-}
+declare -r _INSTALL_LIBEXEC_DIR='@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@'
+declare -r _SCRIPT_DIR="$(dirname "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)")"
 
-function _cdui_cache_dir()
-{
-    printf '%s\n' "${XDG_CACHE_HOME:-${HOME}/.cache}/@PROJECT_NAME@"
-}
+if [[ -r "${_SCRIPT_DIR}"/@PROJECT_NAME@-functions.sh ]]; then
+    # shellcheck source=smart-prompt-functions.sh
+    . "${_SCRIPT_DIR}"/@PROJECT_NAME@-functions.sh
+else
+    # shellcheck source=smart-prompt-functions.sh
+    . "${_INSTALL_LIBEXEC_DIR}"/@PROJECT_NAME@-functions.sh
+fi
 
-function _cdui_cache_file()
-{
-    printf '%s/mc-hotlist.json\n' "$(_cdui_cache_dir)"
-}
+if [[ -r "${_SCRIPT_DIR}"/cdui-feed.sh ]]; then
+    declare -r _FEED_SCRIPT="${_SCRIPT_DIR}"/cdui-feed.sh
+else
+    declare -r _FEED_SCRIPT="${_INSTALL_LIBEXEC_DIR}"/cdui-feed.sh
+fi
 
-function _cdui_converter()
-{
-    printf '%s/@PROJECT_NAME@/hotlist2json.awk\n' "@CMAKE_INSTALL_FULL_LIBEXECDIR@"
-}
+# shellcheck disable=SC2016
+declare _JQ_TABLE='
+  def pad($w): . + (" " * ($w - (. | length)));
+  def color_url($prefix; $suffix): $prefix + . + $suffix;
 
-function cdui_refresh_hotlist_cache()
-{
-    local -r hotlist=$(_cdui_hotlist_path)
-    if [[ ! -r ${hotlist} ]]; then
-        printf 'cdui: hotlist file is not readable: %s\n' "${hotlist}" >&2
-        return 1
-    fi
+  map([.origin, .entry, .url]) as $rows
+  | [
+      ($rows | map(.[0] | length) | max),
+      ($rows | map(.[1] | length) | max),
+      ($rows | map(.[2] | length) | max)
+    ] as $w
+  | $rows[]
+  | [
+      (.[0] | pad($w[0])),
+      (.[1] | pad($w[1])),
+      (.[2] | pad($w[2]) | color_url($url_color_prefix; $url_color_suffix)),
+      .[2]
+    ]
+  | @tsv
+'
 
-    local -r converter=$(_cdui_converter)
-    if [[ ! -r ${converter} ]]; then
-        printf 'cdui: converter is not readable: %s\n' "${converter}" >&2
-        return 1
-    fi
-
-    local -r cache_dir=$(_cdui_cache_dir)
-    local -r cache_file=$(_cdui_cache_file)
-    mkdir -p -- "${cache_dir}"
-
-    if [[ ! -e ${cache_file} || ${hotlist} -nt ${cache_file} || ${converter} -nt ${cache_file} ]]; then
-        local tmp_file
-        tmp_file=$(mktemp "${cache_file}.XXXXXX") || return
-        if ! gawk -f "${converter}" "${hotlist}" > "${tmp_file}"; then
-            rm -f -- "${tmp_file}"
-            return 1
-        fi
-        mv -f -- "${tmp_file}" "${cache_file}"
-    fi
-
-    printf '%s\n' "${cache_file}"
-}
-
-function cdui_cache_file()
-{
-    _cdui_cache_file
-}
+_eval_ansi_color_string "reset ${SP_CDUI_URL_COLOR:-cyan}" _cdui_url_color
+_eval_ansi_color_string 'reset' _cdui_reset_color
+# shellcheck disable=SC2154
+bash "${_FEED_SCRIPT}" --mc-hotlist \
+  | jq -r \
+      --arg url_color_prefix "${_cdui_url_color}" \
+      --arg url_color_suffix "${_cdui_reset_color}" \
+      "${_JQ_TABLE}" \
+  | sk \
+        --ansi \
+        --delimiter $'\t' \
+        --with-nth=1,2,3 \
+        --prompt='📁 Select a directory to jump into〉' \
+        --border=rounded \
+  | cut -f4

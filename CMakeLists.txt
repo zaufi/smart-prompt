@@ -210,8 +210,15 @@ configure_file(${PROJECT_NAME}.inputrc.in ${PROJECT_NAME}.inputrc @ONLY)
 install(
     FILES
         ${PROJECT_NAME}-functions.sh
+        cdui-feed.sh
         hotlist2json.awk
     DESTINATION "${CMAKE_INSTALL_LIBEXECDIR}/${PROJECT_NAME}"
+  )
+install(
+    FILES
+        cdui.d/hotlist-plugin.sh
+        cdui.d/recent-plugin.sh
+    DESTINATION "${CMAKE_INSTALL_LIBEXECDIR}/${PROJECT_NAME}/cdui.d"
   )
 
 install(

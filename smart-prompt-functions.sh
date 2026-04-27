@@ -181,6 +181,30 @@ function _eval_color_string
     eval "${_ecs__output_var}=\"${_ecs__result_str}\""
 }
 
+#
+# Expand a string with color names into a raw ANSI escape string.
+#
+# Unlike `_eval_color_string`, this returns actual escape bytes and strips
+# prompt-length markers, so it can be used outside `PS1`.
+#
+# @param $1 -- string with color names
+# @param $2 -- name of the variable to assign result
+#
+function _eval_ansi_color_string
+{
+    local -r _eacs__colors_str=$1
+    local -r _eacs__output_var=$2
+
+    local _eacs__prompt_escaped
+    _eval_color_string "${_eacs__colors_str}" _eacs__prompt_escaped
+    _eacs__prompt_escaped=${_eacs__prompt_escaped//\\[/}
+    _eacs__prompt_escaped=${_eacs__prompt_escaped//\\]/}
+
+    local _eacs__result
+    printf -v _eacs__result '%b' "${_eacs__prompt_escaped}"
+    eval "${_eacs__output_var}=\"${_eacs__result}\""
+}
+
 
 #
 # Get a value of a color parameter
