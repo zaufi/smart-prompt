@@ -13,6 +13,7 @@ function usage()
 Usage: cdui-feed.sh [OPTIONS]
 
 Options:
+  -a, --all               Include all available feeds
   -m, --mc-hotlist        Include Midnight Commander hotlist feed
   -r, --recent            Include recent entries feed
   -g, --git-worktrees     Include Git worktrees feed
@@ -40,6 +41,16 @@ function _cdui_report_update_conflict()
 
 while (($# > 0)); do
     case "$1" in
+        -a|--all)
+            if $update; then
+                _cdui_report_update_conflict
+            fi
+            mc_hotlist=true
+            recent=true
+            git_worktrees=true
+            env_dirs=true
+            shift
+            ;;
         -m|--mc-hotlist)
             $update && _cdui_report_update_conflict || mc_hotlist=true
             shift

@@ -145,12 +145,7 @@ export -f _cdui_feed
 function _cdui_get_ui_hints()
 {
     # shellcheck disable=SC2086,SC2154
-    {
-        bash ${_bash_on_trace} "${_FEED_SCRIPT}" --mc-hotlist --ui-hints
-        bash ${_bash_on_trace} "${_FEED_SCRIPT}" --recent --ui-hints
-        bash ${_bash_on_trace} "${_FEED_SCRIPT}" --git-worktrees --ui-hints
-        bash ${_bash_on_trace} "${_FEED_SCRIPT}" --env --ui-hints
-    } | jq -s 'add // []'
+    bash ${_bash_on_trace} "${_FEED_SCRIPT}" --all --ui-hints | jq -s 'add // []'
 }
 export -f _cdui_get_ui_hints
 
