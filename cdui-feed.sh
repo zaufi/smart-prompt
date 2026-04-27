@@ -31,58 +31,38 @@ declare ui_hints=false
 declare update=false
 declare update_dir=
 
+function _cdui_report_update_conflict()
+{
+    printf 'cdui-feed.sh: --update conflicts with other options\n' >&2
+    usage >&2
+    exit 1
+}
+
 while (($# > 0)); do
     case "$1" in
         -m|--mc-hotlist)
-            if $update; then
-                printf 'cdui-feed.sh: --update conflicts with other options\n' >&2
-                usage >&2
-                exit 1
-            fi
-            mc_hotlist=true
+            $update && _cdui_report_update_conflict || mc_hotlist=true
             shift
             ;;
         -r|--recent)
-            if $update; then
-                printf 'cdui-feed.sh: --update conflicts with other options\n' >&2
-                usage >&2
-                exit 1
-            fi
-            recent=true
+            $update && _cdui_report_update_conflict || recent=true
             shift
             ;;
         -g|--git-worktrees)
-            if $update; then
-                printf 'cdui-feed.sh: --update conflicts with other options\n' >&2
-                usage >&2
-                exit 1
-            fi
-            git_worktrees=true
+            $update && _cdui_report_update_conflict || git_worktrees=true
             shift
             ;;
         -e|--env)
-            if $update; then
-                printf 'cdui-feed.sh: --update conflicts with other options\n' >&2
-                usage >&2
-                exit 1
-            fi
-            env_dirs=true
+            $update && _cdui_report_update_conflict || env_dirs=true
             shift
             ;;
         --ui-hints)
-            if $update; then
-                printf 'cdui-feed.sh: --update conflicts with other options\n' >&2
-                usage >&2
-                exit 1
-            fi
-            ui_hints=true
+            $update && _cdui_report_update_conflict || ui_hints=true
             shift
             ;;
         --update)
             if $mc_hotlist || $recent || $git_worktrees || $env_dirs || $ui_hints || $update; then
-                printf 'cdui-feed.sh: --update conflicts with other options\n' >&2
-                usage >&2
-                exit 1
+                _cdui_report_update_conflict
             fi
             if (($# < 2)); then
                 printf 'cdui-feed.sh: missing argument for --update\n' >&2
