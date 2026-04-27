@@ -22,6 +22,14 @@ else
     . "${_INSTALL_LIBEXEC_DIR}"/@PROJECT_NAME@-functions.sh
 fi
 
+if [[ -r "${_SCRIPT_DIR}"/build/charmaps.sh ]]; then
+    # shellcheck source=/dev/null
+    . "${_SCRIPT_DIR}"/build/charmaps.sh
+else
+    # shellcheck source=/dev/null
+    . "${_INSTALL_LIBEXEC_DIR}"/charmaps.sh
+fi
+
 if [[ -r "${_SCRIPT_DIR}"/cdui-feed.sh ]]; then
     declare -rx _FEED_SCRIPT="${_SCRIPT_DIR}"/cdui-feed.sh
 else
@@ -150,7 +158,7 @@ while IFS=$'\t' read -r _hotkey _text _cli_option; do
     fi
 
     _cdui_reload_bindings+=("--bind=$(_cdui_hotkey_to_bind_key "${_hotkey}"):reload(bash -c '_cdui_feed ${_cli_option}')")
-    _cdui_header_parts+=("${_hotkey} ${_text}")
+    _cdui_header_parts+=("$(text2squarefilled "${_hotkey}") $(text2small_caps "${_text}")")
 done < <(
     _cdui_get_ui_hints \
       | jq -r '.[] | [.hotkey, .text, .cli_option] | @tsv'
