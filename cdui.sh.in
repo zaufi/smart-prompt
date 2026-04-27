@@ -50,16 +50,28 @@ export -f cdui_cache_dir
 
 _eval_ansi_color_string "reset ${SP_CDUI_URL_COLOR:-cyan}" _cdui_url_color
 _eval_ansi_color_string 'reset' _cdui_reset_color
-# shellcheck disable=SC2154
-bash "${_FEED_SCRIPT}" --mc-hotlist \
-  | jq -r \
-      --arg url_color_prefix "${_cdui_url_color}" \
-      --arg url_color_suffix "${_cdui_reset_color}" \
-      "${_JQ_TABLE}" \
-  | sk \
-        --ansi \
-        --delimiter $'\t' \
-        --with-nth=1,2,3 \
-        --prompt='📁 Select a directory to jump into〉' \
-        --border=rounded \
-  | cut -f4
+declare -a _feed_bash_args=()
+if [[ $- == *x* ]]; then
+    _feed_bash_args+=(-x)
+fi
+declare _selected_dir
+_selected_dir=$(
+    # shellcheck disable=SC2154
+    bash "${_feed_bash_args[@]}" "${_FEED_SCRIPT}" --mc-hotlist --recent \
+      | jq -r \
+          --arg url_color_prefix "${_cdui_url_color}" \
+          --arg url_color_suffix "${_cdui_reset_color}" \
+          "${_JQ_TABLE}" \
+      | sk \
+            --ansi \
+            --delimiter $'\t' \
+            --with-nth 1,2,3 \
+            --prompt='📁 Select a directory to jump into〉' \
+            --border=rounded \
+      | cut -f4
+  )
+
+if [[ -n ${_selected_dir} ]]; then
+    bash "${_feed_bash_args[@]}" "${_FEED_SCRIPT}" --update "${_selected_dir}"
+    printf '%s\n' "${_selected_dir}"
+fi
