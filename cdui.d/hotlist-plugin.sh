@@ -18,12 +18,12 @@ function _cdui_converter()
     echo "${parent_dir}/hotlist2json.awk"
 }
 
-function cdui_hotlist_cache_file()
+function _cdui_hotlist_cache_file()
 {
     echo "$(cdui_cache_dir)"/mc-hotlist.json
 }
 
-function cdui_refresh_hotlist_cache()
+function _cdui_refresh_hotlist_cache()
 {
     local -r hotlist=$(_cdui_hotlist_file)
     if [[ ! -r ${hotlist} ]]; then
@@ -38,7 +38,7 @@ function cdui_refresh_hotlist_cache()
     fi
 
     local -r cache_dir=$(cdui_cache_dir)
-    local -r cache_file=$(cdui_hotlist_cache_file)
+    local -r cache_file=$(_cdui_hotlist_cache_file)
     mkdir -p -- "${cache_dir}"
 
     if [[ ! -e ${cache_file} || ${hotlist} -nt ${cache_file} || ${converter} -nt ${cache_file} ]]; then
@@ -56,11 +56,11 @@ function cdui_refresh_hotlist_cache()
 
 function cdui_load_hotlist()
 {
-    if [[ ! -f "$(cdui_hotlist_cache_file)" || "$(_cdui_hotlist_file)" -nt "$(cdui_hotlist_cache_file)" ]]; then
-        cdui_refresh_hotlist_cache
+    if [[ ! -f "$(_cdui_hotlist_cache_file)" || "$(_cdui_hotlist_file)" -nt "$(_cdui_hotlist_cache_file)" ]]; then
+        _cdui_refresh_hotlist_cache
     fi
 
-    cat "$(cdui_hotlist_cache_file)" | jq '. | map(. + {origin: "🔥"})'
+    cat "$(_cdui_hotlist_cache_file)" | jq '. | map(. + {origin: "🔥"})'
 }
 
 _CDUI_PLUGIN_ENTRIES+=( cdui_load_hotlist )
