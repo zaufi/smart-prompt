@@ -145,6 +145,7 @@ function _eval_color_string
     _ecs__colors['italic']='\[\e[3m\]'
     _ecs__colors['underscore']='\[\e[4m\]'
     _ecs__colors['reverse']='\[\e[7m\]'
+    _ecs__colors['strike']='\[\e[9m\]'
 
     local -r _ecs__colors_str=$1
     local -r _ecs__output_var=$2

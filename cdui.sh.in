@@ -40,7 +40,7 @@ declare -x _cdui_url_color
 declare -x _cdui_alert_color
 declare -x _cdui_reset_color
 _eval_ansi_color_string "${SP_CDUI_URL_COLOR:-cyan italic}" _cdui_url_color
-_eval_ansi_color_string "${SP_CDUI_MISSED_URL_COLOR:-${SP_COLOR_ALERT:-red italic}}" _cdui_alert_color
+_eval_ansi_color_string "${SP_CDUI_MISSED_URL_COLOR:-${SP_COLOR_ALERT:-red italic strike}}" _cdui_alert_color
 _eval_ansi_color_string 'reset' _cdui_reset_color
 
 # shellcheck disable=SC2016
