@@ -4,11 +4,17 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
+#
+# Return the configured Midnight Commander hotlist file path.
+#
 function _cdui_hotlist_file()
 {
     echo "${SMART_PROMPT_HOTLIST:-${XDG_CONFIG_HOME:-${HOME}/.config}/mc/hotlist}"
 }
 
+#
+# Return the path to the AWK converter used for hotlist-to-JSON transformation.
+#
 function _cdui_converter()
 {
     # Directory of the current script (even when sourced)
@@ -18,11 +24,17 @@ function _cdui_converter()
     echo "${parent_dir}/hotlist2json.awk"
 }
 
+#
+# Return the cache file path for the converted hotlist JSON.
+#
 function _cdui_hotlist_cache_file()
 {
     echo "$(cdui_cache_dir)"/mc-hotlist.json
 }
 
+#
+# Rebuild the hotlist JSON cache when the source file or converter changes.
+#
 function _cdui_refresh_hotlist_cache()
 {
     local -r hotlist=$(_cdui_hotlist_file)
@@ -54,7 +66,10 @@ function _cdui_refresh_hotlist_cache()
     echo "${cache_file}"
 }
 
-function cdui_load_hotlist()
+#
+# Return the Midnight Commander hotlist as a JSON array for the CDUI feed.
+#
+function cdui_hotlist_get_dirs()
 {
     if [[ ! -f "$(_cdui_hotlist_cache_file)" || "$(_cdui_hotlist_file)" -nt "$(_cdui_hotlist_cache_file)" ]]; then
         _cdui_refresh_hotlist_cache
@@ -62,5 +77,3 @@ function cdui_load_hotlist()
 
     cat "$(_cdui_hotlist_cache_file)" | jq '. | map(. + {origin: "🔥"})'
 }
-
-_CDUI_PLUGIN_ENTRIES+=( cdui_load_hotlist )

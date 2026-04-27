@@ -4,6 +4,9 @@
 
 set -eo pipefail
 
+#
+# Print script usage information.
+#
 function usage()
 {
     cat <<'EOF'
@@ -101,13 +104,11 @@ if (($# > 0)); then
     exit 1
 fi
 
-declare -a _CDUI_PLUGIN_ENTRIES=()
-export _CDUI_PLUGIN_ENTRIES
-declare -a _CDUI_PLUGIN_UPDATE_ENTRIES=()
-export _CDUI_PLUGIN_UPDATE_ENTRIES
-
 declare -r _plugin_dir="$(dirname "$0")"/cdui.d
 
+#
+# Source all available CDUI plugin scripts.
+#
 function _cdui_load_all_plugins()
 {
     # shellcheck source=cdui.d/recent-plugin.sh
@@ -118,16 +119,59 @@ function _cdui_load_all_plugins()
     . "${_plugin_dir}"/git-worktrees-plugin.sh
 }
 
+#
+# Check whether a function with the given name exists.
+#
+# @param $1 -- function name to probe
+#
+function _cdui_has_function()
+{
+    [[ $(type -t "$1") == function ]]
+}
+
+#
+# Call a single plugin endpoint if the matching function is defined.
+#
+# @param $1 -- plugin name part used in `cdui_<plugin>_<endpoint>`
+# @param $2 -- endpoint name suffix
+# @param $@ -- optional arguments forwarded to the endpoint function
+#
+function _cdui_dispatch_plugin()
+{
+    local -r plugin_name="$1"
+    local -r endpoint="$2"
+    shift 2
+
+    local -r fn="cdui_${plugin_name}_${endpoint}"
+    if _cdui_has_function "${fn}"; then
+        "${fn}" "$@"
+    fi
+}
+
+#
+# Call all loaded plugin endpoint functions matching the given suffix.
+#
+# @param $1 -- endpoint name suffix to match
+# @param $@ -- optional arguments forwarded to each matched function
+#
+function _cdui_dispatch_all()
+{
+    local -r endpoint="$1"
+    shift
+
+    local fn
+    while IFS= read -r fn; do
+        "${fn}" "$@"
+    done < <(
+        compgen -A function -- cdui_ \
+          | grep -E "^cdui_[[:alnum:]_]+_${endpoint}$" \
+          | sort
+      )
+}
+
 if $update; then
     _cdui_load_all_plugins
-
-    if [[ ${#_CDUI_PLUGIN_UPDATE_ENTRIES[@]} -eq 0 ]]; then
-        exit 0
-    fi
-
-    for _plugin in "${_CDUI_PLUGIN_UPDATE_ENTRIES[@]}"; do
-        "${_plugin}" "${update_dir}"
-    done
+    _cdui_dispatch_all post_select_dir "${update_dir}"
     exit 0
 fi
 
@@ -146,10 +190,8 @@ if $git_worktrees; then
     . "${_plugin_dir}"/git-worktrees-plugin.sh
 fi
 
-if [[ ${#_CDUI_PLUGIN_ENTRIES[@]} -eq 0 ]]; then
+if ! $recent && ! $mc_hotlist && ! $git_worktrees; then
     exit 0
 fi
 
-for _plugin in "${_CDUI_PLUGIN_ENTRIES[@]}"; do
-    ${_plugin}
-done | jq -s add
+_cdui_dispatch_all get_dirs | jq -s 'add // []'

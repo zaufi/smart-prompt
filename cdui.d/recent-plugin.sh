@@ -4,10 +4,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-declare -gA _CDUI_RECENT_DIRS_STATS=()
+declare -Ag _CDUI_RECENT_DIRS_STATS=()
 
 #
-# Get the number of recent directories to keep in the JSON cache
+# Get the number of recent directories to keep in the JSON cache.
 #
 function _cdui_recent_dirs_count()
 {
@@ -20,7 +20,7 @@ function _cdui_recent_dirs_count()
 }
 
 #
-# Get the JSON cache file with top recent directories
+# Return the JSON cache file path with top recent directories.
 #
 function _cdui_recent_cache_file()
 {
@@ -28,7 +28,7 @@ function _cdui_recent_cache_file()
 }
 
 #
-# Get the bash cache file with recent-directory usage statistics
+# Return the bash cache file path with recent-directory usage statistics.
 #
 function _cdui_recent_stats_file()
 {
@@ -36,7 +36,7 @@ function _cdui_recent_stats_file()
 }
 
 #
-# Load recent-directory usage statistics from the bash cache file
+# Load recent-directory usage statistics from the bash cache file.
 #
 function _cdui_load_recent_dirs_stats()
 {
@@ -50,7 +50,7 @@ function _cdui_load_recent_dirs_stats()
 }
 
 #
-# Save recent-directory usage statistics to the bash cache file
+# Save recent-directory usage statistics to the bash cache file.
 #
 function _cdui_save_recent_dirs_stats()
 {
@@ -73,7 +73,7 @@ function _cdui_save_recent_dirs_stats()
 }
 
 #
-# Rebuild the JSON cache with the configured number of most used recent directories
+# Rebuild the JSON cache with the configured number of most used recent directories.
 #
 function _cdui_refresh_recent_dirs_cache()
 {
@@ -106,11 +106,29 @@ function _cdui_refresh_recent_dirs_cache()
 }
 
 #
-# Update usage statistics for a selected directory
+# Return the recent directories list as a JSON array for the CDUI feed.
+#
+function cdui_recent_get_dirs()
+{
+    local -r cache_file=$(_cdui_recent_cache_file)
+
+    if [[ ! -r ${cache_file} ]]; then
+        _cdui_load_recent_dirs_stats
+        _cdui_refresh_recent_dirs_cache || {
+            printf '[]\n'
+            return 0
+        }
+    fi
+
+    jq '. | map(. + {origin: "🔁"})' "${cache_file}"
+}
+
+#
+# Update usage statistics for a selected directory.
 #
 # @param $1 -- directory name to update in the recent-directory cache
 #
-function cdui_update_recent_dirs_stats()
+function cdui_recent_post_select_dir()
 {
     local -r dir_name="$1"
 
@@ -130,24 +148,3 @@ function cdui_update_recent_dirs_stats()
     _cdui_save_recent_dirs_stats || return 1
     _cdui_refresh_recent_dirs_cache
 }
-
-#
-# Load the recent directories list as a JSON array for the CD UI feed
-#
-function cdui_load_recent_dirs_list()
-{
-    local -r cache_file=$(_cdui_recent_cache_file)
-
-    if [[ ! -r ${cache_file} ]]; then
-        _cdui_load_recent_dirs_stats
-        _cdui_refresh_recent_dirs_cache || {
-            printf '[]\n'
-            return 0
-        }
-    fi
-
-    jq '. | map(. + {origin: "🔁"})' "${cache_file}"
-}
-
-_CDUI_PLUGIN_ENTRIES+=( cdui_load_recent_dirs_list )
-_CDUI_PLUGIN_UPDATE_ENTRIES+=( cdui_update_recent_dirs_stats )

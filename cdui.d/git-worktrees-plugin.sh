@@ -5,7 +5,10 @@
 #
 
 #
-# Return a Git worktree entry as a JSON array for the `cdui` feed
+# Return a single Git worktree entry as a JSON array for the CDUI feed.
+#
+# @param $1 -- entry label to show
+# @param $2 -- optional worktree path used as the entry URL
 #
 function _cdui_git_worktrees_entry()
 {
@@ -22,6 +25,9 @@ function _cdui_git_worktrees_entry()
         '[{entry: $entry, url: $url, origin: $origin}]'
 }
 
+#
+# Initialize ANSI color variables used by the Git worktrees plugin.
+#
 function _cdui_git_worktrees_init_colors()
 {
     if ! declare -F _eval_ansi_color_string >/dev/null; then
@@ -52,6 +58,12 @@ function _cdui_git_worktrees_init_colors()
     fi
 }
 
+#
+# Colorize a branch name based on the cleanliness of the worktree.
+#
+# @param $1 -- branch name to render
+# @param $2 -- worktree path used to inspect git status
+#
 function _cdui_git_worktrees_colorize_branch()
 {
     local -r _branch="$1"
@@ -68,9 +80,9 @@ function _cdui_git_worktrees_colorize_branch()
 }
 
 #
-# Load the Git worktrees list as a JSON array for the `cdui` feed
+# Return the Git worktrees list as a JSON array for the CDUI feed.
 #
-function cdui_load_git_worktrees()
+function cdui_git_worktrees_get_dirs()
 {
     if [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) != true ]]; then
         _cdui_git_worktrees_entry 'not a Git repository'
@@ -89,6 +101,9 @@ function cdui_load_git_worktrees()
     local _branch=
     local -a _items=()
 
+    #
+    # Append the current parsed worktree record to the result list.
+    #
     function _cdui_append_git_worktree()
     {
         if [[ -n ${_path} && -n ${_branch} ]]; then
@@ -122,5 +137,3 @@ function cdui_load_git_worktrees()
 
     printf '%s\n' "${_items[@]}" | jq -s add
 }
-
-_CDUI_PLUGIN_ENTRIES+=( cdui_load_git_worktrees )
