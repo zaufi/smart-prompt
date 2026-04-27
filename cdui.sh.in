@@ -37,8 +37,10 @@ else
 fi
 
 declare -x _cdui_url_color
+declare -x _cdui_alert_color
 declare -x _cdui_reset_color
 _eval_ansi_color_string "${SP_CDUI_URL_COLOR:-cyan italic}" _cdui_url_color
+_eval_ansi_color_string "${SP_CDUI_MISSED_URL_COLOR:-${SP_COLOR_ALERT:-red italic}}" _cdui_alert_color
 _eval_ansi_color_string 'reset' _cdui_reset_color
 
 # shellcheck disable=SC2016
@@ -68,7 +70,7 @@ declare -rx _JQ_TABLE='
     end;
 
   map(.url = if .url == $pwd then "" else .url end)
-  | map([.origin, (.entry | entry_to_display), .url]) as $rows
+  | map([.origin, (.entry | entry_to_display), .url, (.missing_url // false)]) as $rows
   | [
       ($rows | map(.[0] | length) | max),
       ($rows | map(.[1] | length) | max),
@@ -78,7 +80,14 @@ declare -rx _JQ_TABLE='
   | [
       (.[0] | pad($w[0])),
       (.[1] | pad($w[1])),
-      (.[2] | pad($w[2]) | color_url($url_color_prefix; $url_color_suffix)),
+      (
+        (.[2] | pad($w[2])) as $url
+        | if .[3] then
+            ($url | color_url($alert_color_prefix; $url_color_suffix))
+          else
+            ($url | color_url($url_color_prefix; $url_color_suffix))
+          end
+      ),
       .[2]
     ]
   | @tsv
@@ -94,18 +103,45 @@ function _cdui_format_table()
 {
     jq -r \
       --arg pwd "${PWD}" \
+      --arg alert_color_prefix "${_cdui_alert_color}" \
       --arg url_color_prefix "${_cdui_url_color}" \
       --arg url_color_suffix "${_cdui_reset_color}" \
       "${_JQ_TABLE}"
 }
 export -f _cdui_format_table
 
+function _cdui_mark_missing_dirs()
+{
+    local _item
+    local _url
+    local _missing
+    local -a _items=()
+
+    while IFS= read -r _item; do
+        _url=$(jq -r '.url // ""' <<< "${_item}")
+        _missing=false
+        if [[ -n ${_url} && ! -d ${_url} ]]; then
+            _missing=true
+        fi
+
+        _items+=( "$(jq -c --argjson missing "${_missing}" '. + {missing_url: $missing}' <<< "${_item}")" )
+    done < <(jq -c '.[]')
+
+    if ((${#_items[@]} == 0)); then
+        printf '[]\n'
+        return 0
+    fi
+
+    printf '%s\n' "${_items[@]}" | jq -s '.'
+}
+export -f _cdui_mark_missing_dirs
+
 function _cdui_feed()
 {
     local -r _cli_option="$1"
 
     # shellcheck disable=SC2086,SC2154
-    bash ${_bash_on_trace} "${_FEED_SCRIPT}" "${_cli_option}" | _cdui_format_table
+    bash ${_bash_on_trace} "${_FEED_SCRIPT}" "${_cli_option}" | _cdui_mark_missing_dirs | _cdui_format_table
 }
 export -f _cdui_feed
 
