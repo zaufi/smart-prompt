@@ -347,12 +347,12 @@ set(CPACK_RPM_PACKAGE_REQUIRES "bash, coreutils, grep, procps-ng, sed, util-linu
 # ALERT The tag `Suggests:` doesn't supported (properly) by `rpmbuild` shipped in CentOS
 #set(CPACK_RPM_PACKAGE_SUGGESTS "fontconfig, iproute, jq, kmod, systemd, usbutils")
 set(CPACK_RPM_PACKAGE_DESCRIPTION [[
- **Smart bash Prompt** is a pluggable system for showing various
- pieces of context information in a command prompt. The initial idea was
- to create an extensible engine with a dynamically changing
- command prompt instead of a <strike>boring</strike> static one,
- capable of displaying auxiliary information depending on a particular
- location and/or condition.]])
+ Smart Bash Prompt is a pluggable system for showing various pieces of
+ context information in a command prompt. The initial idea was to create
+ an extensible engine with a dynamically changing command prompt instead
+ of a <strike>boring</strike> static one, capable of displaying auxiliary
+ information depending on a particular location and/or condition.
+]])
 
 # DEB specific settings
 set(CPACK_DEBIAN_PACKAGE_SECTION "shells")
