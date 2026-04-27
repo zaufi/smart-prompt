@@ -7,6 +7,19 @@
 declare -gA _CDUI_RECENT_DIRS_STATS=()
 
 #
+# Get the number of recent directories to keep in the JSON cache
+#
+function _cdui_recent_dirs_count()
+{
+    if [[ ${SP_CDUI_RECENT_DIRS_COUNT:-} =~ ^[0-9]+$ ]]; then
+        echo "${SP_CDUI_RECENT_DIRS_COUNT}"
+        return 0
+    fi
+
+    echo 10
+}
+
+#
 # Get the JSON cache file with top recent directories
 #
 function _cdui_recent_cache_file()
@@ -60,7 +73,7 @@ function _cdui_save_recent_dirs_stats()
 }
 
 #
-# Rebuild the JSON cache with top 10 most used recent directories
+# Rebuild the JSON cache with the configured number of most used recent directories
 #
 function _cdui_refresh_recent_dirs_cache()
 {
@@ -68,6 +81,7 @@ function _cdui_refresh_recent_dirs_cache()
     mkdir -p -- "$(cdui_cache_dir)"
 
     local -r cache_file=$(_cdui_recent_cache_file)
+    local -r recent_dirs_count=$(_cdui_recent_dirs_count)
     local tmp_file
     tmp_file=$(mktemp "${cache_file}.XXXXXX") || return 1
 
@@ -77,7 +91,7 @@ function _cdui_refresh_recent_dirs_cache()
             printf '%s\t%s\t%s\n' "${_count:-0}" "${_timestamp:-0}" "${_dir}"
         done
     } | sort -t $'\t' -k1,1nr -k2,2nr \
-      | head -n 10 \
+      | head -n "${recent_dirs_count}" \
       | jq -R -s '
             split("\n")
           | map(select(length > 0))
