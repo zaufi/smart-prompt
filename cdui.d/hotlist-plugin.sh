@@ -71,11 +71,21 @@ function _cdui_refresh_hotlist_cache()
 #
 function cdui_hotlist_get_dirs()
 {
-    if [[ ! -f "$(_cdui_hotlist_cache_file)" || "$(_cdui_hotlist_file)" -nt "$(_cdui_hotlist_cache_file)" ]]; then
-        _cdui_refresh_hotlist_cache
+    local -r cache_file=$(_cdui_hotlist_cache_file)
+
+    if [[ ! -r ${cache_file} ]]; then
+        _cdui_refresh_hotlist_cache || {
+            printf '[]\n'
+            return 0
+        }
+    elif [[ "$(_cdui_hotlist_file)" -nt ${cache_file} ]]; then
+        _cdui_refresh_hotlist_cache || {
+            printf '[]\n'
+            return 0
+        }
     fi
 
-    cat "$(_cdui_hotlist_cache_file)" | jq '. | map(. + {origin: "🔥"})'
+    jq '. | map(. + {origin: "🔥"})' "${cache_file}"
 }
 
 #
