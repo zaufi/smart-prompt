@@ -124,6 +124,14 @@ function cdui_recent_get_dirs()
 }
 
 #
+# Return the UI hint metadata for the recent-directories feed.
+#
+function cdui_recent_get_ui_hint()
+{
+    jq -cn '[{hotkey: "CTRL-T", text: "recent dirs 🔁", cli_option: "--recent"}]'
+}
+
+#
 # Update usage statistics for a selected directory.
 #
 # @param $1 -- directory name to update in the recent-directory cache

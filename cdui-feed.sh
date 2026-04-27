@@ -16,6 +16,7 @@ Options:
   -m, --mc-hotlist        Include Midnight Commander hotlist feed
   -r, --recent            Include recent entries feed
   -g, --git-worktrees     Include Git worktrees feed
+      --ui-hints          Return UI hints for the selected feeds
       --update <dir>      Run plugin update hooks for the selected directory
   -h, --help              Show this help message
 EOF
@@ -24,6 +25,7 @@ EOF
 declare mc_hotlist=false
 declare recent=false
 declare git_worktrees=false
+declare ui_hints=false
 declare update=false
 declare update_dir=
 
@@ -56,8 +58,17 @@ while (($# > 0)); do
             git_worktrees=true
             shift
             ;;
+        --ui-hints)
+            if $update; then
+                printf 'cdui-feed.sh: --update conflicts with other options\n' >&2
+                usage >&2
+                exit 1
+            fi
+            ui_hints=true
+            shift
+            ;;
         --update)
-            if $mc_hotlist || $recent || $git_worktrees || $update; then
+            if $mc_hotlist || $recent || $git_worktrees || $ui_hints || $update; then
                 printf 'cdui-feed.sh: --update conflicts with other options\n' >&2
                 usage >&2
                 exit 1
@@ -191,6 +202,11 @@ if $git_worktrees; then
 fi
 
 if ! $recent && ! $mc_hotlist && ! $git_worktrees; then
+    exit 0
+fi
+
+if $ui_hints; then
+    _cdui_dispatch_all get_ui_hint | jq -s 'add // []'
     exit 0
 fi
 

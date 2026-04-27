@@ -137,3 +137,11 @@ function cdui_git_worktrees_get_dirs()
 
     printf '%s\n' "${_items[@]}" | jq -s add
 }
+
+#
+# Return the UI hint metadata for the Git worktrees feed.
+#
+function cdui_git_worktrees_get_ui_hint()
+{
+    jq -cn '[{hotkey: "CTRL-G", text: "Git work trees ", cli_option: "--git-worktrees"}]'
+}

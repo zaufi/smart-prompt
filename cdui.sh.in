@@ -92,43 +92,86 @@ function _cdui_format_table()
 }
 export -f _cdui_format_table
 
-function _cdui_mc_hotlist()
+function _cdui_feed()
+{
+    local -r _cli_option="$1"
+
+    # shellcheck disable=SC2086,SC2154
+    bash ${_bash_on_trace} "${_FEED_SCRIPT}" "${_cli_option}" | _cdui_format_table
+}
+export -f _cdui_feed
+
+function _cdui_get_ui_hints()
 {
     # shellcheck disable=SC2086,SC2154
-    bash ${_bash_on_trace} "${_FEED_SCRIPT}" --mc-hotlist | _cdui_format_table
+    {
+        bash ${_bash_on_trace} "${_FEED_SCRIPT}" --mc-hotlist --ui-hints
+        bash ${_bash_on_trace} "${_FEED_SCRIPT}" --recent --ui-hints
+        bash ${_bash_on_trace} "${_FEED_SCRIPT}" --git-worktrees --ui-hints
+    } | jq -s 'add // []'
 }
-export -f _cdui_mc_hotlist
+export -f _cdui_get_ui_hints
 
-function _cdui_recents()
+function _cdui_hotkey_to_bind_key()
 {
-    # shellcheck disable=SC2086,SC2154
-    bash ${_bash_on_trace} "${_FEED_SCRIPT}" --recent | _cdui_format_table
+    local -r _hotkey="$1"
 
+    echo "${_hotkey,,}" | tr '+' '-'
 }
-export -f _cdui_recents
+export -f _cdui_hotkey_to_bind_key
 
-function _cdui_git_worktrees()
+function _cdui_make_header()
 {
-    # shellcheck disable=SC2086,SC2154
-    bash ${_bash_on_trace} "${_FEED_SCRIPT}" --git-worktrees | _cdui_format_table
+    local _header=
+    local _part
 
+    for _part in "${_cdui_header_parts[@]}"; do
+        if [[ -n ${_header} ]]; then
+            _header+=' · '
+        fi
+        _header+="${_part}"
+    done
+
+    printf '%s\n' "${_header}"
 }
-export -f _cdui_git_worktrees
+export -f _cdui_make_header
+
+declare -a _cdui_reload_bindings=()
+declare -a _cdui_header_parts=()
+declare _cdui_initial_cli_option=
+
+while IFS=$'\t' read -r _hotkey _text _cli_option; do
+    if [[ -z ${_hotkey} || -z ${_text} || -z ${_cli_option} ]]; then
+        continue
+    fi
+
+    if [[ -z ${_cdui_initial_cli_option} ]]; then
+        _cdui_initial_cli_option=${_cli_option}
+    fi
+
+    _cdui_reload_bindings+=("--bind=$(_cdui_hotkey_to_bind_key "${_hotkey}"):reload(bash -c '_cdui_feed ${_cli_option}')")
+    _cdui_header_parts+=("${_hotkey} ${_text}")
+done < <(
+    _cdui_get_ui_hints \
+      | jq -r '.[] | [.hotkey, .text, .cli_option] | @tsv'
+  )
+
+if [[ -z ${_cdui_initial_cli_option} ]]; then
+    _cdui_initial_cli_option=--mc-hotlist
+fi
 
 declare _selected_dir
 _selected_dir=$(
     # shellcheck disable=SC2154
-    _cdui_mc_hotlist \
+    _cdui_feed "${_cdui_initial_cli_option}" \
       | sk \
             --ansi \
             --delimiter $'\t' \
             --with-nth 1,2,3 \
             --prompt='📁 Select a directory to jump into〉' \
             --border=rounded \
-            --bind="ctrl-t:reload(bash -c _cdui_recents)" \
-            --bind="ctrl-h:reload(bash -c _cdui_mc_hotlist)" \
-            --bind="ctrl-g:reload(bash -c _cdui_git_worktrees)" \
-            --header $'🅲🆃🆁🅻-🆃 recent dirs 🔁    🅲🆃🆁🅻-🅷 hot dirs 🔥    🅲🆃🆁🅻+🅶 Git work trees ' \
+            "${_cdui_reload_bindings[@]}" \
+            --header "$(_cdui_make_header)" \
       | cut -f4
   )
 

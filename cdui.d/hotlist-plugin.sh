@@ -77,3 +77,11 @@ function cdui_hotlist_get_dirs()
 
     cat "$(_cdui_hotlist_cache_file)" | jq '. | map(. + {origin: "🔥"})'
 }
+
+#
+# Return the UI hint metadata for the Midnight Commander hotlist feed.
+#
+function cdui_hotlist_get_ui_hint()
+{
+    jq -cn '[{hotkey: "CTRL-H", text: "hot dirs 🔥", cli_option: "--mc-hotlist"}]'
+}
