@@ -4,7 +4,7 @@
 #---------------------------------------------------------
 # Section: Initialize CMake
 #---------------------------------------------------------
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.31)
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
@@ -184,6 +184,11 @@ message(STATUS "WITH_SYSTEMD=${WITH_SYSTEMD}")
 set(CMAKE_SIZEOF_VOID_P 8)
 include(GNUInstallDirs)
 
+find_program(
+    YQ_EXECUTABLE yq REQUIRED
+    DOC "Portable command-line YAML, JSON, XML, CSV, TOML and properties processor"
+  )
+
 #---------------------------------------------------------
 # Section: "Build" related statements
 #---------------------------------------------------------
@@ -202,6 +207,27 @@ list(JOIN search_bindings "\n" search_bindings)
 string(REPLACE "%" ";" search_bindings "${search_bindings}")
 
 configure_file(${PROJECT_NAME}.inputrc.in ${PROJECT_NAME}.inputrc @ONLY)
+
+cmake_path(APPEND CMAKE_CURRENT_SOURCE_DIR charmaps.yaml OUTPUT_VARIABLE CHARMAPS_YAML)
+cmake_path(APPEND CMAKE_CURRENT_BINARY_DIR charmaps.json OUTPUT_VARIABLE CHARMAPS_JSON)
+cmake_path(APPEND CMAKE_CURRENT_SOURCE_DIR yaml2json.cmake OUTPUT_VARIABLE CHARMAPS_CONVERTER)
+
+add_custom_command(
+    OUTPUT "${CHARMAPS_JSON}"
+    COMMAND
+        "${CMAKE_COMMAND}"
+        -DINPUT_FILE="${CHARMAPS_YAML}"
+        -DOUTPUT_FILE="${CHARMAPS_JSON}"
+        -DYQ_EXECUTABLE="${YQ_EXECUTABLE}"
+        -P "${CHARMAPS_CONVERTER}"
+    DEPENDS
+        "${CHARMAPS_YAML}"
+        "${CHARMAPS_CONVERTER}"
+    COMMENT "Generating charmaps.json from charmaps.yaml"
+    VERBATIM
+  )
+
+add_custom_target(charmaps-json ALL DEPENDS "${CHARMAPS_JSON}")
 
 #---------------------------------------------------------
 # Section: Install project files
