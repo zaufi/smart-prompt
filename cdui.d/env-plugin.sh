@@ -75,7 +75,6 @@ function _cdui_env_is_directory_or_missing()
 #
 function cdui_env_get_dirs()
 {
-    local -r _delimiter=':'
     local _var_name
     local -a _items=()
 
@@ -88,7 +87,15 @@ function cdui_env_get_dirs()
         [[ -n ${_value} ]] || continue
         [[ ${_value} =~ ^[A-Za-z][A-Za-z0-9+.-]*: ]] && continue
 
-        if [[ ${_value} == *"${_delimiter}"* ]]; then
+        local _delimiter=''
+        if [[ ${_value} == *:* ]]; then
+            _delimiter=':'
+        elif [[ ${_value} == *' '* ]]; then
+            # Some env vars use space-separated path lists, e.g. CONFIG_PROTECT_MASK.
+            _delimiter=' '
+        fi
+
+        if [[ -n ${_delimiter} ]]; then
             local -a _parts=()
             local IFS="${_delimiter}"
             read -r -a _parts <<< "${_value}"
