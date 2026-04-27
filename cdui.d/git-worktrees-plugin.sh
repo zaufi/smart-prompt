@@ -84,11 +84,6 @@ function _cdui_git_worktrees_colorize_branch()
 #
 function cdui_git_worktrees_get_dirs()
 {
-    if [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) != true ]]; then
-        _cdui_git_worktrees_entry 'not a Git repository'
-        return 0
-    fi
-
     local _porcelain
     if ! _porcelain=$(git worktree list --porcelain 2>/dev/null); then
         _cdui_git_worktrees_entry 'failure on list working trees in this repository'
@@ -143,5 +138,9 @@ function cdui_git_worktrees_get_dirs()
 #
 function cdui_git_worktrees_get_ui_hint()
 {
-    jq -cn '[{hotkey: "CTRL-G", text: "Git work trees ", cli_option: "--git-worktrees"}]'
+    if [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) == true ]]; then
+        jq -cn '[{hotkey: "CTRL-G", text: "Git work trees ", cli_option: "--git-worktrees"}]'
+    else
+        printf '[]\n'
+    fi
 }
