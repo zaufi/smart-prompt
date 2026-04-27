@@ -73,15 +73,14 @@ declare -rx _JQ_TABLE='
   | map([.origin, (.entry | entry_to_display), .url, (.missing_url // false)]) as $rows
   | [
       ($rows | map(.[0] | length) | max),
-      ($rows | map(.[1] | length) | max),
-      ($rows | map(.[2] | length) | max)
+      ($rows | map(.[1] | length) | max)
     ] as $w
   | $rows[]
   | [
       (.[0] | pad($w[0])),
       (.[1] | pad($w[1])),
       (
-        (.[2] | pad($w[2])) as $url
+        .[2] as $url
         | if .[3] then
             ($url | color_url($alert_color_prefix; $url_color_suffix))
           else
