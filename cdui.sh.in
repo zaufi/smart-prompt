@@ -4,6 +4,13 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
+set -e
+
+declare -x _bash_on_trace
+if [[ $- == *x* ]]; then
+    _bash_on_trace='-x'
+fi
+
 declare -r _INSTALL_LIBEXEC_DIR='@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@'
 declare -r _SCRIPT_DIR="$(dirname "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)")"
 
@@ -16,13 +23,18 @@ else
 fi
 
 if [[ -r "${_SCRIPT_DIR}"/cdui-feed.sh ]]; then
-    declare -r _FEED_SCRIPT="${_SCRIPT_DIR}"/cdui-feed.sh
+    declare -rx _FEED_SCRIPT="${_SCRIPT_DIR}"/cdui-feed.sh
 else
-    declare -r _FEED_SCRIPT="${_INSTALL_LIBEXEC_DIR}"/cdui-feed.sh
+    declare -rx _FEED_SCRIPT="${_INSTALL_LIBEXEC_DIR}"/cdui-feed.sh
 fi
 
+declare -x _cdui_url_color
+declare -x _cdui_reset_color
+_eval_ansi_color_string "reset ${SP_CDUI_URL_COLOR:-cyan italic}" _cdui_url_color
+_eval_ansi_color_string 'reset' _cdui_reset_color
+
 # shellcheck disable=SC2016
-declare _JQ_TABLE='
+declare -rx _JQ_TABLE='
   def pad($w): . + (" " * ($w - (. | length)));
   def color_url($prefix; $suffix): $prefix + . + $suffix;
   def pluralize($count; $unit): "\($count) \($unit)\(if $count == 1 then "" else "s" end) ago";
@@ -69,30 +81,57 @@ function cdui_cache_dir()
 }
 export -f cdui_cache_dir
 
-_eval_ansi_color_string "reset ${SP_CDUI_URL_COLOR:-cyan}" _cdui_url_color
-_eval_ansi_color_string 'reset' _cdui_reset_color
-declare -a _feed_bash_args=()
-if [[ $- == *x* ]]; then
-    _feed_bash_args+=(-x)
-fi
+function _cdui_format_table()
+{
+    jq -r \
+      --arg url_color_prefix "${_cdui_url_color}" \
+      --arg url_color_suffix "${_cdui_reset_color}" \
+      "${_JQ_TABLE}"
+}
+export -f _cdui_format_table
+
+function _cdui_mc_hotlist()
+{
+    # shellcheck disable=SC2086,SC2154
+    bash ${_bash_on_trace} "${_FEED_SCRIPT}" --mc-hotlist | _cdui_format_table
+}
+export -f _cdui_mc_hotlist
+
+function _cdui_recents()
+{
+    # shellcheck disable=SC2086,SC2154
+    bash ${_bash_on_trace} "${_FEED_SCRIPT}" --recent | _cdui_format_table
+
+}
+export -f _cdui_recents
+
+function _cdui_git_worktrees()
+{
+    # shellcheck disable=SC2086,SC2154
+    bash ${_bash_on_trace} "${_FEED_SCRIPT}" --git-worktrees | _cdui_format_table
+
+}
+export -f _cdui_git_worktrees
+
 declare _selected_dir
 _selected_dir=$(
     # shellcheck disable=SC2154
-    bash "${_feed_bash_args[@]}" "${_FEED_SCRIPT}" --mc-hotlist --recent \
-      | jq -r \
-          --arg url_color_prefix "${_cdui_url_color}" \
-          --arg url_color_suffix "${_cdui_reset_color}" \
-          "${_JQ_TABLE}" \
+    _cdui_mc_hotlist \
       | sk \
             --ansi \
             --delimiter $'\t' \
             --with-nth 1,2,3 \
             --prompt='📁 Select a directory to jump into〉' \
             --border=rounded \
+            --bind="ctrl-t:reload(bash -c _cdui_recents)" \
+            --bind="ctrl-h:reload(bash -c _cdui_mc_hotlist)" \
+            --bind="ctrl-g:reload(bash -c _cdui_git_worktrees)" \
+            --header $'🅲🆃🆁🅻-🆃 recent dirs 🔁    🅲🆃🆁🅻-🅷 hot dirs 🔥    🅲🆃🆁🅻+🅶 Git work trees ' \
       | cut -f4
   )
 
 if [[ -n ${_selected_dir} ]]; then
-    bash "${_feed_bash_args[@]}" "${_FEED_SCRIPT}" --update "${_selected_dir}"
+    # shellcheck disable=SC2086
+    bash ${_bash_on_trace} "${_FEED_SCRIPT}" --update "${_selected_dir}"
     printf '%s\n' "${_selected_dir}"
 fi
