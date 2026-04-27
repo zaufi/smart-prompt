@@ -16,6 +16,7 @@ Options:
   -m, --mc-hotlist        Include Midnight Commander hotlist feed
   -r, --recent            Include recent entries feed
   -g, --git-worktrees     Include Git worktrees feed
+  -e, --env               Include environment-directory feed
       --ui-hints          Return UI hints for the selected feeds
       --update <dir>      Run plugin update hooks for the selected directory
   -h, --help              Show this help message
@@ -25,6 +26,7 @@ EOF
 declare mc_hotlist=false
 declare recent=false
 declare git_worktrees=false
+declare env_dirs=false
 declare ui_hints=false
 declare update=false
 declare update_dir=
@@ -58,6 +60,15 @@ while (($# > 0)); do
             git_worktrees=true
             shift
             ;;
+        -e|--env)
+            if $update; then
+                printf 'cdui-feed.sh: --update conflicts with other options\n' >&2
+                usage >&2
+                exit 1
+            fi
+            env_dirs=true
+            shift
+            ;;
         --ui-hints)
             if $update; then
                 printf 'cdui-feed.sh: --update conflicts with other options\n' >&2
@@ -68,7 +79,7 @@ while (($# > 0)); do
             shift
             ;;
         --update)
-            if $mc_hotlist || $recent || $git_worktrees || $ui_hints || $update; then
+            if $mc_hotlist || $recent || $git_worktrees || $env_dirs || $ui_hints || $update; then
                 printf 'cdui-feed.sh: --update conflicts with other options\n' >&2
                 usage >&2
                 exit 1
@@ -128,6 +139,8 @@ function _cdui_load_all_plugins()
     . "${_plugin_dir}"/hotlist-plugin.sh
     # shellcheck source=cdui.d/git-worktrees-plugin.sh
     . "${_plugin_dir}"/git-worktrees-plugin.sh
+    # shellcheck source=cdui.d/env-plugin.sh
+    . "${_plugin_dir}"/env-plugin.sh
 }
 
 #
@@ -201,7 +214,12 @@ if $git_worktrees; then
     . "${_plugin_dir}"/git-worktrees-plugin.sh
 fi
 
-if ! $recent && ! $mc_hotlist && ! $git_worktrees; then
+if $env_dirs; then
+    # shellcheck source=cdui.d/env-plugin.sh
+    . "${_plugin_dir}"/env-plugin.sh
+fi
+
+if ! $recent && ! $mc_hotlist && ! $git_worktrees && ! $env_dirs; then
     exit 0
 fi
 

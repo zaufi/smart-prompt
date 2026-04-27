@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2024-2026 Alex Turbov <i.zaufi@gmail.com>
 # SPDX-License-Identifier: CC0-1.0
 
-disable=SC2154,SC2155,SC2034
+disable=SC2154,SC2155,SC2034,SC2088
 external-sources=true
 
 # kate: hl INI Files;

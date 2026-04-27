@@ -264,6 +264,8 @@ install(
   )
 install(
     FILES
+        cdui.d/env-plugin.sh
+        cdui.d/git-worktrees-plugin.sh
         cdui.d/hotlist-plugin.sh
         cdui.d/recent-plugin.sh
     DESTINATION "${CMAKE_INSTALL_LIBEXECDIR}/${PROJECT_NAME}/cdui.d"
