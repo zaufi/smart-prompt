@@ -42,6 +42,12 @@ declare _JQ_TABLE='
   | @tsv
 '
 
+function cdui_cache_dir()
+{
+    echo "${XDG_CACHE_HOME:-${HOME}/.cache}"/smart-prompt
+}
+export -f cdui_cache_dir
+
 _eval_ansi_color_string "reset ${SP_CDUI_URL_COLOR:-cyan}" _cdui_url_color
 _eval_ansi_color_string 'reset' _cdui_reset_color
 # shellcheck disable=SC2154

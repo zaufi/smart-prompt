@@ -18,12 +18,7 @@ function _cdui_converter()
     echo "${parent_dir}/hotlist2json.awk"
 }
 
-function cdui_cache_dir()
-{
-    echo "${XDG_CACHE_HOME:-${HOME}/.cache}"/smart-prompt
-}
-
-function cdui_cache_file()
+function cdui_hotlist_cache_file()
 {
     echo "$(cdui_cache_dir)"/mc-hotlist.json
 }
@@ -43,7 +38,7 @@ function cdui_refresh_hotlist_cache()
     fi
 
     local -r cache_dir=$(cdui_cache_dir)
-    local -r cache_file=$(cdui_cache_file)
+    local -r cache_file=$(cdui_hotlist_cache_file)
     mkdir -p -- "${cache_dir}"
 
     if [[ ! -e ${cache_file} || ${hotlist} -nt ${cache_file} || ${converter} -nt ${cache_file} ]]; then
@@ -61,11 +56,11 @@ function cdui_refresh_hotlist_cache()
 
 function cdui_load_hotlist()
 {
-    if [[ ! -f "$(cdui_cache_file)" || "$(_cdui_hotlist_file)" -nt "$(cdui_cache_file)" ]]; then
+    if [[ ! -f "$(cdui_hotlist_cache_file)" || "$(_cdui_hotlist_file)" -nt "$(cdui_hotlist_cache_file)" ]]; then
         cdui_refresh_hotlist_cache
     fi
 
-    cat "$(cdui_cache_file)" | jq '. | map(. + {origin: "🔥"})'
+    cat "$(cdui_hotlist_cache_file)" | jq '. | map(. + {origin: "🔥"})'
 }
 
 _CDUI_PLUGIN_ENTRIES+=( cdui_load_hotlist )
