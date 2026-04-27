@@ -1,0 +1,5 @@
+function text2@_charmap_name@()
+{
+    printf '%s' "$1" \
+      | sed 'y/@_input_alphabet@/@_output_alphabet@/'
+}
