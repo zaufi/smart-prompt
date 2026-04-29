@@ -142,6 +142,7 @@ function _eval_color_string
 
     _ecs__colors['reset']='\[\e[0m\]'
     _ecs__colors['bold']='\[\e[1m\]'
+    _ecs__colors['dim']='\[\e[2m\]'
     _ecs__colors['italic']='\[\e[3m\]'
     _ecs__colors['underscore']='\[\e[4m\]'
     _ecs__colors['reverse']='\[\e[7m\]'
