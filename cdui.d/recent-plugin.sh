@@ -149,7 +149,6 @@ function cdui_recent_post_select_dir()
     _cdui_refresh_recent_dirs_cache
 }
 
-
 #
 # Return the UI hint metadata for the recent-directories feed.
 #
