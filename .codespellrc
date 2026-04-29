@@ -18,5 +18,5 @@ quiet-level = 3
 # skip =
 # TODO Add _false positives_ to the ignore list below.
 # noqa: spellcheck off
-# ignore-words-list =
+ignore-words-list = grey
 # noqa: spellcheck on

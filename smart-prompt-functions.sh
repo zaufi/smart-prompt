@@ -130,8 +130,10 @@ function _eval_color_string
     _ecs__colors['magenta']='\[\e[35m\]'
     _ecs__colors['cyan']='\[\e[36m\]'
     _ecs__colors['grey']='\[\e[37m\]'
+    _ecs__colors['gray']='\[\e[37m\]'
 
     _ecs__colors['dark-grey']='\[\e[30;1m\]'
+    _ecs__colors['dark-gray']='\[\e[30;1m\]'
     _ecs__colors['bright-red']='\[\e[31;1m\]'
     _ecs__colors['bright-green']='\[\e[32;1m\]'
     _ecs__colors['yellow']='\[\e[33;1m\]'
