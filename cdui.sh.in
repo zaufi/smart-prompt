@@ -35,10 +35,10 @@ else
 fi
 
 declare -x _cdui_url_color
-declare -x _cdui_alert_color
+declare -x _cdui_missed_url_color
 declare -x _cdui_reset_color
 _eval_ansi_color_string "${SP_CDUI_URL_COLOR:-cyan italic}" _cdui_url_color
-_eval_ansi_color_string "${SP_CDUI_MISSED_URL_COLOR:-${SP_COLOR_ALERT:-red italic strike}}" _cdui_alert_color
+_eval_ansi_color_string "${SP_CDUI_MISSED_URL_COLOR:-${SP_COLOR_ALERT:-red italic strike}}" _cdui_missed_url_color
 _eval_ansi_color_string 'reset' _cdui_reset_color
 
 # shellcheck disable=SC2016
@@ -80,9 +80,9 @@ declare -x _JQ_TABLE='
       (
         .[2] as $url
         | if .[3] then
-            ($url | color_url($alert_color_prefix; $url_color_suffix))
+            ($url | color_url($missed_url_color; $reset_color))
           else
-            ($url | color_url($url_color_prefix; $url_color_suffix))
+            ($url | color_url($url_color_prefix; $reset_color))
           end
       ),
       .[2]
@@ -100,9 +100,9 @@ function _cdui_format_table()
 {
     jq -r \
       --arg pwd "${PWD}" \
-      --arg alert_color_prefix "${_cdui_alert_color}" \
+      --arg missed_url_color "${_cdui_missed_url_color}" \
       --arg url_color_prefix "${_cdui_url_color}" \
-      --arg url_color_suffix "${_cdui_reset_color}" \
+      --arg reset_color "${_cdui_reset_color}" \
       "${_JQ_TABLE}"
 }
 export -f _cdui_format_table
