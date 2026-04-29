@@ -47,6 +47,12 @@ _eval_ansi_color_string 'reset' _cdui_reset_color
 declare -x _JQ_TABLE='
   def pad($w): . + (" " * ($w - (. | length)));
   def color_url($prefix; $suffix): $prefix + . + $suffix;
+  def display_url($url):
+    if $home != "" and ($url | startswith($home)) then
+      "~" + ($url[$home|length:])
+    else
+      $url
+    end;
   def pluralize($count; $unit): "\($count) \($unit)\(if $count == 1 then "" else "s" end) ago";
   def ago_time:
     . as $timestamp
@@ -80,15 +86,16 @@ declare -x _JQ_TABLE='
       (.[1] | pad($w[1])),
       (
         .[2] as $url
+        | display_url($url) as $shown_url
         | if .[3] then
-            ($url | color_url($missed_url_color; $reset_color))
+            ($shown_url | color_url($missed_url_color; $reset_color))
         elif $url == $pwd then
-          ($url | color_url($current_url_color; $reset_color))
+          ($shown_url | color_url($current_url_color; $reset_color))
         else
-            ($url | color_url($url_color_prefix; $reset_color))
+            ($shown_url | color_url($url_color_prefix; $reset_color))
           end
       ),
-      .[2]
+    .[2]
     ]
   | @tsv
 '
@@ -103,6 +110,7 @@ function _cdui_format_table()
 {
     jq -r \
       --arg pwd "${PWD}" \
+      --arg home "${HOME}" \
       --arg current_url_color "${_cdui_current_url_color}" \
       --arg missed_url_color "${_cdui_missed_url_color}" \
       --arg url_color_prefix "${_cdui_url_color}" \
