@@ -35,9 +35,11 @@ else
 fi
 
 declare -x _cdui_url_color
+declare -x _cdui_current_url_color
 declare -x _cdui_missed_url_color
 declare -x _cdui_reset_color
 _eval_ansi_color_string "${SP_CDUI_URL_COLOR:-cyan italic}" _cdui_url_color
+_eval_ansi_color_string "${SP_CDUI_CURRENT_URL_COLOR:-grey dim italic strike}" _cdui_current_url_color
 _eval_ansi_color_string "${SP_CDUI_MISSED_URL_COLOR:-${SP_COLOR_ALERT:-red italic strike}}" _cdui_missed_url_color
 _eval_ansi_color_string 'reset' _cdui_reset_color
 
@@ -67,8 +69,7 @@ declare -x _JQ_TABLE='
       tostring
     end;
 
-  map(.url = if .url == $pwd then "" else .url end)
-  | map([.origin, (.entry | entry_to_display), .url, (.missing_url // false)]) as $rows
+  map([.origin, (.entry | entry_to_display), .url, (.missing_url // false)]) as $rows
   | [
       ($rows | map(.[0] | length) | max),
       ($rows | map(.[1] | length) | max)
@@ -81,7 +82,9 @@ declare -x _JQ_TABLE='
         .[2] as $url
         | if .[3] then
             ($url | color_url($missed_url_color; $reset_color))
-          else
+        elif $url == $pwd then
+          ($url | color_url($current_url_color; $reset_color))
+        else
             ($url | color_url($url_color_prefix; $reset_color))
           end
       ),
@@ -100,6 +103,7 @@ function _cdui_format_table()
 {
     jq -r \
       --arg pwd "${PWD}" \
+      --arg current_url_color "${_cdui_current_url_color}" \
       --arg missed_url_color "${_cdui_missed_url_color}" \
       --arg url_color_prefix "${_cdui_url_color}" \
       --arg reset_color "${_cdui_reset_color}" \
@@ -216,7 +220,7 @@ function cdui()
           | cut -f4
       )
 
-    if [[ -n ${_selected_dir} ]]; then
+    if [[ -n ${_selected_dir} && ${_selected_dir} != "${PWD}" ]]; then
         # shellcheck disable=SC2086
         bash ${_bash_on_trace} "${_FEED_SCRIPT}" --update "${_selected_dir}"
         pushd "${_selected_dir}" >/dev/null 2>&1 || return
