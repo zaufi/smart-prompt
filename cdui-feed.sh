@@ -24,6 +24,7 @@ Options:
 EOF
 }
 
+declare all=false
 declare mc_hotlist=false
 declare recent=false
 declare git_worktrees=false
@@ -42,13 +43,7 @@ function _cdui_report_update_conflict()
 while (($# > 0)); do
     case "$1" in
         -a|--all)
-            if $update; then
-                _cdui_report_update_conflict
-            fi
-            mc_hotlist=true
-            recent=true
-            git_worktrees=true
-            env_dirs=true
+            $update && _cdui_report_update_conflict || all=true
             shift
             ;;
         -m|--mc-hotlist)
@@ -104,6 +99,12 @@ while (($# > 0)); do
             ;;
     esac
 done
+
+if ! [[ $recent || $mc_hotlist || $git_worktrees || $env_dirs || $all ]]; then
+    printf 'cdui-feed.sh: no feed selection option has been given\n' >&2
+    usage >&2
+    exit 1
+fi
 
 if $update && [[ -z ${update_dir} ]]; then
     printf 'cdui-feed.sh: missing argument for --update\n' >&2
@@ -190,28 +191,24 @@ if $update; then
     exit 0
 fi
 
-if $recent; then
+if $recent || $all; then
     # shellcheck source=cdui.d/recent-plugin.sh
     . "${_plugin_dir}"/recent-plugin.sh
 fi
 
-if $mc_hotlist; then
+if $mc_hotlist || $all; then
     # shellcheck source=cdui.d/hotlist-plugin.sh
     . "${_plugin_dir}"/hotlist-plugin.sh
 fi
 
-if $git_worktrees; then
+if $git_worktrees || $all; then
     # shellcheck source=cdui.d/git-worktrees-plugin.sh
     . "${_plugin_dir}"/git-worktrees-plugin.sh
 fi
 
-if $env_dirs; then
+if $env_dirs || $all; then
     # shellcheck source=cdui.d/env-plugin.sh
     . "${_plugin_dir}"/env-plugin.sh
-fi
-
-if ! $recent && ! $mc_hotlist && ! $git_worktrees && ! $env_dirs; then
-    exit 0
 fi
 
 if $ui_hints; then
