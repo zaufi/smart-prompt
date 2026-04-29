@@ -9,8 +9,8 @@ if [[ $- == *x* ]]; then
     _bash_on_trace='-x'
 fi
 
-declare -r _INSTALL_LIBEXEC_DIR='@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@'
-declare -r _SCRIPT_DIR="$(dirname "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)")"
+declare _INSTALL_LIBEXEC_DIR='@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@'
+declare _SCRIPT_DIR="$(dirname "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)")"
 
 if [[ -r "${_SCRIPT_DIR}"/@PROJECT_NAME@-functions.sh ]]; then
     # shellcheck source=smart-prompt-functions.sh
@@ -29,9 +29,9 @@ else
 fi
 
 if [[ -r "${_SCRIPT_DIR}"/cdui-feed.sh ]]; then
-    declare -rx _FEED_SCRIPT="${_SCRIPT_DIR}"/cdui-feed.sh
+    declare -x _FEED_SCRIPT="${_SCRIPT_DIR}"/cdui-feed.sh
 else
-    declare -rx _FEED_SCRIPT="${_INSTALL_LIBEXEC_DIR}"/cdui-feed.sh
+    declare -x _FEED_SCRIPT="${_INSTALL_LIBEXEC_DIR}"/cdui-feed.sh
 fi
 
 declare -x _cdui_url_color
@@ -42,7 +42,7 @@ _eval_ansi_color_string "${SP_CDUI_MISSED_URL_COLOR:-${SP_COLOR_ALERT:-red itali
 _eval_ansi_color_string 'reset' _cdui_reset_color
 
 # shellcheck disable=SC2016
-declare -rx _JQ_TABLE='
+declare -x _JQ_TABLE='
   def pad($w): . + (" " * ($w - (. | length)));
   def color_url($prefix; $suffix): $prefix + . + $suffix;
   def pluralize($count; $unit): "\($count) \($unit)\(if $count == 1 then "" else "s" end) ago";

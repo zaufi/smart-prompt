@@ -93,5 +93,14 @@ function cdui_hotlist_get_dirs()
 #
 function cdui_hotlist_get_ui_hint()
 {
-    jq -cn '[{hotkey: "CTRL-H", text: "hot dirs 🔥", cli_option: "--mc-hotlist"}]'
+    jq -cn --argjson order "${CDUI_PLUGIN_HOTLIST_ORDER:-1}" '
+      [
+        {
+          hotkey: "CTRL-H",
+          text: "hot dirs 🔥",
+          cli_option: "--mc-hotlist",
+          order: $order
+        }
+      ]
+    '
 }

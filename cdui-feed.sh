@@ -215,7 +215,7 @@ if ! $recent && ! $mc_hotlist && ! $git_worktrees && ! $env_dirs; then
 fi
 
 if $ui_hints; then
-    _cdui_dispatch_all get_ui_hint | jq -s 'add // []'
+    _cdui_dispatch_all get_ui_hint | jq -s 'add | sort_by(.order) // []'
     exit 0
 fi
 

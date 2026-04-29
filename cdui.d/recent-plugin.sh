@@ -124,14 +124,6 @@ function cdui_recent_get_dirs()
 }
 
 #
-# Return the UI hint metadata for the recent-directories feed.
-#
-function cdui_recent_get_ui_hint()
-{
-    jq -cn '[{hotkey: "CTRL-T", text: "recent dirs 🔁", cli_option: "--recent"}]'
-}
-
-#
 # Update usage statistics for a selected directory.
 #
 # @param $1 -- directory name to update in the recent-directory cache
@@ -155,4 +147,22 @@ function cdui_recent_post_select_dir()
     _CDUI_RECENT_DIRS_STATS["${dir_name}"]="$((count + 1)) $(date +%s)"
     _cdui_save_recent_dirs_stats || return 1
     _cdui_refresh_recent_dirs_cache
+}
+
+
+#
+# Return the UI hint metadata for the recent-directories feed.
+#
+function cdui_recent_get_ui_hint()
+{
+    jq -cn --argjson order "${CDUI_PLUGIN_RECENT_ORDER:-2}" '
+      [
+        {
+          hotkey: "CTRL-T",
+          text: "recent dirs 🔁",
+          cli_option: "--recent",
+          order: $order
+        }
+      ]
+    '
 }

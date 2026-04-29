@@ -139,7 +139,16 @@ function cdui_git_worktrees_get_dirs()
 function cdui_git_worktrees_get_ui_hint()
 {
     if [[ $(git rev-parse --is-inside-work-tree 2>/dev/null) == true ]]; then
-        jq -cn '[{hotkey: "CTRL-G", text: "Git work trees ", cli_option: "--git-worktrees"}]'
+        jq -cn --argjson order "${CDUI_PLUGIN_GIT_WORKTREES_ORDER:-3}" '
+          [
+            {
+              hotkey: "CTRL-G",
+              text: "Git work trees ",
+              cli_option: "--git-worktrees",
+              order: $order
+            }
+          ]
+        '
     else
         printf '[]\n'
     fi

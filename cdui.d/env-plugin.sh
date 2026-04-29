@@ -133,5 +133,14 @@ function cdui_env_get_dirs()
 #
 function cdui_env_get_ui_hint()
 {
-    jq -cn '[{hotkey: "CTRL-E", text: "environment dirs ⚙️", cli_option: "--env"}]'
+    jq -cn --argjson order "${CDUI_PLUGIN_ENV_ORDER:-4}" '
+      [
+        {
+          hotkey: "CTRL-E",
+          text: "environment dirs ⚙️",
+          cli_option: "--env",
+          order: $order
+        }
+      ]
+    '
 }
