@@ -47,7 +47,7 @@ repos:
 
   # NOTE For config options check this: https://editorconfig-checker.github.io
   - repo: https://github.com/editorconfig-checker/editorconfig-checker
-    rev: v3.6.1
+    rev: v3.7.0
     hooks:
       - id: editorconfig-checker
 
@@ -59,7 +59,7 @@ repos:
 
   # NOTE See BUG https://github.com/crate-ci/typos/issues/390
   - repo: https://github.com/adhtruong/mirrors-typos
-    rev: v1.45.1
+    rev: v1.47.0
     hooks:
       - id: typos
         # NOTE Override hook-provided args to prevent automatic
