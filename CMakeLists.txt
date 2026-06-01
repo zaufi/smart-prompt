@@ -191,7 +191,6 @@ endforeach()
 #---------------------------------------------------------
 
 configure_file(${PROJECT_NAME}.sh.in ${PROJECT_NAME}.sh @ONLY)
-configure_file(cdui.sh.in cdui.sh @ONLY)
 
 if(WITH_RIPGREP)
     file(STRINGS ${PROJECT_NAME}-rg.inputrc search_bindings)
@@ -205,48 +204,6 @@ string(REPLACE "%" ";" search_bindings "${search_bindings}")
 
 configure_file(${PROJECT_NAME}.inputrc.in ${PROJECT_NAME}.inputrc @ONLY)
 
-cmake_path(APPEND CMAKE_CURRENT_SOURCE_DIR charmaps.yaml OUTPUT_VARIABLE CHARMAPS_YAML)
-cmake_path(APPEND CMAKE_CURRENT_BINARY_DIR charmaps.json OUTPUT_VARIABLE CHARMAPS_JSON)
-cmake_path(APPEND CMAKE_CURRENT_SOURCE_DIR yaml2json.cmake OUTPUT_VARIABLE CHARMAPS_CONVERTER)
-cmake_path(APPEND CMAKE_CURRENT_BINARY_DIR charmaps.sh OUTPUT_VARIABLE CHARMAPS_BASH)
-cmake_path(APPEND CMAKE_CURRENT_SOURCE_DIR json2bash-functions.cmake OUTPUT_VARIABLE CHARMAPS_BASH_GENERATOR)
-cmake_path(APPEND CMAKE_CURRENT_SOURCE_DIR charmap.bash.in OUTPUT_VARIABLE CHARMAP_BASH_TEMPLATE)
-
-add_custom_command(
-    OUTPUT "${CHARMAPS_JSON}"
-    COMMAND
-        "${CMAKE_COMMAND}"
-        -DINPUT_FILE="${CHARMAPS_YAML}"
-        -DOUTPUT_FILE="${CHARMAPS_JSON}"
-        -DYQ_EXECUTABLE="${YQ_EXECUTABLE}"
-        -P "${CHARMAPS_CONVERTER}"
-    DEPENDS
-        "${CHARMAPS_YAML}"
-        "${CHARMAPS_CONVERTER}"
-    COMMENT "Generating charmaps.json from charmaps.yaml"
-    VERBATIM
-  )
-
-add_custom_target(charmaps-json ALL DEPENDS "${CHARMAPS_JSON}")
-
-add_custom_command(
-    OUTPUT "${CHARMAPS_BASH}"
-    COMMAND
-        "${CMAKE_COMMAND}"
-        -DINPUT_FILE="${CHARMAPS_JSON}"
-        -DOUTPUT_FILE="${CHARMAPS_BASH}"
-        -DTEMPLATE_FILE="${CHARMAP_BASH_TEMPLATE}"
-        -P "${CHARMAPS_BASH_GENERATOR}"
-    DEPENDS
-        "${CHARMAPS_JSON}"
-        "${CHARMAP_BASH_TEMPLATE}"
-        "${CHARMAPS_BASH_GENERATOR}"
-    COMMENT "Generating bash helper functions from charmaps.json"
-    VERBATIM
-  )
-
-add_custom_target(charmaps-bash-helpers ALL DEPENDS "${CHARMAPS_BASH}")
-
 #---------------------------------------------------------
 # Section: Install project files
 #---------------------------------------------------------
@@ -254,18 +211,7 @@ add_custom_target(charmaps-bash-helpers ALL DEPENDS "${CHARMAPS_BASH}")
 install(
     FILES
         ${PROJECT_NAME}-functions.sh
-        cdui-feed.sh
-        hotlist2json.awk
-        "${CHARMAPS_BASH}"
     DESTINATION "${CMAKE_INSTALL_LIBEXECDIR}/${PROJECT_NAME}"
-  )
-install(
-    FILES
-        cdui.d/env-plugin.sh
-        cdui.d/git-worktrees-plugin.sh
-        cdui.d/hotlist-plugin.sh
-        cdui.d/recent-plugin.sh
-    DESTINATION "${CMAKE_INSTALL_LIBEXECDIR}/${PROJECT_NAME}/cdui.d"
   )
 
 install(
@@ -298,7 +244,6 @@ if(WITH_INPUTRC)
     install(
         FILES
             "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh"
-            "${CMAKE_BINARY_DIR}/cdui.sh"
         DESTINATION "${CMAKE_INSTALL_FULL_SYSCONFDIR}/profile.d"
       )
 endif()
