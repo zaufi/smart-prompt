@@ -124,6 +124,39 @@ function _smart_prompt()
     local sp_color_seg
     _eval_color_string "reset ${SP_SEGMENT_COLOR:-bright-blue}" sp_color_seg
 
+    local sp_git_rebase_color
+    _eval_color_string "reset ${SP_GIT_REBASE_COLOR-bright-cyan}" sp_git_rebase_color
+
+    local sp_git_merge_color
+    _eval_color_string "reset ${SP_GIT_MERGE_COLOR-bright-blue}" sp_git_merge_color
+
+    local sp_git_cherry_pick_color
+    _eval_color_string "reset ${SP_GIT_CHERRY_PICK_COLOR-bright-magenta}" sp_git_cherry_pick_color
+
+    local sp_git_revert_color
+    _eval_color_string "reset ${SP_GIT_REVERT_COLOR-yellow}" sp_git_revert_color
+
+    local sp_git_bisect_color
+    _eval_color_string "reset ${SP_GIT_BISECT_COLOR-yellow}" sp_git_bisect_color
+
+    local sp_git_conflict_color
+    _eval_color_string "reset ${SP_GIT_CONFLICT_COLOR-bright-red}" sp_git_conflict_color
+
+    local sp_git_detached_color
+    _eval_color_string "reset ${SP_GIT_DETACHED_COLOR-dark-gray}" sp_git_detached_color
+
+    local sp_git_staged_color
+    _eval_color_string "reset ${SP_GIT_STAGED_COLOR-green dim}" sp_git_staged_color
+
+    local sp_git_modified_color
+    _eval_color_string "reset ${SP_GIT_MODIFIED_COLOR-brown}" sp_git_modified_color
+
+    local sp_git_untracked_color
+    _eval_color_string "reset ${SP_GIT_UNTRACKED_COLOR-grey}" sp_git_untracked_color
+
+    local sp_git_clean_color
+    _eval_color_string "reset ${SP_GIT_CLEAN_COLOR-bright-green}" sp_git_clean_color
+
     # Get some other (non-color) configurable parameters
     local -r sp_time_fmt=${SP_TIME_FMT:-%H:%M %d/%m}
     local -r sp_seg=${sp_color_seg}${SP_SEGMENT_DELIMITER:-"〉"}

@@ -27,65 +27,114 @@ function _get_git_branch()
     eval "${_ggb__output_var}=\"${_ggb__branch}\""
 }
 
+function _get_git_worktree_state()
+{
+    local -r worktree="${1}"
+
+    local gitdir
+    gitdir=$(git -C "${worktree}" rev-parse --git-dir 2>/dev/null) \
+      || return 1
+
+    # BEGIN Git operations in progress (highest priority)
+    if [[ -d "${gitdir}"/rebase-merge || -d "${gitdir}"/rebase-apply ]]; then
+        printf rebase
+        return
+    fi
+
+    if [[ -f "${gitdir}"/MERGE_HEAD ]]; then
+        printf merge
+        return
+    fi
+
+    if [[ -f "${gitdir}"/CHERRY_PICK_HEAD ]]; then
+        printf cherry_pick
+        return
+    fi
+
+    if [[ -f "${gitdir}"/REVERT_HEAD ]]; then
+        printf revert
+        return
+    fi
+
+    if [[ -f "${gitdir}"/BISECT_LOG ]]; then
+        printf bisect
+        return
+    fi
+    # END Git operations in progress (highest priority)
+
+    # BEGIN Content state
+    local status
+    status=$(git -C "${worktree}" status --porcelain 2>/dev/null)
+
+    # Unmerged/conflicting paths.
+    if grep -qE '^(DD|AU|UD|UA|DU|AA|UU)' <<< "${status}"; then
+        printf conflict
+        return
+    fi
+
+    # Detached HEAD.
+    if ! git -C "${worktree}" symbolic-ref -q HEAD >/dev/null 2>&1; then
+        printf detached
+        return
+    fi
+
+    # Staged changes.
+    if grep -qE '^[MADRCUT][[:space:]MADRCUT?]' <<< "${status}"; then
+        printf staged
+        return
+    fi
+
+    # Unstaged changes.
+    if grep -qE '^.[MADRCUT]' <<< "${status}"; then
+        printf modified
+        return
+    fi
+
+    # Untracked files.
+    if grep -q '^??' <<< "${status}"; then
+        printf untracked
+        return
+    fi
+
+    printf clean
+    # END Content state
+}
+
 function _get_git_dirty_status()
 {
     local _ggds__output_var=$1
+    local _ggds__state=$2
+
     local _ggds__status_color
-    if [[ -z $(git status -s 2> /dev/null) ]]; then
-        _get_color_param SP_GIT_GREEN_COLOR sp_color_info _ggds__status_color
-    else
-        _get_color_param SP_GIT_DIRTY_COLOR sp_color_warn _ggds__status_color
-    fi
+    case ${_ggds__state} in
+        # Git operations in progress
+        rebase | merge | cherry_pick | revert | bisect | conflict | detached | staged | modified | untracked | clean)
+            _get_color_param "SP_GIT_${_ggds__state^^}_COLOR" "sp_git_${_ggds__state}_color" _ggds__status_color
+            ;;
+        *)
+            ;;
+    esac
     eval "${_ggds__output_var}=\"${_ggds__status_color}\""
-}
-
-# THANX to https://github.com/twolfson/sexy-bash-prompt/blob/master/.bash_prompt
-function _get_git_progress() {
-    local _ggp__output_var=$1
-    # Detect in-progress actions (e.g. merge, rebase)
-    # https://github.com/git/git/blob/v1.9-rc2/wt-status.c#L1199-L1241
-    local _ggp__git_dir="$(git rev-parse --git-dir)"
-
-    # git merge
-    local __ggp__result
-    if [[ -f "${_ggp__git_dir}/MERGE_HEAD" ]]; then
-        __ggp__result=merge
-    elif [[ -d "${_ggp__git_dir}/rebase-apply" ]]; then
-        # git am
-        if [[ -f "${_ggp__git_dir}/rebase-apply/applying" ]]; then
-            __ggp__result=am
-        # git rebase
-        else
-            __ggp__result=rebase
-        fi
-    elif [[ -d "${_ggp__git_dir}/rebase-merge" ]]; then
-        # git rebase --interactive/--merge
-        __ggp__result=rebase
-    elif [[ -f "${_ggp__git_dir}/CHERRY_PICK_HEAD" ]]; then
-        # git cherry-pick
-        __ggp__result=cherry-pick
-    fi
-    if [[ -f "${_ggp__git_dir}/BISECT_LOG" ]]; then
-        # git bisect
-        __ggp__result=bisect
-    fi
-    if [[ -f "${_ggp__git_dir}/REVERT_HEAD" ]]; then
-        # git revert --no-commit
-        __ggp__result=revert
-    fi
-    if [[ -n "${__ggp__result}" ]]; then
-        eval "${_ggp__output_var}='❲${__ggp__result}❳'"
-    fi
 }
 
 function _show_git_status()
 {
     local _sgs__branch
     _get_git_branch _sgs__branch
-    local _sgs__status
-    _get_git_dirty_status _sgs__status
+
+    local _sgs__state=$(_get_git_worktree_state "${PWD}")
     local _sgs__progress
-    _get_git_progress _sgs__progress
+    case ${_sgs__state} in
+        # Git operations in progress
+        rebase | merge | cherry_pick | revert | bisect)
+            _sgs__progress="❲${_sgs__state}❳"
+            ;;
+        *)
+            ;;
+    esac
+
+    local _sgs__status
+    _get_git_dirty_status _sgs__status "${_sgs__state}"
 
     local _sgs__wt
     if [[ $(git rev-parse --git-path config.worktree) =~ .*/\.git/worktrees/.* ]]; then
