@@ -258,13 +258,19 @@ function _sp.seconds_to_duration()
 }
 
 #
-# Check whether the current directory name starts with a given prefix
+# Check whether the current directory is a given directory or one of its children
 #
 # @param $1 -- dirname to match
 #
 function _sp.cur_dir_starts_with()
 {
-    [[ ${PWD} =~ ^${1} ]]
+    local _sp__prefix=${1%/}
+
+    if [[ -z ${_sp__prefix} || ${_sp__prefix} == / ]]; then
+        [[ ${PWD} == /* ]]
+    else
+        [[ ${PWD} == "${_sp__prefix}" || ${PWD} == "${_sp__prefix}"/* ]]
+    fi
 }
 
 #

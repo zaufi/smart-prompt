@@ -148,7 +148,10 @@ SMART_PROMPT_PLUGINS[_61_is_proc_dir]=_show_processes_and_load
 #
 function _65_is_in_usr_src_linux_dir()
 {
-    _sp.cur_dir_starts_with /usr/src/linux
+    [[ ${PWD} == /usr/src/linux ||
+       ${PWD} == /usr/src/linux/* ||
+       ${PWD} == /usr/src/linux-* ||
+       ${PWD} == /usr/src/linux-*/* ]]
 }
 # TODO Show kernel's build time?
 function _show_kernel_config()
