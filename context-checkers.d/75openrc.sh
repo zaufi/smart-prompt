@@ -10,17 +10,17 @@
 #BEGIN Service functions
 function _get_started_services_cnt()
 {
-    local _gssc__level=${1:--a}
-    local _gssc__output_var=$2
-    local -i _gssc__count=$(rc-status "${_gssc__level}" | grep -c started)
+    local -r _gssc__level=${1:--a}
+    local -r _gssc__output_var=$2
+    local -ir _gssc__count=$(rc-status "${_gssc__level}" | grep -c started)
     eval "${_gssc__output_var}=\"${_gssc__count}\""
 }
 
 function _get_total_services_cnt()
 {
-    local _gssc__level=${1:--a}
-    local _gssc__output_var=$2
-    local -i _gssc__count=$(rc-status "${_gssc__level}" | wc -l)
+    local -r _gssc__level=${1:--a}
+    local -r _gssc__output_var=$2
+    local -ir _gssc__count=$(rc-status "${_gssc__level}" | wc -l)
     eval "${_gssc__output_var}=\"${_gssc__count}\""
 }
 #END Service functions
@@ -34,7 +34,7 @@ function _75_is_init_d_dir()
 }
 function _show_started_services()
 {
-    local _sss__level=${1:--a}
+    local -r _sss__level=${1:--a}
     local _sss__count
     local _sss__total_count
     _get_started_services_cnt "${_sss__level}" _sss__count
@@ -51,7 +51,7 @@ function _75_is_inside_of_runlevels_dir()
 }
 function _show_started_services_at_level()
 {
-    local _level=${PWD##*/}
+    local -r _level=${PWD##*/}
     if [[ ${_level} == 'runlevels' ]]; then
         _show_started_services
     else

@@ -204,8 +204,7 @@ function _eval_ansi_color_string
     _eacs__prompt_escaped=${_eacs__prompt_escaped//\\[/}
     _eacs__prompt_escaped=${_eacs__prompt_escaped//\\]/}
 
-    local _eacs__result
-    printf -v _eacs__result '%b' "${_eacs__prompt_escaped}"
+    local -r _eacs__result=$(printf '%b' "${_eacs__prompt_escaped}")
     eval "${_eacs__output_var}=\"${_eacs__result}\""
 }
 

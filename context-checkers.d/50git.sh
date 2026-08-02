@@ -19,7 +19,7 @@ function _51_is_git_dir()
 
 function _get_git_branch()
 {
-    local _ggb__output_var=$1
+    local -r _ggb__output_var=$1
     local _ggb__branch=$(git symbolic-ref --short HEAD 2> /dev/null)
     if [[ -z ${_ggb__branch} ]]; then
         _ggb__branch=$(git describe --tags --always | sed -e 's,-\([0-9]\+\)-g.*, +\1,')
@@ -34,6 +34,7 @@ function _get_git_worktree_state()
     local gitdir
     gitdir=$(git -C "${worktree}" rev-parse --git-dir 2>/dev/null) \
       || return 1
+    local -r gitdir
 
     # BEGIN Git operations in progress (highest priority)
     if [[ -d "${gitdir}"/rebase-merge || -d "${gitdir}"/rebase-apply ]]; then
@@ -65,6 +66,7 @@ function _get_git_worktree_state()
     # BEGIN Content state
     local status
     status=$(git -C "${worktree}" status --porcelain 2>/dev/null)
+    local -r status
 
     # Unmerged/conflicting paths.
     if grep -qE '^(DD|AU|UD|UA|DU|AA|UU)' <<< "${status}"; then
@@ -102,8 +104,8 @@ function _get_git_worktree_state()
 
 function _get_git_dirty_status()
 {
-    local _ggds__output_var=$1
-    local _ggds__state=$2
+    local -r _ggds__output_var=$1
+    local -r _ggds__state=$2
 
     local _ggds__status_color
     case ${_ggds__state} in
@@ -122,7 +124,7 @@ function _show_git_status()
     local _sgs__branch
     _get_git_branch _sgs__branch
 
-    local _sgs__state=$(_get_git_worktree_state "${PWD}")
+    local -r _sgs__state=$(_get_git_worktree_state "${PWD}")
     local _sgs__progress
     case ${_sgs__state} in
         # Git operations in progress
@@ -172,7 +174,7 @@ function _show_git_status()
 
 function _show_git_git()
 {
-    local _sgg__org=$(git config --local --get remote.origin.url)
+    local -r _sgg__org=$(git config --local --get remote.origin.url)
     _get_color_param SP_GIT_ORIGIN_COLOR sp_color_info _sgg__origin_color
     printf '%s%s' "${_sgg__origin_color}" "${_sgg__org}"
 }

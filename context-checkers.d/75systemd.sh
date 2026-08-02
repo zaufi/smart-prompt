@@ -16,11 +16,12 @@ function _75_is_systemd_dir()
 }
 function _systemd_show_default_target()
 {
-    local _sdt__target=$(systemctl get-default)
+    local -r _sdt__target=$(systemctl get-default)
     # NOTE To capture the exit code of `systemctl is-system-running`
     # declaration and assign are on the different lines.
     local _sdt__state
     _sdt__state=$(systemctl is-system-running)
+    local -r _sdt__state
     local -i _sdt__exit_code=$?
 
     local _sdt__target_color

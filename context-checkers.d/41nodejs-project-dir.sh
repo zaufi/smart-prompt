@@ -16,7 +16,7 @@ function _41_is_nodejs_project_dir()
 function _show_package_details()
 {
     if _find_program jq _spd__jq_bin; then
-        local _spd__name_version=$(${_spd__jq_bin} -r '.name+"@"+.version' package.json)
+        local -r _spd__name_version=$(${_spd__jq_bin} -r '.name+"@"+.version' package.json)
         if [[ -n ${_spd__name_version} && ${_spd__name_version} != '@' ]]; then
             local _spd__color_name
             _get_color_param SP_JS_PKG_NAME_VERSION sp_color_notice _spd__color_name

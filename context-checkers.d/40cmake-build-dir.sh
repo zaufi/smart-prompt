@@ -19,21 +19,22 @@ function _show_cmake_options()
     if [[ -f CMakeFiles/CMakeDirectoryInformation.cmake ]]; then
         _sco__top_build_dir=$(grep 'CMAKE_RELATIVE_PATH_TOP_BINARY' CMakeFiles/CMakeDirectoryInformation.cmake \
           | sed 's,SET(CMAKE_RELATIVE_PATH_TOP_BINARY\s\+"\(.*\)")$,\1,i')
+        local -r _sco__top_build_dir
         if [[ -n ${_sco__top_build_dir} && -f ${_sco__top_build_dir}/CMakeCache.txt ]]; then
-            local _sco__build_type=$( \
+            local -r _sco__build_type=$( \
                 sed -ne '/^CMAKE_BUILD_TYPE:.*=.*$/ {s,CMAKE_BUILD_TYPE:.*=,,; p}' \
                 "${_sco__top_build_dir}"/CMakeCache.txt \
               )
-            local _sco__prefix=$( \
+            local -r _sco__prefix=$( \
                 sed -ne '/^CMAKE_INSTALL_PREFIX:PATH=.*$/ {s,CMAKE_INSTALL_PREFIX:PATH=,,; p}' \
                 "${_sco__top_build_dir}"/CMakeCache.txt \
               )
-            local _sco__version=$( \
+            local -r _sco__version=$( \
                 sed -ne '/^CMAKE_PROJECT_VERSION:STATIC=.*$/ {s,CMAKE_PROJECT_VERSION:STATIC=,,; p}' \
                 "${_sco__top_build_dir}"/CMakeCache.txt \
               )
             local _sco__color_build_type
-            local _sco__build_type_color_var="SP_CMAKE_${_sco__build_type^^}_BUILD_TYPE_COLOR"
+            local -r _sco__build_type_color_var="SP_CMAKE_${_sco__build_type^^}_BUILD_TYPE_COLOR"
             if [[ -n ${!_sco__build_type_color_var} ]]; then
                 _get_color_param "${_sco__build_type_color_var}" sp_color_notice _sco__color_build_type
             else

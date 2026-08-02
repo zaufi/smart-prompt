@@ -24,7 +24,7 @@ function _show_loaded_modules()
 # TODO Make sure /proc is available
 function _show_uptime()
 {
-    local _seconds=$(sed 's,\([0-9]\+\)\..*,\1,' /proc/uptime)
+    local -r _seconds=$(sed 's,\([0-9]\+\)\..*,\1,' /proc/uptime)
     local _uptime
     _seconds_to_duration "${_seconds}" _uptime
 
@@ -56,7 +56,7 @@ function _show_net_ifaces()
                 case "${_sni_stat}" in
                     1*)
                         # TODO What about IPv6 address? Or IPv6 only hosts?
-                        local _sni__addr=$("${_sni__ip_bin}" addr show "${_sni__iface}" \
+                        local -r _sni__addr=$("${_sni__ip_bin}" addr show "${_sni__iface}" \
                           | sed -ne '/inet / {s,\s\+inet \([^ ]\+\).*,\1,;p}' \
                           )
                         local _sni__active_iface_color
@@ -85,7 +85,7 @@ function _60_is_linked_dir()
 }
 function _show_dir_link()
 {
-    local _link_to=$(readlink "${PWD}")
+    local -r _link_to=$(readlink "${PWD}")
     local _sdl__link_color
     _get_color_param SP_LINKED_DIR_COLOR sp_color_debug _sdl__link_color
     printf '%s→%s' "${_sdl__link_color}" "${_link_to}"
@@ -122,11 +122,11 @@ function _61_is_proc_dir()
 }
 function _show_processes_and_load()
 {
-    local _load=$(cut -d ' ' -f 1,2,3 /proc/loadavg)
-    local _psax_wc_l=$(ps ax --no-headers | wc -l)
-    local _psu_wc_l=$(ps -u "${USER}" --no-headers | wc -l)
-    local _all_processes=$(( _psax_wc_l - 2))
-    local _user_processes=$(( _psu_wc_l - 2))
+    local -r _load=$(cut -d ' ' -f 1,2,3 /proc/loadavg)
+    local -r _psax_wc_l=$(ps ax --no-headers | wc -l)
+    local -r _psu_wc_l=$(ps -u "${USER}" --no-headers | wc -l)
+    local -ir _all_processes=$(( _psax_wc_l - 2))
+    local -ir _user_processes=$(( _psu_wc_l - 2))
 
     local _spal__processes_color
     _get_color_param SP_PROCESSES_COUNT_COLOR sp_color_debug _spal__processes_color
@@ -232,7 +232,7 @@ function _show_fonts_info()
     if _find_program fc-list _fc_list_bin; then
         local _sfi__fc_color
         _get_color_param SP_FONTS_COUNT_COLOR sp_color_misc _sfi__fc_color
-        local -i _sfi__total="$("${_fc_list_bin}" 2>/dev/null | wc -l)"
+        local -ir _sfi__total="$("${_fc_list_bin}" 2>/dev/null | wc -l)"
         if _cur_dir_starts_with /etc/fonts; then
             printf '%s%s %d' "${_sfi__fc_color}" "${SP_FONT_DIR_MARK:-fonts:}" "${_sfi__total}"
         else
@@ -277,6 +277,7 @@ function _show_logged_users()
 {
     local -a _users
     readarray -t _users < <(who | cut -d ' ' -f 1 | sort -nr | uniq -c)
+    local -ar _users
     local _slu__users_color
     _get_color_param SP_LOGGED_USERS_COUNT_COLOR sp_color_misc _slu__users_color
     local _delim=${_slu__users_color}
@@ -303,7 +304,7 @@ function _62_is_etc_bash_completion_dir()
 function _show_bash_completions_config()
 {
     # shellcheck disable=SC2207
-    local -a _sbcc__active=( $(shopt -s nullglob; echo *) )
+    local -ar _sbcc__active=( $(shopt -s nullglob; echo *) )
     local _sbcc__count_color
     _get_color_param SP_BASH_COMPLETIONS_COUNT_COLOR sp_color_notice _sbcc__count_color
     printf '%s%d installed' "${_sbcc__count_color}" "${#_sbcc__active[@]}"
