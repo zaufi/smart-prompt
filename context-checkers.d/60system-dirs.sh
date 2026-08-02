@@ -198,9 +198,8 @@ function _show_some_dev_and_mount_info()
 {
     local _ssdami__mount_info_color
     _sp.get_color_param SP_BLOCK_DEVS_COUNT_COLOR sp_color_debug _ssdami__mount_info_color
-    printf '%s%s%d blk.devs' \
+    printf '%s%d blk.devs' \
         "${_ssdami__mount_info_color}" \
-        "${_devs_mounted}" \
         "$(/bin/mount | grep -c '^/dev/')"
 
     local _lsusb_bin
