@@ -45,21 +45,21 @@ function _sp.is_debug()
 #
 function _sp.parse_rgb()
 {
-    local -r _prbg__input="$1"
-    local -r _prbg__prefix=$2
+    local -r _input="$1"
+    local -r _prefix=$2
 
-    local -n _prbg__r="${_prbg__prefix}_r"
-    local -n _prbg__g="${_prbg__prefix}_g"
-    local -n _prbg__b="${_prbg__prefix}_b"
+    local -n _r="${_prefix}_r"
+    local -n _g="${_prefix}_g"
+    local -n _b="${_prefix}_b"
 
-    if [[ ${_prbg__input} =~ rgb\(\ *([0-9]+)\ *,\ *([0-9]+)\ *,\ *([0-9]+)\ *\) ]]; then
-        _prbg__r=${BASH_REMATCH[1]}
-        _prbg__g=${BASH_REMATCH[2]}
-        _prbg__b=${BASH_REMATCH[3]}
+    if [[ ${_input} =~ rgb\(\ *([0-9]+)\ *,\ *([0-9]+)\ *,\ *([0-9]+)\ *\) ]]; then
+        _r=${BASH_REMATCH[1]}
+        _g=${BASH_REMATCH[2]}
+        _b=${BASH_REMATCH[3]}
         return 0
     fi
 
-    logger -t 'smart-prompt' "Invalid color specification '${_prbg__input}'"
+    logger -t 'smart-prompt' "Invalid color specification '${_input}'"
     return 1
 }
 
@@ -72,33 +72,33 @@ function _sp.parse_rgb()
 #
 function _sp.parse_hex_color()
 {
-    local -r _phc__input="$1"
-    local -r _phc__prefix=$2
+    local -r _input="$1"
+    local -r _prefix=$2
 
-    local -n _phc__r="${_phc__prefix}_r"
-    local -n _phc__g="${_phc__prefix}_g"
-    local -n _phc__b="${_phc__prefix}_b"
+    local -n _r="${_prefix}_r"
+    local -n _g="${_prefix}_g"
+    local -n _b="${_prefix}_b"
 
-    if [[ ${_phc__input} =~ ^0x([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$ ]]; then
-        _phc__r=$((0x${BASH_REMATCH[1]}))
-        _phc__g=$((0x${BASH_REMATCH[2]}))
-        _phc__b=$((0x${BASH_REMATCH[3]}))
+    if [[ ${_input} =~ ^0x([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$ ]]; then
+        _r=$((0x${BASH_REMATCH[1]}))
+        _g=$((0x${BASH_REMATCH[2]}))
+        _b=$((0x${BASH_REMATCH[3]}))
         return 0
     fi
-    if [[ ${_phc__input} =~ ^#([0-9A-Fa-f])([0-9A-Fa-f])([0-9A-Fa-f])$ ]]; then
-        _phc__r=$((0x${BASH_REMATCH[1]}${BASH_REMATCH[1]}))
-        _phc__g=$((0x${BASH_REMATCH[2]}${BASH_REMATCH[2]}))
-        _phc__b=$((0x${BASH_REMATCH[3]}${BASH_REMATCH[3]}))
+    if [[ ${_input} =~ ^#([0-9A-Fa-f])([0-9A-Fa-f])([0-9A-Fa-f])$ ]]; then
+        _r=$((0x${BASH_REMATCH[1]}${BASH_REMATCH[1]}))
+        _g=$((0x${BASH_REMATCH[2]}${BASH_REMATCH[2]}))
+        _b=$((0x${BASH_REMATCH[3]}${BASH_REMATCH[3]}))
         return 0
     fi
-    if [[ ${_phc__input} =~ ^#([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$ ]]; then
-        _phc__r=$((0x${BASH_REMATCH[1]}))
-        _phc__g=$((0x${BASH_REMATCH[2]}))
-        _phc__b=$((0x${BASH_REMATCH[3]}))
+    if [[ ${_input} =~ ^#([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$ ]]; then
+        _r=$((0x${BASH_REMATCH[1]}))
+        _g=$((0x${BASH_REMATCH[2]}))
+        _b=$((0x${BASH_REMATCH[3]}))
         return 0
     fi
 
-    logger -t 'smart-prompt' "Invalid color specification '${_phc__input}'"
+    logger -t 'smart-prompt' "Invalid color specification '${_input}'"
     return 1
 }
 
@@ -112,19 +112,19 @@ function _sp.parse_hex_color()
 #
 function _sp.rgb_to_ansi()
 {
-    local -r _r2a__r=$1
-    local -r _r2a__g=$2
-    local -r _r2a__b=$3
-    local -r _r2a__output_var=$4
+    local -r _r=$1
+    local -r _g=$2
+    local -r _b=$3
+    local -r _output_var=$4
 
-    local -n _r2a__output="${_r2a__output_var}"
+    local -n _output="${_output_var}"
 
-    if [[ ${_r2a__r} -le 5 && ${_r2a__g} -le 5 && ${_r2a__b} -le 5 ]]; then
+    if [[ ${_r} -le 5 && ${_g} -le 5 && ${_b} -le 5 ]]; then
         # 256 colors
-        _r2a__output="\\[\\e[38;5;$(( _r2a__r * 36 + _r2a__g * 6 + _r2a__b + 16 ))m\\]"
+        _output="\\[\\e[38;5;$(( _r * 36 + _g * 6 + _b + 16 ))m\\]"
     else
         # 16M colors
-        _r2a__output="\\[\\e[38;2;${_r2a__r};${_r2a__g};${_r2a__b}m\\]"
+        _output="\\[\\e[38;2;${_r};${_g};${_b}m\\]"
     fi
 }
 
@@ -136,70 +136,67 @@ function _sp.rgb_to_ansi()
 #
 function _sp.eval_color_string
 {
-    local -A _ecs__colors
-    _ecs__colors['black']='\[\e[30m\]'
-    _ecs__colors['red']='\[\e[31m\]'
-    _ecs__colors['green']='\[\e[32m\]'
-    _ecs__colors['brown']='\[\e[33m\]'
-    _ecs__colors['blue']='\[\e[34m\]'
-    _ecs__colors['magenta']='\[\e[35m\]'
-    _ecs__colors['cyan']='\[\e[36m\]'
-    _ecs__colors['grey']='\[\e[37m\]'
-    _ecs__colors['gray']='\[\e[37m\]'
+    local -A _colors
+    _colors['black']='\[\e[30m\]'
+    _colors['red']='\[\e[31m\]'
+    _colors['green']='\[\e[32m\]'
+    _colors['brown']='\[\e[33m\]'
+    _colors['blue']='\[\e[34m\]'
+    _colors['magenta']='\[\e[35m\]'
+    _colors['cyan']='\[\e[36m\]'
+    _colors['grey']='\[\e[37m\]'
+    _colors['gray']='\[\e[37m\]'
 
-    _ecs__colors['dark-grey']='\[\e[90m\]'
-    _ecs__colors['dark-gray']='\[\e[90m\]'
-    _ecs__colors['bright-red']='\[\e[91m\]'
-    _ecs__colors['bright-green']='\[\e[92m\]'
-    _ecs__colors['yellow']='\[\e[93m\]'
-    _ecs__colors['bright-blue']='\[\e[94m\]'
-    _ecs__colors['bright-magenta']='\[\e[95m\]'
-    _ecs__colors['bright-cyan']='\[\e[96m\]'
-    _ecs__colors['white']='\[\e[97m\]'
+    _colors['dark-grey']='\[\e[90m\]'
+    _colors['dark-gray']='\[\e[90m\]'
+    _colors['bright-red']='\[\e[91m\]'
+    _colors['bright-green']='\[\e[92m\]'
+    _colors['yellow']='\[\e[93m\]'
+    _colors['bright-blue']='\[\e[94m\]'
+    _colors['bright-magenta']='\[\e[95m\]'
+    _colors['bright-cyan']='\[\e[96m\]'
+    _colors['white']='\[\e[97m\]'
 
-    _ecs__colors['reset']='\[\e[0m\]'
-    _ecs__colors['bold']='\[\e[1m\]'
-    _ecs__colors['dim']='\[\e[2m\]'
-    _ecs__colors['italic']='\[\e[3m\]'
-    _ecs__colors['underscore']='\[\e[4m\]'
-    _ecs__colors['reverse']='\[\e[7m\]'
-    _ecs__colors['strike']='\[\e[9m\]'
+    _colors['reset']='\[\e[0m\]'
+    _colors['bold']='\[\e[1m\]'
+    _colors['dim']='\[\e[2m\]'
+    _colors['italic']='\[\e[3m\]'
+    _colors['underscore']='\[\e[4m\]'
+    _colors['reverse']='\[\e[7m\]'
+    _colors['strike']='\[\e[9m\]'
 
-    local -r _ecs__colors_str=$1
-    local -r _ecs__output_var=$2
+    local -r _colors_str=$1
+    local -r _output_var=$2
 
-    local -n _ecs__output="${_ecs__output_var}"
+    local -n _output="${_output_var}"
+    local _color_r
+    local _color_g
+    local _color_b
 
-    local _ecs__result_str
-    local _ecs__c
-    for _ecs__c in ${_ecs__colors_str}; do
-        case ${_ecs__c} in
+    local _result_str
+    local _c
+    for _c in ${_colors_str}; do
+        case ${_c} in
         rgb*)
-            local _esc__r
-            local _esc__g
-            local _esc__b
-            if _sp.parse_rgb "${_ecs__c}" _esc_; then
-                local _ecs_rgb
-                _sp.rgb_to_ansi "${_esc__r}" "${_esc__g}" "${_esc__b}" _ecs_rgb
-                _ecs__result_str="${_ecs__result_str}${_ecs_rgb}"
+            if _sp.parse_rgb "${_c}" _color; then
+                local _rgb
+                _sp.rgb_to_ansi "${_color_r}" "${_color_g}" "${_color_b}" _rgb
+                _result_str="${_result_str}${_rgb}"
             fi
             ;;
         0x*|\#*)
-            local _esc__r
-            local _esc__g
-            local _esc__b
-            if _sp.parse_hex_color "${_ecs__c}" _esc_; then
-                local _ecs_rgb
-                _sp.rgb_to_ansi "${_esc__r}" "${_esc__g}" "${_esc__b}" _ecs_rgb
-                _ecs__result_str="${_ecs__result_str}${_ecs_rgb}"
+            if _sp.parse_hex_color "${_c}" _color; then
+                local _rgb
+                _sp.rgb_to_ansi "${_color_r}" "${_color_g}" "${_color_b}" _rgb
+                _result_str="${_result_str}${_rgb}"
             fi
             ;;
         *)
-            _ecs__result_str="${_ecs__result_str}${_ecs__colors[${_ecs__c}]-}"
+            _result_str="${_result_str}${_colors[${_c}]-}"
             ;;
         esac
     done
-    _ecs__output=${_ecs__result_str}
+    _output=${_result_str}
 }
 
 #
@@ -213,18 +210,18 @@ function _sp.eval_color_string
 #
 function _sp.eval_ansi_color_string
 {
-    local -r _eacs__colors_str=$1
-    local -r _eacs__output_var=$2
+    local -r _colors_str=$1
+    local -r _output_var=$2
 
-    local -n _eacs__output="${_eacs__output_var}"
+    local -n _output="${_output_var}"
 
-    local _eacs__prompt_escaped
-    _sp.eval_color_string "${_eacs__colors_str}" _eacs__prompt_escaped
-    _eacs__prompt_escaped=${_eacs__prompt_escaped//\\[/}
-    _eacs__prompt_escaped=${_eacs__prompt_escaped//\\]/}
+    local _prompt_escaped
+    _sp.eval_color_string "${_colors_str}" _prompt_escaped
+    _prompt_escaped=${_prompt_escaped//\\[/}
+    _prompt_escaped=${_prompt_escaped//\\]/}
 
-    local -r _eacs__result=$(printf '%b' "${_eacs__prompt_escaped}")
-    _eacs__output=${_eacs__result}
+    local -r _result=$(printf '%b' "${_prompt_escaped}")
+    _output=${_result}
 }
 
 
@@ -237,20 +234,20 @@ function _sp.eval_ansi_color_string
 #
 function _sp.get_color_param()
 {
-    local -r _gcp__param=$1
-    local -r _gcp__fallback=$2
-    local -r _gcp__output_var=$3
+    local -r _param=$1
+    local -r _fallback=$2
+    local -r _output_var=$3
 
-    local -n _gcp__output="${_gcp__output_var}"
+    local -n _output="${_output_var}"
 
     if _sp.is_debug; then
-        echo -e "\e[1;30mGetting color parameter '${_gcp__param}'\e[38m"
+        echo -e "\e[1;30mGetting color parameter '${_param}'\e[38m"
     fi
 
-    if [[ -n ${!_gcp__param} ]]; then
-        _sp.eval_color_string "reset ${!_gcp__param}" "${_gcp__output_var}"
+    if [[ -n ${!_param} ]]; then
+        _sp.eval_color_string "reset ${!_param}" "${_output_var}"
     else
-        _gcp__output=${!_gcp__fallback}
+        _output=${!_fallback}
     fi
 }
 
@@ -262,22 +259,22 @@ function _sp.get_color_param()
 #
 function _sp.seconds_to_duration()
 {
-    local -ir _s2d__seconds=$1
-    local -r _s2d__output_var=$2
+    local -ir _seconds=$1
+    local -r _output_var=$2
 
-    local -n _s2d__output="${_s2d__output_var}"
+    local -n _output="${_output_var}"
 
-    local -ir _s2d__d=$(( _s2d__seconds / (3600 * 24) ))
-    local -ir _s2d__h=$(( (_s2d__seconds % (3600 * 24)) / 3600 ))
-    local -ir _s2d__m=$(( ((_s2d__seconds % (3600 * 24)) % 3600) / 60 ))
+    local -ir _d=$(( _seconds / (3600 * 24) ))
+    local -ir _h=$(( (_seconds % (3600 * 24)) / 3600 ))
+    local -ir _m=$(( ((_seconds % (3600 * 24)) % 3600) / 60 ))
 
-    local _s2d__result
-    if [[ ${_s2d__d} != 0 ]]; then
-        _s2d__result=$(printf "%d days, %02d:%02d" ${_s2d__d} ${_s2d__h} ${_s2d__m})
+    local _result
+    if [[ ${_d} != 0 ]]; then
+        _result=$(printf "%d days, %02d:%02d" ${_d} ${_h} ${_m})
     else
-        _s2d__result=$(printf "%02d:%02d" ${_s2d__h} ${_s2d__m})
+        _result=$(printf "%02d:%02d" ${_h} ${_m})
     fi
-    _s2d__output=${_s2d__result}
+    _output=${_result}
 }
 
 #
@@ -287,12 +284,12 @@ function _sp.seconds_to_duration()
 #
 function _sp.cur_dir_starts_with()
 {
-    local _sp__prefix=${1%/}
+    local _prefix=${1%/}
 
-    if [[ -z ${_sp__prefix} || ${_sp__prefix} == / ]]; then
+    if [[ -z ${_prefix} || ${_prefix} == / ]]; then
         [[ ${PWD} == /* ]]
     else
-        [[ ${PWD} == "${_sp__prefix}" || ${PWD} == "${_sp__prefix}"/* ]]
+        [[ ${PWD} == "${_prefix}" || ${PWD} == "${_prefix}"/* ]]
     fi
 }
 
@@ -324,18 +321,18 @@ function _sp.cur_dir_matches()
 #
 function _sp.find_program()
 {
-    local -r _fp__name=${1}
-    local -r _fp__output_var=${2}
-    local -n _fp__output="${_fp__output_var}"
-    local _fp__bin=$(hash -t "${_fp__name}" 2>/dev/null)
-    if [[ -z ${_fp__bin} ]]; then
-        _fp__bin=$(command -v "${_fp__name}" || return 1)
-        if [[ -n ${_fp__bin} ]]; then
-            hash -p "${_fp__bin}" "${_fp__name}"
+    local -r _name=${1}
+    local -r _output_var=${2}
+    local -n _output="${_output_var}"
+    local _bin=$(hash -t "${_name}" 2>/dev/null)
+    if [[ -z ${_bin} ]]; then
+        _bin=$(command -v "${_name}" || return 1)
+        if [[ -n ${_bin} ]]; then
+            hash -p "${_bin}" "${_name}"
         fi
     fi
-    if [[ -n ${_fp__bin} ]]; then
-        _fp__output=${_fp__bin}
+    if [[ -n ${_bin} ]]; then
+        _output=${_bin}
         return 0
     fi
     return 1

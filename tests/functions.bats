@@ -83,3 +83,11 @@ setup()
 
     assert_failure 1
 }
+
+@test "runtime shell files contain no function-derived local prefixes" {
+    run rg -n \
+        '_(prbg|phc|r2a|ecs|esc|eacs|gcp|s2d|fp|sp|sdc|sco|spd|ggb|ggds|sgs|sgg|gsb|gsds|sss|sbcc|sdl|sfi|sk|skc|slm|slu|sni|spal|ssdami|su|spi|gtpi|sip|swd|gssc|sdt|svenv|ssc)(__|_)' \
+        "${BATS_TEST_DIRNAME}/.."
+
+    assert_failure 1
+}

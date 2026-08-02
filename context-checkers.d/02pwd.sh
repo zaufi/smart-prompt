@@ -14,38 +14,39 @@ function _02_show_pwd()
 
 function _show_pwd()
 {
-    local _sp__dir_stack_size=''
+    local _dir_stack_size=''
     if [[ "${#DIRSTACK[@]}" -gt 1 ]]; then
-        _sp__dir_stack_size="${#DIRSTACK[@]}:"
+        _dir_stack_size="${#DIRSTACK[@]}:"
     fi
 
-    local _sp__pwd_color
-    _sp.get_color_param SP_PWD_COLOR sp_color_info _sp__pwd_color
+    local _pwd_color
+    _sp.get_color_param SP_PWD_COLOR sp_color_info _pwd_color
 
-    local _sp__pwd_marks
+    local _pwd_marks
+    local _pwd_empty_dir_color
     if [[ -z $(shopt -s nullglob; echo *) ]]; then
-        _sp.get_color_param SP_EMPTY_DIR_COLOR sp_color_debug _sp__pwd_empty_dir_color
-        _sp__pwd_marks=${_sp__pwd_empty_dir_color}${SP_EMPTY_DIR_MARK}${sp_reset}
+        _sp.get_color_param SP_EMPTY_DIR_COLOR sp_color_debug _pwd_empty_dir_color
+        _pwd_marks=${_pwd_empty_dir_color}${SP_EMPTY_DIR_MARK}${sp_reset}
     else
-        local _sp__pwd_pair
-        local _sp__pwd_key
-        local _sp__pwd_glob
-        for _sp__pwd_pair in "${SP_MARKS_MAP[@]}"; do
-            IFS=': ' read -r _sp__pwd_key _sp__pwd_glob <<<"${_sp__pwd_pair}"
-            _sp__pwd_marks+=$([[ -e ${_sp__pwd_glob} ]] && echo "${_sp__pwd_key}")
+        local _pwd_pair
+        local _pwd_key
+        local _pwd_glob
+        for _pwd_pair in "${SP_MARKS_MAP[@]}"; do
+            IFS=': ' read -r _pwd_key _pwd_glob <<<"${_pwd_pair}"
+            _pwd_marks+=$([[ -e ${_pwd_glob} ]] && echo "${_pwd_key}")
         done
-        for _sp__pwd_pair in "${SP_MARK_PATTERNS_MAP[@]}"; do
-            IFS=':' read -r _sp__pwd_key _sp__pwd_glob <<<"${_sp__pwd_pair}"
+        for _pwd_pair in "${SP_MARK_PATTERNS_MAP[@]}"; do
+            IFS=':' read -r _pwd_key _pwd_glob <<<"${_pwd_pair}"
             # shellcheck disable=SC2086
-            _sp__pwd_marks+=$([[ -n $(shopt -s extglob globstar nullglob; echo ${_sp__pwd_glob}) ]] && echo "${_sp__pwd_key}")
+            _pwd_marks+=$([[ -n $(shopt -s extglob globstar nullglob; echo ${_pwd_glob}) ]] && echo "${_pwd_key}")
         done
 
-        if [[ -n ${_sp__pwd_marks} ]]; then
-            _sp__pwd_marks=${SP_OPEN_MARK:-❲}${_sp__pwd_marks}${SP_CLOSE_MARKS:-❳}
+        if [[ -n ${_pwd_marks} ]]; then
+            _pwd_marks=${SP_OPEN_MARK:-❲}${_pwd_marks}${SP_CLOSE_MARKS:-❳}
         fi
     fi
 
-    printf '%s%s\w%s' "${_sp__pwd_color}" "${_sp__dir_stack_size}" "${_sp__pwd_marks}"
+    printf '%s%s\w%s' "${_pwd_color}" "${_dir_stack_size}" "${_pwd_marks}"
 }
 
 SMART_PROMPT_PLUGINS[_02_show_pwd]=_show_pwd

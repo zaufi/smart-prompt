@@ -14,11 +14,12 @@ function _00_is_under_schroot()
 
 function _show_debian_chroot()
 {
-    _sp.get_color_param SP_CHROOT_NAME sp_color_warn _sdc__chroot_name
+    local _chroot_name
+    _sp.get_color_param SP_CHROOT_NAME sp_color_warn _chroot_name
     if [[ -n ${SCHROOT_CHROOT_NAME} ]]; then
-        printf '%s%s' "${_sdc__chroot_name}" "${SCHROOT_CHROOT_NAME}"
+        printf '%s%s' "${_chroot_name}" "${SCHROOT_CHROOT_NAME}"
     else
-        printf '%s%s' "${_sdc__chroot_name}" "$(< /etc/debian_chroot)"
+        printf '%s%s' "${_chroot_name}" "$(< /etc/debian_chroot)"
     fi
 }
 SMART_PROMPT_PLUGINS[_00_is_under_schroot]=_show_debian_chroot

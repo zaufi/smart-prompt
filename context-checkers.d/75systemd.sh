@@ -16,25 +16,25 @@ function _75_is_systemd_dir()
 }
 function _systemd_show_default_target()
 {
-    local -r _sdt__target=$(systemctl get-default)
+    local -r _target=$(systemctl get-default)
     # NOTE To capture the exit code of `systemctl is-system-running`
     # declaration and assign are on the different lines.
-    local _sdt__state
-    _sdt__state=$(systemctl is-system-running)
-    local -r _sdt__state
-    local -i _sdt__exit_code=$?
+    local _state
+    _state=$(systemctl is-system-running)
+    local -r _state
+    local -i _exit_code=$?
 
-    local _sdt__target_color
-    _sp.get_color_param SP_SYSTEMD_TARGET_COLOR sp_color_notice _sdt__target_color
+    local _target_color
+    _sp.get_color_param SP_SYSTEMD_TARGET_COLOR sp_color_notice _target_color
 
-    local _sdt__state_color
-    if [[ ${_sdt__exit_code} != 0 ]]; then
-        _sp.get_color_param SP_SYSTEMD_STATE_ALERT_COLOR sp_color_alert _sdt__state_color
+    local _state_color
+    if [[ ${_exit_code} != 0 ]]; then
+        _sp.get_color_param SP_SYSTEMD_STATE_ALERT_COLOR sp_color_alert _state_color
     else
-        _sp.get_color_param SP_SYSTEMD_STATE_OK_COLOR sp_color_info _sdt__state_color
+        _sp.get_color_param SP_SYSTEMD_STATE_OK_COLOR sp_color_info _state_color
     fi
 
-    printf '%s%s %s%s' "${_sdt__target_color}" "${_sdt__target}" "${_sdt__state_color}" "${_sdt__state}"
+    printf '%s%s %s%s' "${_target_color}" "${_target}" "${_state_color}" "${_state}"
 }
 
 if command -v systemctl &>/dev/null; then

@@ -11,12 +11,12 @@
 
 function _99_check_prev_cmd_exit_code()
 {
-    [[ ${_sp__prev_cmd_exit_code} -ne 0 ]]
+    [[ ${_prev_cmd_exit_code} -ne 0 ]]
 }
 
 function _show_prev_cmd_exit_code()
 {
-    printf '%s%s' "${sp_color_alert}" "${_sp__prev_cmd_exit_code}"
+    printf '%s%s' "${sp_color_alert}" "${_prev_cmd_exit_code}"
 }
 
 SMART_PROMPT_PLUGINS[_99_check_prev_cmd_exit_code]=_show_prev_cmd_exit_code

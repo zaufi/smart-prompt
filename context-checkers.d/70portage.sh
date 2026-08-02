@@ -10,11 +10,11 @@
 #BEGIN Service functions
 function _get_total_packages_installed()
 {
-    local -n _gtpi__output="$1"
+    local -n _output="$1"
     # TODO Refactor this!
     # shellcheck disable=SC2010,SC2012,SC2126
-    local -ir _gtpi__count=$(ls -1 /var/db/pkg/* | grep -E -v '(^|:)$' | wc -l)
-    _gtpi__output=${_gtpi__count}
+    local -ir _package_count=$(ls -1 /var/db/pkg/* | grep -E -v '(^|:)$' | wc -l)
+    _output=${_package_count}
 }
 #END Service functions
 
@@ -71,29 +71,29 @@ function _72_is_var_db_pkg_dir()
 }
 function _show_installed_packages()
 {
-    local _sip_installed_cnt
-    _get_total_packages_installed _sip_installed_cnt
+    local _installed_cnt
+    _get_total_packages_installed _installed_cnt
     case "${PWD}" in
     /var/db/pkg/*/*)
-        local _sip_installed_date=$(< COUNTER)
-        _sip_installed_date=$(date --date="@${_sip_installed_date}" +"${sp_time_fmt}")
-        local -r _sip_installed_from_repo=$(< REPOSITORY)
-        local _sip_repo_color
-        _sp.get_color_param SP_PORTAGE_PKG_DETAILS_COLOR sp_color_info _sip_repo_color
-        printf '%s%s from %s' "${_sip_repo_color}" "${_sip_installed_date}" "${_sip_installed_from_repo}"
+        local _installed_date=$(< COUNTER)
+        _installed_date=$(date --date="@${_installed_date}" +"${sp_time_fmt}")
+        local -r _installed_from_repo=$(< REPOSITORY)
+        local _repo_color
+        _sp.get_color_param SP_PORTAGE_PKG_DETAILS_COLOR sp_color_info _repo_color
+        printf '%s%s from %s' "${_repo_color}" "${_installed_date}" "${_installed_from_repo}"
         ;;
     /var/db/pkg/*)
         # TODO Any better way?
         # shellcheck disable=SC2207
-        local -r _sip_pkgs_in_cat=( $(shopt -s nullglob; echo *) )
-        local _sip_cat_color
-        _sp.get_color_param SP_PORTAGE_CATEGORY_DETAILS_COLOR sp_color_notice _sip_cat_color
-        printf '%s%d/%d cat/total pkgs' "${_sip_cat_color}" "${#_sip_pkgs_in_cat[@]}" "${_sip_installed_cnt}"
+        local -r _pkgs_in_cat=( $(shopt -s nullglob; echo *) )
+        local _cat_color
+        _sp.get_color_param SP_PORTAGE_CATEGORY_DETAILS_COLOR sp_color_notice _cat_color
+        printf '%s%d/%d cat/total pkgs' "${_cat_color}" "${#_pkgs_in_cat[@]}" "${_installed_cnt}"
         ;;
     /var/db/pkg)
-        local _sip_pkgdb_color
-        _sp.get_color_param SP_PORTAGE_PKG_TOTAL_COLOR sp_color_notice _sip_pkgdb_color
-        printf '%s%d pkgs total' "${_sip_pkgdb_color}" "${_sip_installed_cnt}"
+        local _pkgdb_color
+        _sp.get_color_param SP_PORTAGE_PKG_TOTAL_COLOR sp_color_notice _pkgdb_color
+        printf '%s%d pkgs total' "${_pkgdb_color}" "${_installed_cnt}"
         ;;
     esac
 }
@@ -108,15 +108,15 @@ function _72_is_var_lib_portage_dir()
 }
 function _show_world_details()
 {
-    local _swd_installed_cnt
-    _get_total_packages_installed _swd_installed_cnt
-    local -r _swd_world_contents=$(< /var/lib/portage/world)
+    local _installed_cnt
+    _get_total_packages_installed _installed_cnt
+    local -r _world_contents=$(< /var/lib/portage/world)
     # TODO Refactor this!
     # shellcheck disable=SC2126
-    local -r _swd_pkgs=$(grep -E -v '(\*|@)' <<<"${_swd_world_contents}" | wc -l)
-    local -r _swd_sets=$(grep -E -c '(\*|@)' <<<"${_swd_world_contents}")
-    local _sip_pkgdb_color
-    _sp.get_color_param SP_PORTAGE_WORLD_COLOR sp_color_notice _sip_pkgdb_color
-    printf "%s%d/%d/%d pkgs/sets/total" "${_sip_pkgdb_color}" "${_swd_pkgs}" "${_swd_sets}" "${_swd_installed_cnt}"
+    local -r _pkgs=$(grep -E -v '(\*|@)' <<<"${_world_contents}" | wc -l)
+    local -r _sets=$(grep -E -c '(\*|@)' <<<"${_world_contents}")
+    local _pkgdb_color
+    _sp.get_color_param SP_PORTAGE_WORLD_COLOR sp_color_notice _pkgdb_color
+    printf "%s%d/%d/%d pkgs/sets/total" "${_pkgdb_color}" "${_pkgs}" "${_sets}" "${_installed_cnt}"
 }
 SMART_PROMPT_PLUGINS[_72_is_var_lib_portage_dir]=_show_world_details

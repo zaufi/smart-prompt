@@ -14,48 +14,48 @@ function _52_is_svn_repo()
 
 function _get_svn_branch()
 {
-    local -n _gsb__output="$1"
-    local -r _gsb__url=$(svn info | grep '^URL' | sed 's,URL:\s*,,')
-    local _gsb__branch=$(sed -e 's,.*/branches/\([^/]\+\).*,\1,' -e 't end' -e 'd' -e ':end' <<<"${_gsb__url}")
-    if [[ -z ${_gsb__branch} ]]; then
-        _gsb__branch=$(sed -e 's,.*/\(trunk\).*,\1,' -e 't end' -e 'd' -e ':end' <<<"${_gsb__url}")
-        if [[ -n ${_gsb__branch} ]]; then
-            _gsb__output=${_gsb__branch}
+    local -n _output="$1"
+    local -r _url=$(svn info | grep '^URL' | sed 's,URL:\s*,,')
+    local _branch_name=$(sed -e 's,.*/branches/\([^/]\+\).*,\1,' -e 't end' -e 'd' -e ':end' <<<"${_url}")
+    if [[ -z ${_branch_name} ]]; then
+        _branch_name=$(sed -e 's,.*/\(trunk\).*,\1,' -e 't end' -e 'd' -e ':end' <<<"${_url}")
+        if [[ -n ${_branch_name} ]]; then
+            _output=${_branch_name}
         fi
     else
-        _gsb__output=${_gsb__branch}
+        _output=${_branch_name}
     fi
 }
 
 # TODO Detect conflicts
 function _get_svn_dirty_status()
 {
-    local -n _gsds__output="$1"
-    local -r _gsds__work_root=$(svn info \
+    local -n _output="$1"
+    local -r _work_root=$(svn info \
       | grep 'Working Copy Root Path' \
       | sed 's,Working Copy Root Path:\s*\(.*\)$,\1,')
-    local _gsds__status_color
-    if [[ -z $(svn status -q "${_gsds__work_root}" 2>/dev/null) ]]; then
-        _sp.get_color_param SP_SVN_GREEN_COLOR sp_color_info _gsds__status_color
+    local _status_color
+    if [[ -z $(svn status -q "${_work_root}" 2>/dev/null) ]]; then
+        _sp.get_color_param SP_SVN_GREEN_COLOR sp_color_info _status_color
     else
-        _sp.get_color_param SP_SVN_DIRTY_COLOR sp_color_warn _gsds__status_color
+        _sp.get_color_param SP_SVN_DIRTY_COLOR sp_color_warn _status_color
     fi
-    _gsds__output=${_gsds__status_color}
+    _output=${_status_color}
 }
 
 function _show_svn_status()
 {
-    local _sss__branch
-    _get_svn_branch _sss__branch
-    local _sss__status
-    _get_svn_dirty_status _sss__status
+    local _branch
+    _get_svn_branch _branch
+    local _status
+    _get_svn_dirty_status _status
 
-    local _sss__repo
+    local _repo
     if _sp.check_bool "${SP_INDICATE_REPO_TYPE}" -o [[ "${SP_INDICATE_REPO_TYPE[@]}" =~ svn ]]; then
-        _sss__repo='svn:'
+        _repo='svn:'
     fi
 
-    printf '%s%s%s%s' "${_sss__status}" "${_sss__repo}" "${SP_VCS_BRANCH_SYMBOL:-\356\202\240:}" "${_sss__branch}"
+    printf '%s%s%s%s' "${_status}" "${_repo}" "${SP_VCS_BRANCH_SYMBOL:-\356\202\240:}" "${_branch}"
 }
 
 SMART_PROMPT_PLUGINS[_52_is_svn_repo]=_show_svn_status

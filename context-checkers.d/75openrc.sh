@@ -10,18 +10,18 @@
 #BEGIN Service functions
 function _get_started_services_cnt()
 {
-    local -r _gssc__level=${1:--a}
-    local -n _gssc__output="$2"
-    local -ir _gssc__count=$(rc-status "${_gssc__level}" | grep -c started)
-    _gssc__output=${_gssc__count}
+    local -r _level=${1:--a}
+    local -n _output="$2"
+    local -ir _started_count=$(rc-status "${_level}" | grep -c started)
+    _output=${_started_count}
 }
 
 function _get_total_services_cnt()
 {
-    local -r _gssc__level=${1:--a}
-    local -n _gssc__output="$2"
-    local -ir _gssc__count=$(rc-status "${_gssc__level}" | wc -l)
-    _gssc__output=${_gssc__count}
+    local -r _level=${1:--a}
+    local -n _output="$2"
+    local -ir _service_count=$(rc-status "${_level}" | wc -l)
+    _output=${_service_count}
 }
 #END Service functions
 
@@ -34,14 +34,14 @@ function _75_is_init_d_dir()
 }
 function _show_started_services()
 {
-    local -r _sss__level=${1:--a}
-    local _sss__count
-    local _sss__total_count
-    _get_started_services_cnt "${_sss__level}" _sss__count
-    _get_total_services_cnt "${_sss__level}" _sss__total_count
-    local _sss__services_color
-    _sp.get_color_param SP_OPENRC_SERVICES_COLOR sp_color_notice _sss__services_color
-    printf '%s%d/%d started' "${_sss__services_color}" "${_sss__count}" "${_sss__total_count}"
+    local -r _level=${1:--a}
+    local _count
+    local _total_count
+    _get_started_services_cnt "${_level}" _count
+    _get_total_services_cnt "${_level}" _total_count
+    local _services_color
+    _sp.get_color_param SP_OPENRC_SERVICES_COLOR sp_color_notice _services_color
+    printf '%s%d/%d started' "${_services_color}" "${_count}" "${_total_count}"
 }
 SMART_PROMPT_PLUGINS[_75_is_init_d_dir]=_show_started_services
 

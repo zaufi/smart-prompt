@@ -14,17 +14,17 @@ function _80_check_virtualenv()
 
 function _show_virtualenv()
 {
-    local _svenv_segment
-    local _svenv__color
+    local _segment
+    local _color
     if [[ -n ${VIRTUAL_ENV} ]]; then
-        _sp.get_color_param SP_VENV_COLOR sp_color_notice _svenv__color
-        local _svenv_ve_path=$(realpath --relative-to="${PWD}" "${VIRTUAL_ENV}")
-        if [[ ${#VIRTUAL_ENV} -lt ${#_svenv_ve_path} ]]; then
-            _svenv_ve_path="${VIRTUAL_ENV}"
+        _sp.get_color_param SP_VENV_COLOR sp_color_notice _color
+        local _ve_path=$(realpath --relative-to="${PWD}" "${VIRTUAL_ENV}")
+        if [[ ${#VIRTUAL_ENV} -lt ${#_ve_path} ]]; then
+            _ve_path="${VIRTUAL_ENV}"
         fi
-        _svenv_segment="${_svenv__color}${SP_VIRTUALENV_MARK:-🐍:}${_svenv_ve_path}"
+        _segment="${_color}${SP_VIRTUALENV_MARK:-🐍:}${_ve_path}"
     fi
-    printf '%s' "${_svenv_segment}"
+    printf '%s' "${_segment}"
 }
 
 SMART_PROMPT_PLUGINS[_80_check_virtualenv]=_show_virtualenv

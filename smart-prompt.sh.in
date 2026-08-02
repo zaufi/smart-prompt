@@ -48,7 +48,7 @@ fi
 # Declare a global associative array to be filled by the discovered plugins
 declare -A SMART_PROMPT_PLUGINS
 
-declare _sp__nullglob_status=$(shopt -p nullglob || true)
+declare _nullglob_status=$(shopt -p nullglob || true)
 shopt -s nullglob
 
 # Load plugins
@@ -73,8 +73,8 @@ if [[ -d "${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@.d" ]]; then
     done
 fi
 
-$_sp__nullglob_status
-unset _sp__nullglob_status
+$_nullglob_status
+unset _nullglob_status
 
 function _get_registered_context_checkers()
 {
@@ -87,7 +87,7 @@ function _smart_prompt()
 {
     # NOTE As the very first action, store an exit code of the
     # previous command...
-    local _sp__prev_cmd_exit_code=$?
+    local _prev_cmd_exit_code=$?
 
     # Get configured colors (or defaults)
     # NOTE Before setting the desired color, make sure there are no

@@ -19,12 +19,12 @@ function _51_is_git_dir()
 
 function _get_git_branch()
 {
-    local -n _ggb__output="$1"
-    local _ggb__branch=$(git symbolic-ref --short HEAD 2> /dev/null)
-    if [[ -z ${_ggb__branch} ]]; then
-        _ggb__branch=$(git describe --tags --always | sed -e 's,-\([0-9]\+\)-g.*, +\1,')
+    local -n _output="$1"
+    local _branch_name=$(git symbolic-ref --short HEAD 2> /dev/null)
+    if [[ -z ${_branch_name} ]]; then
+        _branch_name=$(git describe --tags --always | sed -e 's,-\([0-9]\+\)-g.*, +\1,')
     fi
-    _ggb__output=${_ggb__branch}
+    _output=${_branch_name}
 }
 
 function _get_git_worktree_state()
@@ -104,79 +104,79 @@ function _get_git_worktree_state()
 
 function _get_git_dirty_status()
 {
-    local -n _ggds__output="$1"
-    local -r _ggds__state=$2
+    local -n _output="$1"
+    local -r _state=$2
 
-    local _ggds__status_color
-    case ${_ggds__state} in
+    local _status_color
+    case ${_state} in
         # Git operations in progress
         rebase | merge | cherry_pick | revert | bisect | conflict | detached | staged | modified | untracked | clean)
-            _sp.get_color_param "SP_GIT_${_ggds__state^^}_COLOR" "sp_git_${_ggds__state}_color" _ggds__status_color
+            _sp.get_color_param "SP_GIT_${_state^^}_COLOR" "sp_git_${_state}_color" _status_color
             ;;
         *)
             ;;
     esac
-    _ggds__output=${_ggds__status_color}
+    _output=${_status_color}
 }
 
 function _show_git_status()
 {
-    local _sgs__branch
-    _get_git_branch _sgs__branch
+    local _branch
+    _get_git_branch _branch
 
-    local -r _sgs__state=$(_get_git_worktree_state "${PWD}")
-    local _sgs__progress
-    case ${_sgs__state} in
+    local -r _state=$(_get_git_worktree_state "${PWD}")
+    local _progress
+    case ${_state} in
         # Git operations in progress
         rebase | merge | cherry_pick | revert | bisect)
-            _sgs__progress="❲${_sgs__state}❳"
+            _progress="❲${_state}❳"
             ;;
         *)
             ;;
     esac
 
-    local _sgs__status
-    _get_git_dirty_status _sgs__status "${_sgs__state}"
+    local _status
+    _get_git_dirty_status _status "${_state}"
 
-    local _sgs__wt
+    local _wt
     if [[ $(git rev-parse --git-path config.worktree) =~ .*/\.git/worktrees/.* ]]; then
-        _sgs__wt=${SP_VCS_WT_SYMBOL:-\\360\\237\\214\\262}
+        _wt=${SP_VCS_WT_SYMBOL:-\\360\\237\\214\\262}
     fi
 
-    local _sgs__wtc=$(git worktree list | wc -l)
-    if [[ ${_sgs__wtc} -lt 2 ]]; then
-        if [[ -n ${_sgs__wt} ]]; then
-            _sgs__wtc="❲${_sgs__wt}❳"
+    local _wtc=$(git worktree list | wc -l)
+    if [[ ${_wtc} -lt 2 ]]; then
+        if [[ -n ${_wt} ]]; then
+            _wtc="❲${_wt}❳"
         else
-            unset _sgs__wtc
+            unset _wtc
         fi
     else
-        if [[ -n ${_sgs__wt} ]]; then
-            _sgs__wtc="❲${_sgs__wt}/${_sgs__wtc}❳"
+        if [[ -n ${_wt} ]]; then
+            _wtc="❲${_wt}/${_wtc}❳"
         else
-            _sgs__wtc="❲${_sgs__wtc}${SP_VCS_WT_SYMBOL:-\\360\\237\\214\\262}❳"
+            _wtc="❲${_wtc}${SP_VCS_WT_SYMBOL:-\\360\\237\\214\\262}❳"
         fi
     fi
 
-    local _sgs__repo
+    local _repo
     if _sp.check_bool "${SP_INDICATE_REPO_TYPE}" -o [[ "${SP_INDICATE_REPO_TYPE[@]}" =~ git ]]; then
-        _sgs__repo="${SP_REPO_GIT_MARK:-git:}"
+        _repo="${SP_REPO_GIT_MARK:-git:}"
     fi
 
     printf '%s%s%s%s%s%s' \
-        "${_sgs__status}" \
-        "${_sgs__repo}" \
+        "${_status}" \
+        "${_repo}" \
         "${SP_VCS_BRANCH_SYMBOL:-\\356\\202\\240:}" \
-        "${_sgs__branch}" \
-        "${_sgs__wtc}" \
-        "${_sgs__progress}"
+        "${_branch}" \
+        "${_wtc}" \
+        "${_progress}"
 }
 
 function _show_git_git()
 {
-    local -r _sgg__org=$(git config --local --get remote.origin.url)
-    _sp.get_color_param SP_GIT_ORIGIN_COLOR sp_color_info _sgg__origin_color
-    printf '%s%s' "${_sgg__origin_color}" "${_sgg__org}"
+    local -r _org=$(git config --local --get remote.origin.url)
+    _sp.get_color_param SP_GIT_ORIGIN_COLOR sp_color_info _origin_color
+    printf '%s%s' "${_origin_color}" "${_org}"
 }
 
 if command -v git &>/dev/null; then
