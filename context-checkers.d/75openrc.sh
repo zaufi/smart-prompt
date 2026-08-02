@@ -11,17 +11,17 @@
 function _get_started_services_cnt()
 {
     local -r _gssc__level=${1:--a}
-    local -r _gssc__output_var=$2
+    local -n _gssc__output="$2"
     local -ir _gssc__count=$(rc-status "${_gssc__level}" | grep -c started)
-    eval "${_gssc__output_var}=\"${_gssc__count}\""
+    _gssc__output=${_gssc__count}
 }
 
 function _get_total_services_cnt()
 {
     local -r _gssc__level=${1:--a}
-    local -r _gssc__output_var=$2
+    local -n _gssc__output="$2"
     local -ir _gssc__count=$(rc-status "${_gssc__level}" | wc -l)
-    eval "${_gssc__output_var}=\"${_gssc__count}\""
+    _gssc__output=${_gssc__count}
 }
 #END Service functions
 

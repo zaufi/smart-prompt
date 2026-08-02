@@ -323,7 +323,7 @@ set(CPACK_RPM_PACKAGE_RELEASE "1")
 set(CPACK_RPM_PACKAGE_LICENSE "GPL3")
 set(CPACK_RPM_FILE_NAME "RPM-DEFAULT")
 set(CPACK_RPM_PACKAGE_ARCHITECTURE "noarch")
-set(CPACK_RPM_PACKAGE_REQUIRES "bash, coreutils, grep, procps-ng, sed, util-linux${_rpm_aux_deps}")
+set(CPACK_RPM_PACKAGE_REQUIRES "bash >= 4.3, coreutils, grep, procps-ng, sed, util-linux${_rpm_aux_deps}")
 # ALERT The tag `Suggests:` doesn't supported (properly) by `rpmbuild` shipped in CentOS
 #set(CPACK_RPM_PACKAGE_SUGGESTS "fontconfig, iproute, jq, kmod, systemd, usbutils")
 set(CPACK_RPM_PACKAGE_DESCRIPTION [[
@@ -338,7 +338,7 @@ set(CPACK_RPM_PACKAGE_DESCRIPTION [[
 set(CPACK_DEBIAN_PACKAGE_SECTION "shells")
 set(CPACK_DEBIAN_FILE_NAME "DEB-DEFAULT")
 set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "all")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "bash, coreutils, grep, mount, procps, sed${_deb_aux_deps}")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "bash (>= 4.3), coreutils, grep, mount, procps, sed${_deb_aux_deps}")
 set(CPACK_DEBIAN_PACKAGE_SUGGESTS "fontconfig, iproute2, jq, kmod, systemd, usbutils")
 set(
     CPACK_DEBIAN_PACKAGE_DESCRIPTION

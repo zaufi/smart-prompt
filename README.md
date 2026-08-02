@@ -57,7 +57,7 @@ As you may notice, [`cmake`](http://cmake.org) is needed to install
     cmake .. && \
     sudo cmake --install .
 
-But to work, it doesn't require **any** other dependencies, except `bash`
+But to work, it doesn't require **any** other dependencies, except `bash` 4.3 or newer
 (and some tools detected at configure time), because it is written using pure
 `bash`, nothing else ;-)
 

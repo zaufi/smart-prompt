@@ -14,23 +14,23 @@ function _52_is_svn_repo()
 
 function _get_svn_branch()
 {
-    local -r _gsb__output_var=$1
+    local -n _gsb__output="$1"
     local -r _gsb__url=$(svn info | grep '^URL' | sed 's,URL:\s*,,')
     local _gsb__branch=$(sed -e 's,.*/branches/\([^/]\+\).*,\1,' -e 't end' -e 'd' -e ':end' <<<"${_gsb__url}")
     if [[ -z ${_gsb__branch} ]]; then
         _gsb__branch=$(sed -e 's,.*/\(trunk\).*,\1,' -e 't end' -e 'd' -e ':end' <<<"${_gsb__url}")
         if [[ -n ${_gsb__branch} ]]; then
-            eval "${_gsb__output_var}=\"${_gsb__branch}\""
+            _gsb__output=${_gsb__branch}
         fi
     else
-        eval "${_gsb__output_var}=\"${_gsb__branch}\""
+        _gsb__output=${_gsb__branch}
     fi
 }
 
 # TODO Detect conflicts
 function _get_svn_dirty_status()
 {
-    local -r _gsds__output_var=$1
+    local -n _gsds__output="$1"
     local -r _gsds__work_root=$(svn info \
       | grep 'Working Copy Root Path' \
       | sed 's,Working Copy Root Path:\s*\(.*\)$,\1,')
@@ -40,7 +40,7 @@ function _get_svn_dirty_status()
     else
         _sp.get_color_param SP_SVN_DIRTY_COLOR sp_color_warn _gsds__status_color
     fi
-    eval "${_gsds__output_var}=\"${_gsds__status_color}\""
+    _gsds__output=${_gsds__status_color}
 }
 
 function _show_svn_status()

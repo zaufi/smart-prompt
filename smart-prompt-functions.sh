@@ -7,6 +7,11 @@
 # Functions that can be used by context checkers
 #
 
+if (( BASH_VERSINFO[0] < 4 || (BASH_VERSINFO[0] == 4 && BASH_VERSINFO[1] < 3) )); then
+    printf '%s\n' 'smart-prompt requires Bash 4.3 or newer' >&2
+    return 1
+fi
+
 
 #
 # Check if given boolean value is `true`
@@ -43,10 +48,14 @@ function _sp.parse_rgb()
     local -r _prbg__input="$1"
     local -r _prbg__prefix=$2
 
+    local -n _prbg__r="${_prbg__prefix}_r"
+    local -n _prbg__g="${_prbg__prefix}_g"
+    local -n _prbg__b="${_prbg__prefix}_b"
+
     if [[ ${_prbg__input} =~ rgb\(\ *([0-9]+)\ *,\ *([0-9]+)\ *,\ *([0-9]+)\ *\) ]]; then
-        eval "${_prbg__prefix}_r=${BASH_REMATCH[1]}"
-        eval "${_prbg__prefix}_g=${BASH_REMATCH[2]}"
-        eval "${_prbg__prefix}_b=${BASH_REMATCH[3]}"
+        _prbg__r=${BASH_REMATCH[1]}
+        _prbg__g=${BASH_REMATCH[2]}
+        _prbg__b=${BASH_REMATCH[3]}
         return 0
     fi
 
@@ -66,22 +75,26 @@ function _sp.parse_hex_color()
     local -r _phc__input="$1"
     local -r _phc__prefix=$2
 
+    local -n _phc__r="${_phc__prefix}_r"
+    local -n _phc__g="${_phc__prefix}_g"
+    local -n _phc__b="${_phc__prefix}_b"
+
     if [[ ${_phc__input} =~ ^0x([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$ ]]; then
-        eval "${_phc__prefix}_r=$((0x${BASH_REMATCH[1]}))"
-        eval "${_phc__prefix}_g=$((0x${BASH_REMATCH[2]}))"
-        eval "${_phc__prefix}_b=$((0x${BASH_REMATCH[3]}))"
+        _phc__r=$((0x${BASH_REMATCH[1]}))
+        _phc__g=$((0x${BASH_REMATCH[2]}))
+        _phc__b=$((0x${BASH_REMATCH[3]}))
         return 0
     fi
     if [[ ${_phc__input} =~ ^#([0-9A-Fa-f])([0-9A-Fa-f])([0-9A-Fa-f])$ ]]; then
-        eval "${_phc__prefix}_r=$((0x${BASH_REMATCH[1]}${BASH_REMATCH[1]}))"
-        eval "${_phc__prefix}_g=$((0x${BASH_REMATCH[2]}${BASH_REMATCH[2]}))"
-        eval "${_phc__prefix}_b=$((0x${BASH_REMATCH[3]}${BASH_REMATCH[3]}))"
+        _phc__r=$((0x${BASH_REMATCH[1]}${BASH_REMATCH[1]}))
+        _phc__g=$((0x${BASH_REMATCH[2]}${BASH_REMATCH[2]}))
+        _phc__b=$((0x${BASH_REMATCH[3]}${BASH_REMATCH[3]}))
         return 0
     fi
     if [[ ${_phc__input} =~ ^#([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$ ]]; then
-        eval "${_phc__prefix}_r=$((0x${BASH_REMATCH[1]}))"
-        eval "${_phc__prefix}_g=$((0x${BASH_REMATCH[2]}))"
-        eval "${_phc__prefix}_b=$((0x${BASH_REMATCH[3]}))"
+        _phc__r=$((0x${BASH_REMATCH[1]}))
+        _phc__g=$((0x${BASH_REMATCH[2]}))
+        _phc__b=$((0x${BASH_REMATCH[3]}))
         return 0
     fi
 
@@ -104,12 +117,14 @@ function _sp.rgb_to_ansi()
     local -r _r2a__b=$3
     local -r _r2a__output_var=$4
 
+    local -n _r2a__output="${_r2a__output_var}"
+
     if [[ ${_r2a__r} -le 5 && ${_r2a__g} -le 5 && ${_r2a__b} -le 5 ]]; then
         # 256 colors
-        eval "${_r2a__output_var}='\[\e[38;5;$(( _r2a__r * 36 + _r2a__g * 6 + _r2a__b + 16 ))m\]'"
+        _r2a__output="\\[\\e[38;5;$(( _r2a__r * 36 + _r2a__g * 6 + _r2a__b + 16 ))m\\]"
     else
         # 16M colors
-        eval "${_r2a__output_var}='\[\e[38;2;${_r2a__r};${_r2a__g};${_r2a__b}m\]'"
+        _r2a__output="\\[\\e[38;2;${_r2a__r};${_r2a__g};${_r2a__b}m\\]"
     fi
 }
 
@@ -153,6 +168,8 @@ function _sp.eval_color_string
     local -r _ecs__colors_str=$1
     local -r _ecs__output_var=$2
 
+    local -n _ecs__output="${_ecs__output_var}"
+
     local _ecs__result_str
     local _ecs__c
     for _ecs__c in ${_ecs__colors_str}; do
@@ -178,11 +195,11 @@ function _sp.eval_color_string
             fi
             ;;
         *)
-            _ecs__result_str="${_ecs__result_str}\${_ecs__colors[${_ecs__c}]}"
+            _ecs__result_str="${_ecs__result_str}${_ecs__colors[${_ecs__c}]-}"
             ;;
         esac
     done
-    eval "${_ecs__output_var}=\"${_ecs__result_str}\""
+    _ecs__output=${_ecs__result_str}
 }
 
 #
@@ -199,13 +216,15 @@ function _sp.eval_ansi_color_string
     local -r _eacs__colors_str=$1
     local -r _eacs__output_var=$2
 
+    local -n _eacs__output="${_eacs__output_var}"
+
     local _eacs__prompt_escaped
     _sp.eval_color_string "${_eacs__colors_str}" _eacs__prompt_escaped
     _eacs__prompt_escaped=${_eacs__prompt_escaped//\\[/}
     _eacs__prompt_escaped=${_eacs__prompt_escaped//\\]/}
 
     local -r _eacs__result=$(printf '%b' "${_eacs__prompt_escaped}")
-    eval "${_eacs__output_var}=\"${_eacs__result}\""
+    _eacs__output=${_eacs__result}
 }
 
 
@@ -222,6 +241,8 @@ function _sp.get_color_param()
     local -r _gcp__fallback=$2
     local -r _gcp__output_var=$3
 
+    local -n _gcp__output="${_gcp__output_var}"
+
     if _sp.is_debug; then
         echo -e "\e[1;30mGetting color parameter '${_gcp__param}'\e[38m"
     fi
@@ -229,7 +250,7 @@ function _sp.get_color_param()
     if [[ -n ${!_gcp__param} ]]; then
         _sp.eval_color_string "reset ${!_gcp__param}" "${_gcp__output_var}"
     else
-        eval "${_gcp__output_var}=\"${!_gcp__fallback}\""
+        _gcp__output=${!_gcp__fallback}
     fi
 }
 
@@ -244,6 +265,8 @@ function _sp.seconds_to_duration()
     local -ir _s2d__seconds=$1
     local -r _s2d__output_var=$2
 
+    local -n _s2d__output="${_s2d__output_var}"
+
     local -ir _s2d__d=$(( _s2d__seconds / (3600 * 24) ))
     local -ir _s2d__h=$(( (_s2d__seconds % (3600 * 24)) / 3600 ))
     local -ir _s2d__m=$(( ((_s2d__seconds % (3600 * 24)) % 3600) / 60 ))
@@ -254,7 +277,7 @@ function _sp.seconds_to_duration()
     else
         _s2d__result=$(printf "%02d:%02d" ${_s2d__h} ${_s2d__m})
     fi
-    eval "${_s2d__output_var}=\"${_s2d__result}\""
+    _s2d__output=${_s2d__result}
 }
 
 #
@@ -303,6 +326,7 @@ function _sp.find_program()
 {
     local -r _fp__name=${1}
     local -r _fp__output_var=${2}
+    local -n _fp__output="${_fp__output_var}"
     local _fp__bin=$(hash -t "${_fp__name}" 2>/dev/null)
     if [[ -z ${_fp__bin} ]]; then
         _fp__bin=$(command -v "${_fp__name}" || return 1)
@@ -311,7 +335,7 @@ function _sp.find_program()
         fi
     fi
     if [[ -n ${_fp__bin} ]]; then
-        eval "${_fp__output_var}=\"${_fp__bin}\""
+        _fp__output=${_fp__bin}
         return 0
     fi
     return 1

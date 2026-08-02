@@ -10,11 +10,11 @@
 #BEGIN Service functions
 function _get_total_packages_installed()
 {
-    local -r _gtpi__output_var=$1
+    local -n _gtpi__output="$1"
     # TODO Refactor this!
     # shellcheck disable=SC2010,SC2012,SC2126
     local -ir _gtpi__count=$(ls -1 /var/db/pkg/* | grep -E -v '(^|:)$' | wc -l)
-    eval "${_gtpi__output_var}=\"${_gtpi__count}\""
+    _gtpi__output=${_gtpi__count}
 }
 #END Service functions
 

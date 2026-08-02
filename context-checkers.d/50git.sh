@@ -19,12 +19,12 @@ function _51_is_git_dir()
 
 function _get_git_branch()
 {
-    local -r _ggb__output_var=$1
+    local -n _ggb__output="$1"
     local _ggb__branch=$(git symbolic-ref --short HEAD 2> /dev/null)
     if [[ -z ${_ggb__branch} ]]; then
         _ggb__branch=$(git describe --tags --always | sed -e 's,-\([0-9]\+\)-g.*, +\1,')
     fi
-    eval "${_ggb__output_var}=\"${_ggb__branch}\""
+    _ggb__output=${_ggb__branch}
 }
 
 function _get_git_worktree_state()
@@ -104,7 +104,7 @@ function _get_git_worktree_state()
 
 function _get_git_dirty_status()
 {
-    local -r _ggds__output_var=$1
+    local -n _ggds__output="$1"
     local -r _ggds__state=$2
 
     local _ggds__status_color
@@ -116,7 +116,7 @@ function _get_git_dirty_status()
         *)
             ;;
     esac
-    eval "${_ggds__output_var}=\"${_ggds__status_color}\""
+    _ggds__output=${_ggds__status_color}
 }
 
 function _show_git_status()
