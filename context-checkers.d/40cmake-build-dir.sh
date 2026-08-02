@@ -36,14 +36,14 @@ function _show_cmake_options()
             local _sco__color_build_type
             local -r _sco__build_type_color_var="SP_CMAKE_${_sco__build_type^^}_BUILD_TYPE_COLOR"
             if [[ -n ${!_sco__build_type_color_var} ]]; then
-                _get_color_param "${_sco__build_type_color_var}" sp_color_notice _sco__color_build_type
+                _sp.get_color_param "${_sco__build_type_color_var}" sp_color_notice _sco__color_build_type
             else
-                _get_color_param SP_CMAKE_BUILD_TYPE_COLOR sp_color_notice _sco__color_build_type
+                _sp.get_color_param SP_CMAKE_BUILD_TYPE_COLOR sp_color_notice _sco__color_build_type
             fi
             local _sco__color_version
-            _get_color_param SP_CMAKE_PROJECT_VERSION_COLOR sp_color_info _sco__color_version
+            _sp.get_color_param SP_CMAKE_PROJECT_VERSION_COLOR sp_color_info _sco__color_version
             local _sco__color_install_pfx
-            _get_color_param SP_CMAKE_INSTALL_PREFIX_COLOR sp_color_debug _sco__color_install_pfx
+            _sp.get_color_param SP_CMAKE_INSTALL_PREFIX_COLOR sp_color_debug _sco__color_install_pfx
 
             printf '%s%s%s%s%s→%s%s' \
                 "${_sco__color_build_type}" \
@@ -55,9 +55,9 @@ function _show_cmake_options()
                 "${_sco__prefix}"
         else
             local _sco__color_broken_mark
-            _get_color_param SP_CMAKE_BROKEN_MARK_COLOR sp_color_alert _sco__color_broken_mark
+            _sp.get_color_param SP_CMAKE_BROKEN_MARK_COLOR sp_color_alert _sco__color_broken_mark
             local _sco__color_broken_path
-            _get_color_param SP_CMAKE_BROKEN_BUILD_DIR_COLOR sp_color_warn _sco__color_broken_path
+            _sp.get_color_param SP_CMAKE_BROKEN_BUILD_DIR_COLOR sp_color_warn _sco__color_broken_path
             printf '%s×%s%s' "${_sco__color_broken_mark}" "${_sco__color_broken_path}" "${_sco__top_build_dir}"
         fi
     fi

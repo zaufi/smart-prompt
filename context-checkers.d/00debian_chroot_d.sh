@@ -15,7 +15,7 @@ function _00_is_under_docker()
 
 function _show_docker_debian_chroot()
 {
-    _get_color_param SP_CHROOT_NAME sp_color_warn _sdc__chroot_name
+    _sp.get_color_param SP_CHROOT_NAME sp_color_warn _sdc__chroot_name
     local _mark="${SP_DOCKER_MARK:-🐳:}"
     if [[ ${SP_DOCKER_MARK} == 'none' ]]; then
         _mark=""

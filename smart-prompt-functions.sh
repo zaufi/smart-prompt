@@ -11,7 +11,7 @@
 #
 # Check if given boolean value is `true`
 #
-function _sp_check_bool()
+function _sp.check_bool()
 {
     case "${1,,}" in
         1|y|yes|on|true)
@@ -26,9 +26,9 @@ function _sp_check_bool()
 #
 # Check whether smart-prompt has been asked to show debug output
 #
-function _sp_is_debug()
+function _sp.is_debug()
 {
-    _sp_check_bool "${SP_DEBUG}"
+    _sp.check_bool "${SP_DEBUG}"
 }
 
 #
@@ -38,7 +38,7 @@ function _sp_is_debug()
 # @param $2 -- prefix of variables to assign results. Output can be read
 #              from `<prefix>_r`, `<prefix>_g` and `<prefix>_b`
 #
-function _parse_rgb()
+function _sp.parse_rgb()
 {
     local -r _prbg__input="$1"
     local -r _prbg__prefix=$2
@@ -61,7 +61,7 @@ function _parse_rgb()
 # @param $2 -- prefix of variables to assign results. Output can be read
 #              from `<prefix>_r`, `<prefix>_g` and `<prefix>_b`
 #
-function _parse_hex_color()
+function _sp.parse_hex_color()
 {
     local -r _phc__input="$1"
     local -r _phc__prefix=$2
@@ -97,7 +97,7 @@ function _parse_hex_color()
 # @param $3 -- blue component
 # @param $4 -- name of the variable to assign result
 #
-function _rgb_to_ansi()
+function _sp.rgb_to_ansi()
 {
     local -r _r2a__r=$1
     local -r _r2a__g=$2
@@ -119,7 +119,7 @@ function _rgb_to_ansi()
 # @param $1 -- string with color names (like 'bright-red italic')
 # @param $2 -- name of the variable to assign result
 #
-function _eval_color_string
+function _sp.eval_color_string
 {
     local -A _ecs__colors
     _ecs__colors['black']='\[\e[30m\]'
@@ -161,9 +161,9 @@ function _eval_color_string
             local _esc__r
             local _esc__g
             local _esc__b
-            if _parse_rgb "${_ecs__c}" _esc_; then
+            if _sp.parse_rgb "${_ecs__c}" _esc_; then
                 local _ecs_rgb
-                _rgb_to_ansi "${_esc__r}" "${_esc__g}" "${_esc__b}" _ecs_rgb
+                _sp.rgb_to_ansi "${_esc__r}" "${_esc__g}" "${_esc__b}" _ecs_rgb
                 _ecs__result_str="${_ecs__result_str}${_ecs_rgb}"
             fi
             ;;
@@ -171,9 +171,9 @@ function _eval_color_string
             local _esc__r
             local _esc__g
             local _esc__b
-            if _parse_hex_color "${_ecs__c}" _esc_; then
+            if _sp.parse_hex_color "${_ecs__c}" _esc_; then
                 local _ecs_rgb
-                _rgb_to_ansi "${_esc__r}" "${_esc__g}" "${_esc__b}" _ecs_rgb
+                _sp.rgb_to_ansi "${_esc__r}" "${_esc__g}" "${_esc__b}" _ecs_rgb
                 _ecs__result_str="${_ecs__result_str}${_ecs_rgb}"
             fi
             ;;
@@ -188,19 +188,19 @@ function _eval_color_string
 #
 # Expand a string with color names into a raw ANSI escape string.
 #
-# Unlike `_eval_color_string`, this returns actual escape bytes and strips
+# Unlike `_sp.eval_color_string`, this returns actual escape bytes and strips
 # prompt-length markers, so it can be used outside `PS1`.
 #
 # @param $1 -- string with color names
 # @param $2 -- name of the variable to assign result
 #
-function _eval_ansi_color_string
+function _sp.eval_ansi_color_string
 {
     local -r _eacs__colors_str=$1
     local -r _eacs__output_var=$2
 
     local _eacs__prompt_escaped
-    _eval_color_string "${_eacs__colors_str}" _eacs__prompt_escaped
+    _sp.eval_color_string "${_eacs__colors_str}" _eacs__prompt_escaped
     _eacs__prompt_escaped=${_eacs__prompt_escaped//\\[/}
     _eacs__prompt_escaped=${_eacs__prompt_escaped//\\]/}
 
@@ -216,18 +216,18 @@ function _eval_ansi_color_string
 # @param $2 -- fallback variable with the default value
 # @param $3 -- name of the variable to assign result
 #
-function _get_color_param()
+function _sp.get_color_param()
 {
     local -r _gcp__param=$1
     local -r _gcp__fallback=$2
     local -r _gcp__output_var=$3
 
-    if _sp_is_debug; then
+    if _sp.is_debug; then
         echo -e "\e[1;30mGetting color parameter '${_gcp__param}'\e[38m"
     fi
 
     if [[ -n ${!_gcp__param} ]]; then
-        _eval_color_string "reset ${!_gcp__param}" "${_gcp__output_var}"
+        _sp.eval_color_string "reset ${!_gcp__param}" "${_gcp__output_var}"
     else
         eval "${_gcp__output_var}=\"${!_gcp__fallback}\""
     fi
@@ -239,7 +239,7 @@ function _get_color_param()
 # @param $1 -- input seconds count
 # @param $2 -- name of the variable to assign result
 #
-function _seconds_to_duration()
+function _sp.seconds_to_duration()
 {
     local -ir _s2d__seconds=$1
     local -r _s2d__output_var=$2
@@ -262,7 +262,7 @@ function _seconds_to_duration()
 #
 # @param $1 -- dirname to match
 #
-function _cur_dir_starts_with()
+function _sp.cur_dir_starts_with()
 {
     [[ ${PWD} =~ ^${1} ]]
 }
@@ -272,7 +272,7 @@ function _cur_dir_starts_with()
 #
 # @param $1 -- dirname to check against
 #
-function _is_cur_dir_equals_to()
+function _sp.is_cur_dir_equals_to()
 {
     [[ ${PWD} == "${1}" ]]
 }
@@ -282,7 +282,7 @@ function _is_cur_dir_equals_to()
 #
 # @param $1 -- regex pattern to check match
 #
-function _cur_dir_matches()
+function _sp.cur_dir_matches()
 {
     [[ ${PWD} =~ ${1} ]]
 }
@@ -293,7 +293,7 @@ function _cur_dir_matches()
 # @param $1 -- a program to find
 # @param $2 -- a variable to set to the full path of the executable
 #
-function _find_program()
+function _sp.find_program()
 {
     local -r _fp__name=${1}
     local -r _fp__output_var=${2}

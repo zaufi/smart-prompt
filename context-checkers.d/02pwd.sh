@@ -20,11 +20,11 @@ function _show_pwd()
     fi
 
     local _sp__pwd_color
-    _get_color_param SP_PWD_COLOR sp_color_info _sp__pwd_color
+    _sp.get_color_param SP_PWD_COLOR sp_color_info _sp__pwd_color
 
     local _sp__pwd_marks
     if [[ -z $(shopt -s nullglob; echo *) ]]; then
-        _get_color_param SP_EMPTY_DIR_COLOR sp_color_debug _sp__pwd_empty_dir_color
+        _sp.get_color_param SP_EMPTY_DIR_COLOR sp_color_debug _sp__pwd_empty_dir_color
         _sp__pwd_marks=${_sp__pwd_empty_dir_color}${SP_EMPTY_DIR_MARK}${sp_reset}
     else
         local _sp__pwd_pair

@@ -12,7 +12,7 @@
 #
 function _75_is_systemd_dir()
 {
-    _cur_dir_starts_with /etc/systemd || _cur_dir_matches '/usr/(.*/)?lib/systemd'
+    _sp.cur_dir_starts_with /etc/systemd || _sp.cur_dir_matches '/usr/(.*/)?lib/systemd'
 }
 function _systemd_show_default_target()
 {
@@ -25,13 +25,13 @@ function _systemd_show_default_target()
     local -i _sdt__exit_code=$?
 
     local _sdt__target_color
-    _get_color_param SP_SYSTEMD_TARGET_COLOR sp_color_notice _sdt__target_color
+    _sp.get_color_param SP_SYSTEMD_TARGET_COLOR sp_color_notice _sdt__target_color
 
     local _sdt__state_color
     if [[ ${_sdt__exit_code} != 0 ]]; then
-        _get_color_param SP_SYSTEMD_STATE_ALERT_COLOR sp_color_alert _sdt__state_color
+        _sp.get_color_param SP_SYSTEMD_STATE_ALERT_COLOR sp_color_alert _sdt__state_color
     else
-        _get_color_param SP_SYSTEMD_STATE_OK_COLOR sp_color_info _sdt__state_color
+        _sp.get_color_param SP_SYSTEMD_STATE_OK_COLOR sp_color_info _sdt__state_color
     fi
 
     printf '%s%s %s%s' "${_sdt__target_color}" "${_sdt__target}" "${_sdt__state_color}" "${_sdt__state}"

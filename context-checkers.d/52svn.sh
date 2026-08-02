@@ -36,9 +36,9 @@ function _get_svn_dirty_status()
       | sed 's,Working Copy Root Path:\s*\(.*\)$,\1,')
     local _gsds__status_color
     if [[ -z $(svn status -q "${_gsds__work_root}" 2>/dev/null) ]]; then
-        _get_color_param SP_SVN_GREEN_COLOR sp_color_info _gsds__status_color
+        _sp.get_color_param SP_SVN_GREEN_COLOR sp_color_info _gsds__status_color
     else
-        _get_color_param SP_SVN_DIRTY_COLOR sp_color_warn _gsds__status_color
+        _sp.get_color_param SP_SVN_DIRTY_COLOR sp_color_warn _gsds__status_color
     fi
     eval "${_gsds__output_var}=\"${_gsds__status_color}\""
 }
@@ -51,7 +51,7 @@ function _show_svn_status()
     _get_svn_dirty_status _sss__status
 
     local _sss__repo
-    if _sp_check_bool "${SP_INDICATE_REPO_TYPE}" -o [[ "${SP_INDICATE_REPO_TYPE[@]}" =~ svn ]]; then
+    if _sp.check_bool "${SP_INDICATE_REPO_TYPE}" -o [[ "${SP_INDICATE_REPO_TYPE[@]}" =~ svn ]]; then
         _sss__repo='svn:'
     fi
 

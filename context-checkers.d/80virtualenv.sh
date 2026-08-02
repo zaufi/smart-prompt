@@ -17,7 +17,7 @@ function _show_virtualenv()
     local _svenv_segment
     local _svenv__color
     if [[ -n ${VIRTUAL_ENV} ]]; then
-        _get_color_param SP_VENV_COLOR sp_color_notice _svenv__color
+        _sp.get_color_param SP_VENV_COLOR sp_color_notice _svenv__color
         local _svenv_ve_path=$(realpath --relative-to="${PWD}" "${VIRTUAL_ENV}")
         if [[ ${#VIRTUAL_ENV} -lt ${#_svenv_ve_path} ]]; then
             _svenv_ve_path="${VIRTUAL_ENV}"

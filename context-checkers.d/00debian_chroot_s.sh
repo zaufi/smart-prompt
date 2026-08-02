@@ -14,7 +14,7 @@ function _00_is_under_schroot()
 
 function _show_debian_chroot()
 {
-    _get_color_param SP_CHROOT_NAME sp_color_warn _sdc__chroot_name
+    _sp.get_color_param SP_CHROOT_NAME sp_color_warn _sdc__chroot_name
     if [[ -n ${SCHROOT_CHROOT_NAME} ]]; then
         printf '%s%s' "${_sdc__chroot_name}" "${SCHROOT_CHROOT_NAME}"
     else

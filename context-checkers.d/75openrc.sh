@@ -30,7 +30,7 @@ function _get_total_services_cnt()
 #
 function _75_is_init_d_dir()
 {
-    _is_cur_dir_equals_to /etc/init.d
+    _sp.is_cur_dir_equals_to /etc/init.d
 }
 function _show_started_services()
 {
@@ -40,14 +40,14 @@ function _show_started_services()
     _get_started_services_cnt "${_sss__level}" _sss__count
     _get_total_services_cnt "${_sss__level}" _sss__total_count
     local _sss__services_color
-    _get_color_param SP_OPENRC_SERVICES_COLOR sp_color_notice _sss__services_color
+    _sp.get_color_param SP_OPENRC_SERVICES_COLOR sp_color_notice _sss__services_color
     printf '%s%d/%d started' "${_sss__services_color}" "${_sss__count}" "${_sss__total_count}"
 }
 SMART_PROMPT_PLUGINS[_75_is_init_d_dir]=_show_started_services
 
 function _75_is_inside_of_runlevels_dir()
 {
-    _cur_dir_starts_with /etc/runlevels
+    _sp.cur_dir_starts_with /etc/runlevels
 }
 function _show_started_services_at_level()
 {
@@ -65,6 +65,6 @@ SMART_PROMPT_PLUGINS[_75_is_inside_of_runlevels_dir]=_show_started_services_at_l
 #
 function _81_is_etc_conf_d_dir()
 {
-    _is_cur_dir_equals_to /etc/conf.d
+    _sp.is_cur_dir_equals_to /etc/conf.d
 }
 SMART_PROMPT_PLUGINS[_81_is_etc_conf_d_dir]='_show_net_ifaces _show_loaded_modules'

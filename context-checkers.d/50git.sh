@@ -14,7 +14,7 @@ function _50_is_git_repo()
 
 function _51_is_git_dir()
 {
-    _cur_dir_matches '\.git$'
+    _sp.cur_dir_matches '\.git$'
 }
 
 function _get_git_branch()
@@ -111,7 +111,7 @@ function _get_git_dirty_status()
     case ${_ggds__state} in
         # Git operations in progress
         rebase | merge | cherry_pick | revert | bisect | conflict | detached | staged | modified | untracked | clean)
-            _get_color_param "SP_GIT_${_ggds__state^^}_COLOR" "sp_git_${_ggds__state}_color" _ggds__status_color
+            _sp.get_color_param "SP_GIT_${_ggds__state^^}_COLOR" "sp_git_${_ggds__state}_color" _ggds__status_color
             ;;
         *)
             ;;
@@ -159,7 +159,7 @@ function _show_git_status()
     fi
 
     local _sgs__repo
-    if _sp_check_bool "${SP_INDICATE_REPO_TYPE}" -o [[ "${SP_INDICATE_REPO_TYPE[@]}" =~ git ]]; then
+    if _sp.check_bool "${SP_INDICATE_REPO_TYPE}" -o [[ "${SP_INDICATE_REPO_TYPE[@]}" =~ git ]]; then
         _sgs__repo="${SP_REPO_GIT_MARK:-git:}"
     fi
 
@@ -175,7 +175,7 @@ function _show_git_status()
 function _show_git_git()
 {
     local -r _sgg__org=$(git config --local --get remote.origin.url)
-    _get_color_param SP_GIT_ORIGIN_COLOR sp_color_info _sgg__origin_color
+    _sp.get_color_param SP_GIT_ORIGIN_COLOR sp_color_info _sgg__origin_color
     printf '%s%s' "${_sgg__origin_color}" "${_sgg__org}"
 }
 

@@ -54,7 +54,7 @@ shopt -s nullglob
 # Load plugins
 if [[ -d "@CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d" ]]; then
     for plugin in @CMAKE_INSTALL_FULL_LIBEXECDIR@/@PROJECT_NAME@/context-checkers.d/[0-9][0-9]*.sh; do
-        if _sp_is_debug; then
+        if _sp.is_debug; then
             echo -e "\e[1;30mloading ${plugin}…\e[38m"
         fi
         # shellcheck source=/dev/null
@@ -65,7 +65,7 @@ fi
 # Load user plugins
 if [[ -d "${XDG_CONFIG_HOME:-${HOME}/.config}/@PROJECT_NAME@.d" ]]; then
     for plugin in "${XDG_CONFIG_HOME:-${HOME}/.config}"/@PROJECT_NAME@.d/[0-9][0-9]*.sh; do
-        if _sp_is_debug; then
+        if _sp.is_debug; then
             echo -e "\e[1;30mloading ${plugin}…\e[38m"
         fi
         # shellcheck source=/dev/null
@@ -97,65 +97,65 @@ function _smart_prompt()
     local sp_color_user
     local sp_reset
     if [[ ${EUID} != 0 ]]; then
-        _eval_color_string "reset ${SP_COLOR_USER:-bright-green}" sp_color_user
+        _sp.eval_color_string "reset ${SP_COLOR_USER:-bright-green}" sp_color_user
     else
-        _eval_color_string "reset ${SP_COLOR_SUSER:-bright-red}" sp_color_user
+        _sp.eval_color_string "reset ${SP_COLOR_SUSER:-bright-red}" sp_color_user
     fi
-    _eval_color_string 'reset' sp_reset
+    _sp.eval_color_string 'reset' sp_reset
 
     local sp_color_alert
-    _eval_color_string "reset ${SP_COLOR_ALERT:-'bright-red'}" sp_color_alert
+    _sp.eval_color_string "reset ${SP_COLOR_ALERT:-'bright-red'}" sp_color_alert
 
     local sp_color_warn
-    _eval_color_string "reset ${SP_COLOR_WARN:-'yellow'}" sp_color_warn
+    _sp.eval_color_string "reset ${SP_COLOR_WARN:-'yellow'}" sp_color_warn
 
     local sp_color_info
-    _eval_color_string "reset ${SP_COLOR_INFO:-'bright-green'}" sp_color_info
+    _sp.eval_color_string "reset ${SP_COLOR_INFO:-'bright-green'}" sp_color_info
 
     local sp_color_notice
-    _eval_color_string "reset ${SP_COLOR_NOTICE:-'bright-cyan'}" sp_color_notice
+    _sp.eval_color_string "reset ${SP_COLOR_NOTICE:-'bright-cyan'}" sp_color_notice
 
     local sp_color_debug
-    _eval_color_string "reset ${SP_COLOR_DEBUG:-'dark-grey'}" sp_color_debug
+    _sp.eval_color_string "reset ${SP_COLOR_DEBUG:-'dark-grey'}" sp_color_debug
 
     local sp_color_misc
-    _eval_color_string "reset ${SP_COLOR_MISC:-'white'}" sp_color_misc
+    _sp.eval_color_string "reset ${SP_COLOR_MISC:-'white'}" sp_color_misc
 
     local sp_color_seg
-    _eval_color_string "reset ${SP_SEGMENT_COLOR:-bright-blue}" sp_color_seg
+    _sp.eval_color_string "reset ${SP_SEGMENT_COLOR:-bright-blue}" sp_color_seg
 
     local sp_git_rebase_color
-    _eval_color_string "reset ${SP_GIT_REBASE_COLOR-bright-cyan}" sp_git_rebase_color
+    _sp.eval_color_string "reset ${SP_GIT_REBASE_COLOR-bright-cyan}" sp_git_rebase_color
 
     local sp_git_merge_color
-    _eval_color_string "reset ${SP_GIT_MERGE_COLOR-bright-blue}" sp_git_merge_color
+    _sp.eval_color_string "reset ${SP_GIT_MERGE_COLOR-bright-blue}" sp_git_merge_color
 
     local sp_git_cherry_pick_color
-    _eval_color_string "reset ${SP_GIT_CHERRY_PICK_COLOR-bright-magenta}" sp_git_cherry_pick_color
+    _sp.eval_color_string "reset ${SP_GIT_CHERRY_PICK_COLOR-bright-magenta}" sp_git_cherry_pick_color
 
     local sp_git_revert_color
-    _eval_color_string "reset ${SP_GIT_REVERT_COLOR-yellow}" sp_git_revert_color
+    _sp.eval_color_string "reset ${SP_GIT_REVERT_COLOR-yellow}" sp_git_revert_color
 
     local sp_git_bisect_color
-    _eval_color_string "reset ${SP_GIT_BISECT_COLOR-yellow}" sp_git_bisect_color
+    _sp.eval_color_string "reset ${SP_GIT_BISECT_COLOR-yellow}" sp_git_bisect_color
 
     local sp_git_conflict_color
-    _eval_color_string "reset ${SP_GIT_CONFLICT_COLOR-bright-red}" sp_git_conflict_color
+    _sp.eval_color_string "reset ${SP_GIT_CONFLICT_COLOR-bright-red}" sp_git_conflict_color
 
     local sp_git_detached_color
-    _eval_color_string "reset ${SP_GIT_DETACHED_COLOR-dark-gray}" sp_git_detached_color
+    _sp.eval_color_string "reset ${SP_GIT_DETACHED_COLOR-dark-gray}" sp_git_detached_color
 
     local sp_git_staged_color
-    _eval_color_string "reset ${SP_GIT_STAGED_COLOR-green dim}" sp_git_staged_color
+    _sp.eval_color_string "reset ${SP_GIT_STAGED_COLOR-green dim}" sp_git_staged_color
 
     local sp_git_modified_color
-    _eval_color_string "reset ${SP_GIT_MODIFIED_COLOR-brown}" sp_git_modified_color
+    _sp.eval_color_string "reset ${SP_GIT_MODIFIED_COLOR-brown}" sp_git_modified_color
 
     local sp_git_untracked_color
-    _eval_color_string "reset ${SP_GIT_UNTRACKED_COLOR-grey}" sp_git_untracked_color
+    _sp.eval_color_string "reset ${SP_GIT_UNTRACKED_COLOR-grey}" sp_git_untracked_color
 
     local sp_git_clean_color
-    _eval_color_string "reset ${SP_GIT_CLEAN_COLOR-bright-green}" sp_git_clean_color
+    _sp.eval_color_string "reset ${SP_GIT_CLEAN_COLOR-bright-green}" sp_git_clean_color
 
     # Get some other (non-color) configurable parameters
     local -r sp_time_fmt=${SP_TIME_FMT:-%H:%M %d/%m}
@@ -165,11 +165,11 @@ function _smart_prompt()
     local sp_ps=''
     local checker
     for checker in $(_get_registered_context_checkers); do
-        if _sp_is_debug; then
+        if _sp.is_debug; then
             echo -ne "\e[1;30mchecking ${checker}…\e[38m "
         fi
         if ${checker}; then
-            if _sp_is_debug; then
+            if _sp.is_debug; then
                 echo -e "\e[1;32mok\e[38m\e[38m"
             fi
 
@@ -179,7 +179,7 @@ function _smart_prompt()
                 [[ ${SP_TRACE} == "${checker}" ]] && set +x
             done
 
-        elif _sp_is_debug; then
+        elif _sp.is_debug; then
             echo -e "\e[1;31m!!\e[38m"
         fi
     done
@@ -190,13 +190,13 @@ function _smart_prompt()
 function _smart_prompt_ps2()
 {
     local sp_color_ps2
-    _eval_color_string "reset ${SP_CONTINUE_MARKER_COLOR:-red}" sp_color_ps2
+    _sp.eval_color_string "reset ${SP_CONTINUE_MARKER_COLOR:-red}" sp_color_ps2
 
     local sp_color_seg
-    _eval_color_string "reset ${SP_SEGMENT_COLOR:-bright-blue}" sp_color_seg
+    _sp.eval_color_string "reset ${SP_SEGMENT_COLOR:-bright-blue}" sp_color_seg
 
     local sp_reset
-    _eval_color_string 'reset' sp_reset
+    _sp.eval_color_string 'reset' sp_reset
 
     echo "${sp_color_ps2}${SP_CONTINUE_MARKER:-…}${sp_color_seg}${SP_SEGMENT_DELIMITER:-〉}${sp_reset}"
 }
@@ -204,19 +204,19 @@ function _smart_prompt_ps2()
 function _smart_prompt_ps4()
 {
     local sp_color_seg
-    _eval_color_string "reset ${SP_SEGMENT_COLOR:-bright-blue}" sp_color_seg
+    _sp.eval_color_string "reset ${SP_SEGMENT_COLOR:-bright-blue}" sp_color_seg
 
     local sp_reset
-    _eval_color_string 'reset' sp_reset
+    _sp.eval_color_string 'reset' sp_reset
 
     local sp_trace_src
-    _eval_color_string "reset ${SP_TRACE_FILE_COLOR:-dark-grey}" sp_trace_src
+    _sp.eval_color_string "reset ${SP_TRACE_FILE_COLOR:-dark-grey}" sp_trace_src
 
     local sp_trace_line
-    _eval_color_string "reset ${SP_TRACE_LINENO_COLOR:-dark-grey}" sp_trace_line
+    _sp.eval_color_string "reset ${SP_TRACE_LINENO_COLOR:-dark-grey}" sp_trace_line
 
     local sp_trace_code
-    _eval_color_string "reset ${SP_TRACE_CODE_COLOR:-grey}" sp_trace_code
+    _sp.eval_color_string "reset ${SP_TRACE_CODE_COLOR:-grey}" sp_trace_code
 
     local sp_src="${sp_trace_src}\${BASH_SOURCE/#.\//}:${sp_trace_line}\${LINENO}"
 

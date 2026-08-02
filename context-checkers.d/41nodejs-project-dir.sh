@@ -15,17 +15,17 @@ function _41_is_nodejs_project_dir()
 
 function _show_package_details()
 {
-    if _find_program jq _spd__jq_bin; then
+    if _sp.find_program jq _spd__jq_bin; then
         local -r _spd__name_version=$(${_spd__jq_bin} -r '.name+"@"+.version' package.json)
         if [[ -n ${_spd__name_version} && ${_spd__name_version} != '@' ]]; then
             local _spd__color_name
-            _get_color_param SP_JS_PKG_NAME_VERSION sp_color_notice _spd__color_name
+            _sp.get_color_param SP_JS_PKG_NAME_VERSION sp_color_notice _spd__color_name
             printf '%s%s' "${_spd__color_name}" "${_spd__name_version}"
         else
             # NOTE Something is wrong with this package:
             # broken JSON, not a JS package at all, and so on.
             local _spd__color_bad_package_json
-            _get_color_param SP_JS_BAD_PACKAGE_JSON sp_color_debug _spd__color_bad_package_json
+            _sp.get_color_param SP_JS_BAD_PACKAGE_JSON sp_color_debug _spd__color_bad_package_json
             printf '%sbad package.json' "${_spd__color_bad_package_json}"
         fi
     fi
