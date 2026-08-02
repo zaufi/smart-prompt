@@ -125,8 +125,8 @@ function _show_processes_and_load()
     local -r _load=$(cut -d ' ' -f 1,2,3 /proc/loadavg)
     local -r _psax_wc_l=$(ps ax --no-headers | wc -l)
     local -r _psu_wc_l=$(ps -u "${USER}" --no-headers | wc -l)
-    local -ir _all_processes=$(( _psax_wc_l - 2))
-    local -ir _user_processes=$(( _psu_wc_l - 2))
+    local -ir _all_processes=${_psax_wc_l}
+    local -ir _user_processes=${_psu_wc_l}
 
     local _spal__processes_color
     _sp.get_color_param SP_PROCESSES_COUNT_COLOR sp_color_debug _spal__processes_color
