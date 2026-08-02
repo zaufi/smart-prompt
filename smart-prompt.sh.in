@@ -104,22 +104,22 @@ function _smart_prompt()
     _sp.eval_color_string 'reset' sp_reset
 
     local sp_color_alert
-    _sp.eval_color_string "reset ${SP_COLOR_ALERT:-'bright-red'}" sp_color_alert
+    _sp.eval_color_string "reset ${SP_COLOR_ALERT:-bright-red}" sp_color_alert
 
     local sp_color_warn
-    _sp.eval_color_string "reset ${SP_COLOR_WARN:-'yellow'}" sp_color_warn
+    _sp.eval_color_string "reset ${SP_COLOR_WARN:-yellow}" sp_color_warn
 
     local sp_color_info
-    _sp.eval_color_string "reset ${SP_COLOR_INFO:-'bright-green'}" sp_color_info
+    _sp.eval_color_string "reset ${SP_COLOR_INFO:-bright-green}" sp_color_info
 
     local sp_color_notice
-    _sp.eval_color_string "reset ${SP_COLOR_NOTICE:-'bright-cyan'}" sp_color_notice
+    _sp.eval_color_string "reset ${SP_COLOR_NOTICE:-bright-cyan}" sp_color_notice
 
     local sp_color_debug
-    _sp.eval_color_string "reset ${SP_COLOR_DEBUG:-'dark-grey'}" sp_color_debug
+    _sp.eval_color_string "reset ${SP_COLOR_DEBUG:-dark-grey}" sp_color_debug
 
     local sp_color_misc
-    _sp.eval_color_string "reset ${SP_COLOR_MISC:-'white'}" sp_color_misc
+    _sp.eval_color_string "reset ${SP_COLOR_MISC:-white}" sp_color_misc
 
     local sp_color_seg
     _sp.eval_color_string "reset ${SP_SEGMENT_COLOR:-bright-blue}" sp_color_seg
