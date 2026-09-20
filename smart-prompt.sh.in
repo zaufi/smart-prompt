@@ -3,12 +3,14 @@
 # SPDX-FileCopyrightText: 2013 - 2026 Alex Turbov <i.zaufi@gmail.com>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+@_SP_INTERACTIVE_SHELL_CHECK@
+
 #
 # This is the main module of the SmartPrompt engine.
 #
 
-# Check for interactive bash and that we haven't already been sourced.
-[[ -z ${BASH_VERSION} || -z ${PS1} || -n ${SMART_PROMPT_PLUGINS} ]] && return
+# Check that we haven't already been sourced.
+[[ -z ${BASH_VERSION} || -n ${SMART_PROMPT_PLUGINS} ]] && return
 
 # Load configuration file
 if [[ -f @CMAKE_INSTALL_FULL_SYSCONFDIR@/@PROJECT_NAME@.conf ]]; then

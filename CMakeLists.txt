@@ -153,7 +153,6 @@ if(WITH_RIPGREP)
     unset(_req)
 endif()
 
-
 # Report options
 message(STATUS "WITH_GIT=${WITH_GIT}")
 message(STATUS "WITH_INPUTRC=${WITH_INPUTRC}")
@@ -186,6 +185,22 @@ foreach(_dep IN ITEMS sk jq grep sed bash cut sort head)
     endif()
 endforeach()
 
+cmake_host_system_information(RESULT DISTRIB_NAME QUERY DISTRIB_NAME)
+cmake_path(APPEND CMAKE_INSTALL_SYSCONFDIR profile.d OUTPUT_VARIABLE CMAKE_INSTALL_SHELL_PROFILEDIR)
+# NOTE Exherbo has `/etc/bash/bashrc.d/` for interactive shells
+# TODO Add other distros with this feature
+if(DISTRIB_NAME STREQUAL "Exherbo")
+    cmake_path(APPEND CMAKE_INSTALL_SYSCONFDIR bash/bashrc.d OUTPUT_VARIABLE CMAKE_INSTALL_SHELL_PROFILEDIR)
+    set(_SP_INTERACTIVE_SHELL_CHECK "")
+else()
+    # NOTE For other distros install out files to `/etc/profile.d/`
+    # and put interactive shell check in it
+    set(
+        _SP_INTERACTIVE_SHELL_CHECK
+        "# Only load in interactive Bash shells.\n[[ $- == *i* ]] || return"
+      )
+endif()
+
 #---------------------------------------------------------
 # Section: "Build" related statements
 #---------------------------------------------------------
@@ -212,6 +227,11 @@ install(
     FILES
         ${PROJECT_NAME}-functions.sh
     DESTINATION "${CMAKE_INSTALL_LIBEXECDIR}/${PROJECT_NAME}"
+  )
+install(
+    FILES
+        "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh"
+    DESTINATION "${CMAKE_INSTALL_SHELL_PROFILEDIR}"
   )
 
 install(
@@ -240,11 +260,6 @@ if(WITH_INPUTRC)
         FILES
             "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.inputrc"
         DESTINATION "${CMAKE_INSTALL_FULL_SYSCONFDIR}"
-      )
-    install(
-        FILES
-            "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh"
-        DESTINATION "${CMAKE_INSTALL_FULL_SYSCONFDIR}/profile.d"
       )
 endif()
 install(
